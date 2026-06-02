@@ -4,6 +4,7 @@
 id = "project-manager"
 name = "Project Manager"
 mode = "read_only_report"
+model = "gpt-5.4-mini"
 instructions_path = "../prompts/project-manager.md"
 
 [context_policy]
@@ -16,7 +17,7 @@ include_recent_reports = ["task_brief"]
 max_context_tokens = 12000
 
 [return_contract]
-output_schema = "../contracts/pm_report.schema.json"
+output_schema = "../contracts/project_manager_report.schema.json"
 must_be_machine_parseable = true
 
 [permissions]

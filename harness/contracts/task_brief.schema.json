@@ -1,0 +1,48 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "context_sources": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Context Sources",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "mode": {
+      "title": "Mode",
+      "type": "string"
+    },
+    "role_id": {
+      "title": "Role Id",
+      "type": "string"
+    },
+    "role_name": {
+      "title": "Role Name",
+      "type": "string"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "task_text": {
+      "title": "Task Text",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_text",
+    "created_at",
+    "role_id",
+    "role_name",
+    "mode",
+    "run_id",
+    "context_sources"
+  ],
+  "title": "TaskBrief",
+  "type": "object"
+}
