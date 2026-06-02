@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from harness.contracts import ProjectManagerReport
 from harness.runtime.role_loader import RoleConfig
 
 
-async def call_project_manager(role: RoleConfig, context_packet: str) -> ProjectManagerReport:
+async def call_project_manager(role: RoleConfig, context_packet_json: str) -> ProjectManagerReport:
     try:
         from agents import Agent, Runner
     except ImportError as exc:
@@ -16,22 +17,23 @@ async def call_project_manager(role: RoleConfig, context_packet: str) -> Project
 
     agent = Agent(
         name=role.name,
-        instructions=_structured_instructions(role.instructions),
+        instructions=_render_agent_instructions(role),
         model=role.model,
         output_type=ProjectManagerReport,
         tools=[],
         handoffs=[],
     )
-    result = await Runner.run(agent, context_packet, max_turns=1)
+    result = await Runner.run(agent, context_packet_json, max_turns=1)
     return _validate_final_output(result.final_output)
 
 
-def _structured_instructions(base_instructions: str) -> str:
+def _render_agent_instructions(role: RoleConfig) -> str:
+    instructions_json = json.dumps(role.instructions_payload, indent=2, ensure_ascii=False)
     return "\n\n".join(
         [
-            base_instructions.strip(),
-            "Return only a structured ProjectManagerReport matching the supplied output schema. "
-            "Do not call tools, do not request shell access, and do not modify files.",
+            "Use this agent contract as the authoritative instruction source.",
+            instructions_json,
+            "Return only a structured ProjectManagerReport that matches the configured return contract.",
         ]
     )
 

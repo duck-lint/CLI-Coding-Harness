@@ -90,7 +90,7 @@
     "strict": true
   },
   "permissions": {
-    "may_recieve_context_packet": true,
+    "may_receive_context_packet": true,
     "may_inspect_repo_files_directly": false,
     "may_write_files": false,
     "may_run_shell": false,

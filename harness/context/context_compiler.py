@@ -19,8 +19,6 @@ class ContextPacket:
 
     `payload` is the canonical semantic object.
     JSON is the preferred format sent to the model and saved as runtime evidence.
-
-    Markdown rendering is provided only as a human-readable/debug transition surface.
     """
 
     payload: dict[str, Any]
@@ -32,34 +30,6 @@ class ContextPacket:
 
     def to_json_text(self) -> str:
         return json.dumps(self.payload, indent=2, ensure_ascii=False, sort_keys=False)
-
-    def to_markdown_text(self) -> str:
-        """
-        Human-readable debug rendering.
-
-        Do not treat this as the canonical packet. The JSON payload is authoritative.
-        """
-        sections: list[str] = []
-
-        task = self.payload.get("task", {})
-        sections.append(_markdown_section("Task Text", task.get("text", "")))
-
-        repo = self.payload.get("repo", {})
-        sections.append(_markdown_section("Git Status", _format_git_status(repo.get("git_status_short", {}))))
-
-        manifest = self.payload.get("authority_manifest", {})
-        sections.append(_markdown_section("Authority Manifest", json.dumps(manifest, indent=2, ensure_ascii=False)))
-
-        authority_sources = self.payload.get("authority_sources", {})
-        for source_id, source in authority_sources.items():
-            title = f"Authority Source: {source_id}"
-            body = json.dumps(source, indent=2, ensure_ascii=False)
-            sections.append(_markdown_section(title, body))
-
-        probe_evidence = self.payload.get("probe_evidence", {})
-        sections.append(_markdown_section("Probe Evidence", json.dumps(probe_evidence, indent=2, ensure_ascii=False)))
-
-        return "\n\n".join(sections).strip() + "\n"
 
 
 def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
@@ -171,12 +141,11 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
     return ContextPacket(payload=packet)
 
 
-def write_context_artifacts(packet: ContextPacket, run_dir: Path, *, write_markdown_debug: bool = True) -> None:
+def write_context_artifacts(packet: ContextPacket, run_dir: Path) -> None:
     """
     Save context packet artifacts for a run.
 
     `context_packet.json` is authoritative.
-    `context_packet.md` is optional debug output for humans during transition.
     """
 
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -185,12 +154,6 @@ def write_context_artifacts(packet: ContextPacket, run_dir: Path, *, write_markd
         packet.to_json_text() + "\n",
         encoding="utf-8"
     )
-
-    if write_markdown_debug:
-        (run_dir / "context_packet.md").write_text(
-            packet.to_markdown_text(),
-            encoding="utf-8"
-        )
 
 
 def _add_source_from_candidates(
@@ -371,25 +334,6 @@ def _guess_content_type(path: Path) -> str:
         return "text/plain"
 
     return "text/plain"
-
-
-def _format_git_status(git_status: Any) -> str:
-    if not isinstance(git_status, dict):
-        return str(git_status)
-
-    if not git_status.get("available"):
-        status = git_status.get("status", "unavailable")
-        detail = git_status.get("detail", "")
-        return f"{status}: {detail}".strip()
-
-    if git_status.get("clean"):
-        return "Clean working tree."
-
-    return git_status.get("short", "")
-
-
-def _markdown_section(title: str, body: str) -> str:
-    return f"# {title}\n\n{str(body).strip()}"
 
 
 def _relative_label(path: Path, repo_root: Path) -> str:

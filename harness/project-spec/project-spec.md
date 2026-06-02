@@ -10,4 +10,4 @@ The first honest vertical slice is:
 
 `python -m harness.runtime.orchestrator plan "TASK TEXT"`
 
-This must load the Project Manager role manifest, compile a minimal context packet, call the Project Manager through the OpenAI Agents SDK, validate the structured report, save task/report/context artifacts under `harness/runs/`, print a short summary, and stop before implementation.
+This must load `harness/agents/project-manager.agent.json`, compile a structured context packet, call the Project Manager through the OpenAI Agents SDK, validate the structured report, save `task_brief.json`, `context_packet.json`, and `project_manager_report.json` under `harness/runs/`, print a short summary, and stop before implementation.

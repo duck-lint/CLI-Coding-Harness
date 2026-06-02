@@ -55,14 +55,13 @@ The following changes require explicit approval because they cross an authority 
 
 Within the first vertical slice, admissible transformations are limited to:
 
-- loading the Project Manager role manifest from `harness/agents/project-manager.toml`;
-- resolving prompt and schema paths relative to the TOML file location;
-- loading `harness/prompts/project-manager.md`;
+- loading the Project Manager role manifest from `harness/agents/project-manager.agent.json`;
+- resolving the return-contract schema path relative to the JSON agent file location;
 - loading or defining the `ProjectManagerReport` contract;
 - compiling a minimal context packet from the task text, `git status --short` when available, `harness/project-spec/project-spec.md`, optional `harness/project-spec/governance-primitives.md`, and `harness/policies/runtime-contract.md`;
 - calling exactly one Project Manager agent through the OpenAI Agents SDK;
 - validating the returned structured report;
-- writing only `task_brief.json`, `project_manager_report.json`, and `context_packet.md` under `harness/runs/<timestamp>/`;
+- writing only `task_brief.json`, `project_manager_report.json`, and `context_packet.json` under `harness/runs/<timestamp>/`;
 - printing a short terminal summary;
 - stopping before planner, adversary, reviewer, implementer, archivist, or Codex worker execution.
 
@@ -92,12 +91,11 @@ python -m harness.runtime.orchestrator plan "TASK TEXT"
 
 The probe passes only if all of the following are true:
 
-- the command loads `harness/agents/project-manager.toml`;
-- the command loads `harness/prompts/project-manager.md`;
+- the command loads `harness/agents/project-manager.agent.json`;
 - the command compiles a context packet from the task text, repo status when available, `harness/project-spec/project-spec.md`, optional `harness/project-spec/governance-primitives.md`, and `harness/policies/runtime-contract.md`;
 - the command calls only the Project Manager through the OpenAI Agents SDK;
 - the command validates the returned `ProjectManagerReport`;
-- the command writes `task_brief.json`, `project_manager_report.json`, and `context_packet.md` under `harness/runs/<timestamp>/`;
+- the command writes `task_brief.json`, `project_manager_report.json`, and `context_packet.json` under `harness/runs/<timestamp>/`;
 - the command prints a short summary;
 - the command stops without entering planner, adversary, reviewer, implementer, archivist, or Codex execution.
 

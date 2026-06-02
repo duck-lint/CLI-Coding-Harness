@@ -1,9 +1,25 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from typing import Any
-import tomllib
+
+
+@dataclass(frozen=True)
+class RolePermissions:
+    may_receive_context_packet: bool
+    may_inspect_repo_files_directly: bool
+    may_write_files: bool
+    may_run_shell: bool
+    may_call_workers: bool
+
+
+@dataclass(frozen=True)
+class ReturnContract:
+    schema_path: Path
+    schema: dict[str, Any]
+    strict: bool
 
 
 @dataclass(frozen=True)
@@ -12,52 +28,62 @@ class RoleConfig:
     name: str
     mode: str
     model: str
-    instructions_path: Path
-    instructions: str
-    output_schema_path: Path
-    may_read_files: bool
-    may_write_files: bool
-    may_run_shell: bool
-    may_call_workers: bool
+    instructions_payload: dict[str, Any]
+    context_policy: dict[str, Any]
+    return_contract: ReturnContract
+    permissions: RolePermissions
 
 
 def load_role(manifest_path: Path) -> RoleConfig:
     manifest_path = manifest_path.resolve()
-    data = _load_toml(manifest_path)
+    data = _load_json(manifest_path)
 
     agent = _section(data, "agent")
+    model = _section(data, "model")
+    instructions = _section(data, "instructions")
+    context_policy = _section(data, "context_policy")
     return_contract = _section(data, "return_contract")
     permissions = _section(data, "permissions")
 
-    instructions_path = _resolve_existing_path(
-        manifest_path, _required_str(agent, "instructions_path")
-    )
     output_schema_path = _resolve_existing_path(
-        manifest_path, _required_str(return_contract, "output_schema")
+        manifest_path, _required_str(return_contract, "schema")
     )
+    output_schema = _load_json(output_schema_path)
 
     config = RoleConfig(
         role_id=_required_str(agent, "id"),
         name=_required_str(agent, "name"),
         mode=_required_str(agent, "mode"),
-        model=_required_str(agent, "model"),
-        instructions_path=instructions_path,
-        instructions=instructions_path.read_text(encoding="utf-8"),
-        output_schema_path=output_schema_path,
-        may_read_files=_required_bool(permissions, "may_read_files"),
-        may_write_files=_required_bool(permissions, "may_write_files"),
-        may_run_shell=_required_bool(permissions, "may_run_shell"),
-        may_call_workers=_required_bool(permissions, "may_call_workers"),
+        model=_required_str(model, "default"),
+        instructions_payload=instructions,
+        context_policy=context_policy,
+        return_contract=ReturnContract(
+            schema_path=output_schema_path,
+            schema=output_schema,
+            strict=_required_bool(return_contract, "strict"),
+        ),
+        permissions=RolePermissions(
+            may_receive_context_packet=_required_bool(permissions, "may_receive_context_packet"),
+            may_inspect_repo_files_directly=_required_bool(
+                permissions, "may_inspect_repo_files_directly"
+            ),
+            may_write_files=_required_bool(permissions, "may_write_files"),
+            may_run_shell=_required_bool(permissions, "may_run_shell"),
+            may_call_workers=_required_bool(permissions, "may_call_workers"),
+        ),
     )
     _validate_read_only_role(config)
     return config
 
 
-def _load_toml(path: Path) -> dict[str, Any]:
+def _load_json(path: Path) -> dict[str, Any]:
     if not path.exists():
         raise FileNotFoundError(f"Role manifest not found: {path}")
-    with path.open("rb") as file:
-        return tomllib.load(file)
+    with path.open("r", encoding="utf-8") as file:
+        data = json.load(file)
+    if not isinstance(data, dict):
+        raise ValueError(f"Expected JSON object at {path}")
+    return data
 
 
 def _section(data: dict[str, Any], name: str) -> dict[str, Any]:
@@ -93,9 +119,13 @@ def _resolve_existing_path(manifest_path: Path, relative_path: str) -> Path:
 def _validate_read_only_role(config: RoleConfig) -> None:
     if config.mode != "read_only_report":
         raise ValueError(f"Unsupported role mode for first slice: {config.mode}")
-    if config.may_write_files:
+    if not config.permissions.may_receive_context_packet:
+        raise ValueError("Project Manager role must accept a compiled context packet.")
+    if config.permissions.may_inspect_repo_files_directly:
+        raise ValueError("Project Manager role may not inspect repo files directly.")
+    if config.permissions.may_write_files:
         raise ValueError("Project Manager role may not write files in the first slice.")
-    if config.may_run_shell:
+    if config.permissions.may_run_shell:
         raise ValueError("Project Manager role may not run shell commands in the first slice.")
-    if config.may_call_workers:
+    if config.permissions.may_call_workers:
         raise ValueError("Project Manager role may not call workers in the first slice.")

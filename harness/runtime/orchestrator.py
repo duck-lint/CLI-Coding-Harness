@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from harness.context.context_compiler import compile_context_packet
+from harness.context.context_compiler import compile_context_packet, write_context_artifacts
 from harness.contracts import ProjectManagerReport, TaskBrief
 from harness.runtime.agent_callers import call_project_manager
 from harness.runtime.role_loader import load_role
@@ -19,6 +19,12 @@ class ProbeResult:
     passed: bool
     checks: list[str]
     missing_basis: list[str]
+
+    @property
+    def reason(self) -> str | None:
+        if not self.missing_basis:
+            return None
+        return "; ".join(self.missing_basis)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -35,7 +41,7 @@ async def _run_plan(task_text: str) -> int:
     _load_local_openai_key(repo_root / ".env.local")
     _require_openai_key()
 
-    role = load_role(repo_root / "harness" / "agents" / "project-manager.toml")
+    role = load_role(repo_root / "harness" / "agents" / "project-manager.agent.json")
     context_packet = compile_context_packet(task_text, repo_root)
     run_id = _timestamp()
     run_dir = repo_root / "harness" / "runs" / run_id
@@ -52,9 +58,9 @@ async def _run_plan(task_text: str) -> int:
     )
 
     _write_json(run_dir / "task_brief.json", task_brief)
-    (run_dir / "context_packet.md").write_text(context_packet.markdown, encoding="utf-8")
+    write_context_artifacts(context_packet, run_dir)
 
-    report = await call_project_manager(role, context_packet.markdown)
+    report = await call_project_manager(role, context_packet.to_json_text())
     _write_json(run_dir / "project_manager_report.json", report)
     probe_result = verify_plan_probe(run_dir, report)
     _print_summary(run_dir, role.name, report, probe_result)
@@ -109,7 +115,7 @@ def verify_plan_probe(run_dir: Path, report: ProjectManagerReport) -> ProbeResul
     required_files = [
         run_dir / "task_brief.json",
         run_dir / "project_manager_report.json",
-        run_dir / "context_packet.md",
+        run_dir / "context_packet.json",
     ]
     checks: list[str] = []
     missing_basis: list[str] = []
@@ -143,6 +149,13 @@ def verify_plan_probe(run_dir: Path, report: ProjectManagerReport) -> ProbeResul
         else:
             checks.append("written report matches in-memory report")
 
+    context_packet_path = run_dir / "context_packet.json"
+    try:
+        json.loads(context_packet_path.read_text(encoding="utf-8"))
+        checks.append("context_packet.json parses")
+    except Exception as exc:  # pragma: no cover - defensive probe guard
+        missing_basis.append(f"context_packet.json parse failed: {exc}")
+
     if report.status in {"admissible", "admissibility-blocked"}:
         checks.append(f"report status recorded: {report.status}")
 
@@ -158,7 +171,10 @@ def _print_summary(
     print(f"Route: {role_name}")
     print(f"Status: {report.status}")
     print(f"Run: {run_dir}")
-    print(f"Probe: {'passed' if probe_result.passed else 'blocked'}")
+    if probe_result.passed:
+        print("Probe: passed")
+    else:
+        print(f"Probe: failed: {probe_result.reason}")
     print(f"Summary: {report.summary}")
     print(f"Next admissible transition: {report.next_admissible_transition}")
 
