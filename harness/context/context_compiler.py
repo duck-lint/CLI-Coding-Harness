@@ -33,17 +33,17 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
         ),
         _file_section(
             "Known Failures",
-            repo_root / "harness" / "known-failures.md",
+            repo_root / "harness" / "project-spec" / "known-failures.md",
             repo_root,
             sources,
-            required=False,
+            required=True,
         ),
         _file_section(
             "Open Decisions",
-            repo_root / "harness" / "open-decisions.md",
+            repo_root / "harness" / "project-spec" / "open-decisions.md",
             repo_root,
             sources,
-            required=False,
+            required=True,
         ),
         _file_section(
             "Runtime Contract",
