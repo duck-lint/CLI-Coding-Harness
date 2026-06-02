@@ -1,0 +1,26 @@
+# harness/agents/project-manager.toml
+
+[agent]
+id = "project-manager"
+name = "Project Manager"
+mode = "read_only_report"
+instructions_path = "../prompts/project-manager.md"
+
+[context_policy]
+include_chat_history = false
+include_repo_summary = true
+include_git_status = true
+include_project_spec = true
+include_active_implementation_docs = true
+include_recent_reports = ["task_brief"]
+max_context_tokens = 12000
+
+[return_contract]
+output_schema = "../contracts/pm_report.schema.json"
+must_be_machine_parseable = true
+
+[permissions]
+may_read_files = true
+may_write_files = false
+may_run_shell = false
+may_call_workers = false
