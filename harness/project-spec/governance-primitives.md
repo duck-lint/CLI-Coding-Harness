@@ -1,4 +1,6 @@
-# Governance Primitives
+{
+  "file": "Governance Primitives"
+  "context": 
 
 This document defines the local authority boundaries for the harness runtime.
 It is specific to this repository: a local Python CLI harness that orchestrates
