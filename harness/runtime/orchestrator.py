@@ -4,6 +4,7 @@ import argparse
 import asyncio
 import json
 import os
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -11,6 +12,13 @@ from harness.context.context_compiler import compile_context_packet
 from harness.contracts import ProjectManagerReport, TaskBrief
 from harness.runtime.agent_callers import call_project_manager
 from harness.runtime.role_loader import load_role
+
+
+@dataclass(frozen=True)
+class ProbeResult:
+    passed: bool
+    checks: list[str]
+    missing_basis: list[str]
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -48,7 +56,8 @@ async def _run_plan(task_text: str) -> int:
 
     report = await call_project_manager(role, context_packet.markdown)
     _write_json(run_dir / "project_manager_report.json", report)
-    _print_summary(run_dir, role.name, report)
+    probe_result = verify_plan_probe(run_dir, report)
+    _print_summary(run_dir, role.name, report, probe_result)
     return 0
 
 
@@ -96,10 +105,60 @@ def _write_json(path: Path, model: TaskBrief | ProjectManagerReport) -> None:
     )
 
 
-def _print_summary(run_dir: Path, role_name: str, report: ProjectManagerReport) -> None:
+def verify_plan_probe(run_dir: Path, report: ProjectManagerReport) -> ProbeResult:
+    required_files = [
+        run_dir / "task_brief.json",
+        run_dir / "project_manager_report.json",
+        run_dir / "context_packet.md",
+    ]
+    checks: list[str] = []
+    missing_basis: list[str] = []
+    report_path = run_dir / "project_manager_report.json"
+
+    for path in required_files:
+        if not path.exists() or not path.is_file():
+            missing_basis.append(str(path))
+            checks.append(f"missing: {path.name}")
+        else:
+            checks.append(f"present: {path.name}")
+
+    task_brief_path = run_dir / "task_brief.json"
+    try:
+        TaskBrief.model_validate_json(task_brief_path.read_text(encoding="utf-8"))
+        checks.append("task_brief.json validates")
+    except Exception as exc:  # pragma: no cover - defensive probe guard
+        missing_basis.append(f"task_brief.json validation failed: {exc}")
+
+    report_text = report_path.read_text(encoding="utf-8")
+    written_report: ProjectManagerReport | None = None
+    try:
+        written_report = ProjectManagerReport.model_validate_json(report_text)
+        checks.append("project_manager_report.json validates")
+    except Exception as exc:  # pragma: no cover - defensive probe guard
+        missing_basis.append(f"project_manager_report.json validation failed: {exc}")
+
+    if written_report is not None:
+        if report.model_dump(mode="json") != written_report.model_dump(mode="json"):
+            missing_basis.append("in-memory report and written report diverged")
+        else:
+            checks.append("written report matches in-memory report")
+
+    if report.status in {"admissible", "admissibility-blocked"}:
+        checks.append(f"report status recorded: {report.status}")
+
+    return ProbeResult(passed=not missing_basis, checks=checks, missing_basis=missing_basis)
+
+
+def _print_summary(
+    run_dir: Path,
+    role_name: str,
+    report: ProjectManagerReport,
+    probe_result: ProbeResult,
+) -> None:
     print(f"Route: {role_name}")
     print(f"Status: {report.status}")
     print(f"Run: {run_dir}")
+    print(f"Probe: {'passed' if probe_result.passed else 'blocked'}")
     print(f"Summary: {report.summary}")
     print(f"Next admissible transition: {report.next_admissible_transition}")
 
