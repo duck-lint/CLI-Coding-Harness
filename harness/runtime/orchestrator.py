@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import math
 import os
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -43,9 +44,11 @@ async def _run_plan(task_text: str) -> int:
 
     role = load_role(repo_root / "harness" / "agents" / "project_manager.agent.json")
     context_packet = compile_context_packet(task_text, repo_root)
+    context_packet_json = context_packet.to_json_text()
     run_id = _timestamp()
     run_dir = repo_root / "harness" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
+    _enforce_context_budget(role, context_packet_json)
 
     task_brief = TaskBrief(
         task_text=task_text,
@@ -60,7 +63,7 @@ async def _run_plan(task_text: str) -> int:
     _write_json(run_dir / "task_brief.json", task_brief)
     write_context_artifacts(context_packet, run_dir)
 
-    report = await call_project_manager(role, context_packet.to_json_text())
+    report = await call_project_manager(role, context_packet_json)
     _write_json(run_dir / "project_manager_report.json", report)
     probe_result = verify_plan_probe(run_dir, report)
     _print_summary(run_dir, role.name, report, probe_result)
@@ -102,6 +105,39 @@ def _load_local_openai_key(path: Path) -> None:
 def _require_openai_key() -> None:
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY is required before calling the Project Manager.")
+
+
+def _enforce_context_budget(role, context_packet_json: str) -> None:
+    policy = role.context_policy
+    max_context_packet_tokens = int(policy.get("max_context_packet_tokens", 0))
+    reserved_output_tokens = int(policy.get("reserved_output_tokens", 0))
+    oversize_strategy = str(policy.get("oversize_strategy", "fail_or_batch"))
+    truncation = str(policy.get("truncation", "disabled"))
+
+    if truncation != "disabled":
+        raise RuntimeError(f"Context truncation must be disabled; got {truncation!r}.")
+
+    estimated_tokens = estimate_token_count(context_packet_json)
+    if estimated_tokens <= max_context_packet_tokens:
+        return
+
+    if oversize_strategy == "fail_or_batch":
+        raise RuntimeError(
+            "Context packet exceeds the configured token budget "
+            f"({estimated_tokens} > {max_context_packet_tokens}); batching is not implemented yet. "
+            f"Reserved output tokens remain {reserved_output_tokens}."
+        )
+
+    raise RuntimeError(
+        "Context packet exceeds the configured token budget and the oversize strategy is "
+        f"not supported: {oversize_strategy!r}."
+    )
+
+
+def estimate_token_count(text: str) -> int:
+    if not text:
+        return 0
+    return max(1, math.ceil(len(text) / 4))
 
 
 def _write_json(path: Path, model: TaskBrief | ProjectManagerReport) -> None:

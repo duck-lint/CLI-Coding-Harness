@@ -39,11 +39,11 @@ def load_role(manifest_path: Path) -> RoleConfig:
     data = _load_json(manifest_path)
 
     agent = _section(data, "agent")
-    model = _section(data, "model")
     instructions = _section(data, "instructions")
     context_policy = _section(data, "context_policy")
     return_contract = _section(data, "return_contract")
     permissions = _section(data, "permissions")
+    default_model = _runtime_default_model(manifest_path)
 
     output_schema_path = _resolve_existing_path(
         manifest_path, _required_str(return_contract, "schema")
@@ -54,7 +54,7 @@ def load_role(manifest_path: Path) -> RoleConfig:
         role_id=_required_str(agent, "id"),
         name=_required_str(agent, "name"),
         mode=_required_str(agent, "mode"),
-        model=_required_str(model, "default"),
+        model=default_model,
         instructions_payload=instructions,
         context_policy=context_policy,
         return_contract=ReturnContract(
@@ -114,6 +114,13 @@ def _resolve_existing_path(manifest_path: Path, relative_path: str) -> Path:
             f"Configured path does not exist: {relative_path} resolved to {resolved}"
         )
     return resolved
+
+
+def _runtime_default_model(manifest_path: Path) -> str:
+    budget_path = (manifest_path.parent.parent / "policies" / "runtime_budget.policy.json").resolve()
+    budget = _load_json(budget_path)
+    default = _section(budget, "default")
+    return _required_str(default, "default_model")
 
 
 def _validate_read_only_role(config: RoleConfig) -> None:

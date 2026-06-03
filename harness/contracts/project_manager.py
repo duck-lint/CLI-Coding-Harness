@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 ReportStatus = Literal["admissible", "admissibility-blocked"]
 CheckStatus = Literal["pass", "fail", "blocked"]
@@ -37,6 +37,35 @@ class AdmissibilityCheck(BaseModel):
     )
 
 
+class SourceCoverage(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source_id: str = Field(description="Context source identifier.")
+    used: bool = Field(description="Whether the report used this source.")
+    claims_supported: list[str] = Field(
+        default_factory=list,
+        description="Report claims or sections supported by the source when used.",
+    )
+    reason: str | None = Field(
+        default=None,
+        description="Why the source was unused when used is false.",
+    )
+
+    @model_validator(mode="after")
+    def _validate_coverage(self) -> "SourceCoverage":
+        if self.used:
+            if not self.claims_supported:
+                raise ValueError("Used source coverage entries must list claims_supported.")
+            if self.reason is not None:
+                raise ValueError("Used source coverage entries must not include a reason.")
+        else:
+            if self.claims_supported:
+                raise ValueError("Unused source coverage entries must not include claims_supported.")
+            if not self.reason:
+                raise ValueError("Unused source coverage entries must include a reason.")
+        return self
+
+
 class ProjectManagerReport(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -48,6 +77,7 @@ class ProjectManagerReport(BaseModel):
     affected_surfaces: ReportSection
     non_affected_surfaces: ReportSection
     admissibility_checks: list[AdmissibilityCheck] = Field(min_length=1)
+    source_coverage: list[SourceCoverage] = Field(min_length=1)
     stop_conditions: ReportSection
     current_posture: str = Field(
         description="Concrete current repo posture derived from supplied context."

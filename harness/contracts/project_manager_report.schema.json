@@ -81,6 +81,48 @@
       ],
       "title": "ReportSection",
       "type": "object"
+    },
+    "SourceCoverage": {
+      "additionalProperties": false,
+      "properties": {
+        "claims_supported": {
+          "description": "Report claims or sections supported by the source when used.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Claims Supported",
+          "type": "array"
+        },
+        "reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Why the source was unused when used is false.",
+          "title": "Reason"
+        },
+        "source_id": {
+          "description": "Context source identifier.",
+          "title": "Source Id",
+          "type": "string"
+        },
+        "used": {
+          "description": "Whether the report used this source.",
+          "title": "Used",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source_id",
+        "used"
+      ],
+      "title": "SourceCoverage",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -128,6 +170,14 @@
       "title": "Proof Frontier",
       "type": "string"
     },
+    "source_coverage": {
+      "items": {
+        "$ref": "#/$defs/SourceCoverage"
+      },
+      "minItems": 1,
+      "title": "Source Coverage",
+      "type": "array"
+    },
     "status": {
       "description": "Overall PM admissibility status.",
       "enum": [
@@ -168,6 +218,7 @@
     "affected_surfaces",
     "non_affected_surfaces",
     "admissibility_checks",
+    "source_coverage",
     "stop_conditions",
     "current_posture",
     "thesis_attractor",

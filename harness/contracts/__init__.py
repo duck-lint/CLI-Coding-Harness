@@ -4,6 +4,7 @@ from harness.contracts.project_manager import (
     ProjectManagerReport,
     ReportSection,
     ReportStatus,
+    SourceCoverage,
     TaskBrief,
 )
 
@@ -13,5 +14,6 @@ __all__ = [
     "ProjectManagerReport",
     "ReportSection",
     "ReportStatus",
+    "SourceCoverage",
     "TaskBrief",
 ]

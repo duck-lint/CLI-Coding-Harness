@@ -1,11 +1,8 @@
 {
   "agent": {
-    "id": "project-manager",
+    "id": "project_manager.agent.json",
     "name": "Project Manager",
     "mode": "read_only_report"
-  },
-  "model": {
-    "default": "gpt-5.4-mini"
   },
   "instructions": {
     "role": "Project Manager",
@@ -64,6 +61,7 @@
     "review_lenses": {
       "invariant_coverage": "are the governing invariant constraints explicitly named?",
       "task_coverage": "are the governing task constraints explicitly named?",
+      "source_coverage_truthfulness": "does the report identify which sources were used and which claims they supported?",
       "conflict_visibility": "are conflicts or missing bases surfaced rather than procedurally interpreted away?",
       "admissible_transformation_coverage": "are only currently allowed transformations listed?",
       "surface_truthfulness": "are affected and non-affected surfaces named truthfully?",
@@ -83,7 +81,10 @@
     "include_project_spec": true,
     "include_active_implementation_docs": true,
     "include_recent_reports": ["task_brief"],
-    "max_context_tokens": 12000
+    "max_context_packet_tokens": 60000,
+    "reserved_output_tokens": 4000,
+    "oversize_strategy": "fail_or_batch",
+    "truncation": "disabled"
   },
   "return_contract": {
     "schema": "../contracts/project_manager_report.schema.json",
