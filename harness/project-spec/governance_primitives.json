@@ -1,14 +1,16 @@
 {
   "metadata": {
-    "document_id": "governance-primitives",
+    "document_id": "governance_primitives",
     "title": "Governance Primitives",
     "context": "Defines project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
-    "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts."
+    "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts.",
+    "source_format": "json",
+    "authority_role": "governance_authority_object"
   },
   "governance_posture": {
     "hard_preservation_constraints": [
       "The harness as a local CLI governance runtime.",
-      "Repo-local authority under harness/.",
+      "Repo-local authority under harness/",
       "Explicit separation between project invariants and current task authority.",
       "Explicit separation between role contract, context packet, output schema, returned report, and runtime probe.",
       "PM-only, read-only behavior for the first vertical slice.",
@@ -21,20 +23,36 @@
       "No runtime capability claim without acceptance probe evidence.",
       "No silent compatibility shims or legacy behavior preservation unless explicitly approved."
     ],
-    "observability_scaffolding": [
-      "task_brief.json.",
-      "context_packet.json.",
-      "project_manager_report.json.",
-      "Role contract path and identity.",
-      "Schema path and validation result.",
-      "Run directory path.",
-      "Deterministic probe result.",
-      "Terminal summary.",
-      "Included source manifest.",
-      "Missing source manifest.",
-      "Git status when available.",
-      "Explicit status values such as pass, fail, blocked, scaffold-only, or runtime-evidenced."
-    ],
+    "observability_scaffolding": {
+      "artifact_paths": [
+        "task_brief.json",
+        "context_packet.json",
+        "project_manager_report.json"
+      ],
+      "runtime_identity": [
+        "Role contract path and identity.",
+        "Schema path and validation result.",
+        "Run directory path."
+      ],
+      "runtime_results": [
+        "Deterministic probe result.",
+        "Terminal summary."
+      ],
+      "authority_manifests": [
+        "Included source manifest.",
+        "Missing source manifest."
+      ],
+      "repo_state": [
+        "Git status when available."
+      ],
+      "status_values": [
+        "pass",
+        "fail",
+        "blocked",
+        "scaffold_only",
+        "runtime_evidenced"
+      ]
+    },
     "explicit_distinctions": [
       "Invariant authority versus task authority.",
       "Policy versus prompt.",
@@ -50,7 +68,7 @@
       "Model output versus project authority."
     ]
   },
-  "invariant_authority":{
+  "invariant_authority": {
     "order": [
       {
         "rank": 1,
@@ -60,7 +78,7 @@
       {
         "rank": 2,
         "id": "project_spec_and_governance",
-        "description": "This file and the other docs under harness/project-spec/**."
+        "description": "This file and the other docs under harness/project-spec/**"
       },
       {
         "rank": 3,
@@ -111,7 +129,7 @@
       {
         "rank": 5,
         "id": "harness_policies",
-        "description": "Relevant repo-local harness policies under harness/."
+        "description": "Relevant repo-local harness policies under harness/"
       },
       {
         "rank": 6,
@@ -151,7 +169,7 @@
         "Source-of-truth rules."
       ],
       "schema": [
-        "harness/contracts/*.schema.json.",
+        "harness/contracts/*.schema.json",
         "Pydantic models used as output contracts.",
         "Required report fields.",
         "Status enum semantics.",
@@ -159,7 +177,7 @@
         "Artifact shape expected by downstream runtime code."
       ],
       "agent_contract": [
-        "harness/agents/*.agent.json.",
+        "harness/agents/*.agent.json",
         "Role identity.",
         "Role mode.",
         "Instruction contract.",
@@ -189,7 +207,7 @@
         "Secrets must never be committed."
       ],
       "storage": [
-        "harness/runs/<timestamp>/ layout.",
+        "harness/runs/<timestamp>/ layout",
         "Required artifact names.",
         "Artifact formats.",
         "Archive layout.",
@@ -254,7 +272,7 @@
         "Active implementation plans and trackers inside their authorized scope.",
         "Saved runtime artifacts as evidence of what happened."
       ],
-      "derived_material":[
+      "derived_material": [
         "PM reports.",
         "Summaries.",
         "Recommendations.",
@@ -317,12 +335,12 @@
   "admissible_transformations": {
     "transformation_or_change_types": {
       "preserve_project_spec": [
-        "Loading project_manager.agent.json.",
+        "Loading project_manager.agent.json",
         "Validating required agent contract fields.",
-        "Compiling structured context_packet.json.",
-        "Preserving optional debug context_packet.md only as transition output.",
+        "Compiling structured context_packet.json",
+        "Preserving optional debug context_packet.md only as transition output",
         "Passing JSON context to the PM route.",
-        "Validating project_manager_report.json.",
+        "Validating project_manager_report.json",
         "Saving run artifacts.",
         "Printing a short terminal summary.",
         "Implementing deterministic artifact probes.",
@@ -376,7 +394,7 @@
         "Preserving obsolete compatibility paths without approval."
       ]
     },
-    "evidence_minimum": [          
+    "evidence_minimum": [
       "What changed.",
       "Why it was admissible.",
       "Which authority allowed it.",
@@ -459,18 +477,18 @@
       }
     }
   ],
-    "not_proof": [
-      "Manually pasted PM report.",
-      "Mock report.",
-      "Schema file alone.",
-      "Role JSON file alone.",
-      "Context compiler code alone.",
-      "Successful terminal summary without artifacts.",
-      "Artifacts without validation.",
-      "Validation without real model route where the claim concerns model call behavior.",
-      "PM statement that the probe passed without deterministic probe evidence.",
-      "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
-    ],
+  "not_proof": [
+    "Manually pasted PM report.",
+    "Mock report.",
+    "Schema file alone.",
+    "Role JSON file alone.",
+    "Context compiler code alone.",
+    "Successful terminal summary without artifacts.",
+    "Artifacts without validation.",
+    "Validation without real model route where the claim concerns model call behavior.",
+    "PM statement that the probe passed without deterministic probe evidence.",
+    "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
+  ],
   "named_admissibility_inputs": {
     "invariant_constraints": [
       "Project thesis.",
@@ -490,39 +508,64 @@
       "Schema expectations and returned report.",
       "Artifact layout and storage policy."
     ],
-    "allowed_transformation_types": [
-      "Scaffold.",
-      "Contract edit.",
-      "Policy edit.",
-      "Context compiler edit.",
-      "Orchestrator edit.",
-      "Agent caller edit.",
-      "Validator edit.",
-      "Probe edit.",
-      "Artifact layout edit.",
-      "Route expansion.",
-      "Worker adapter edit.",
-      "Implementation mutation."
-    ],
-    "affected_surfaces": [
-      "harness/agents/project_manager.agent.json.",
-      "harness/context/context_compiler.py.",
-      "harness/runtime/orchestrator.py.",
-      "harness/runtime/agent_callers.py.",
-      "harness/contracts/project_manager_report.schema.json.",
-      "harness/runs/**."
-    ],
-    "non_affected_surfaces": [
-      "Planner route.",
-      "Adversary route.",
-      "Reviewer route.",
-      "Implementer route.",
-      "Archivist route.",
-      "Codex worker adapter.",
-      "Apply workflow.",
-      "Deployment.",
-      "UI."
-    ],
+    "allowed_transformation_types": {
+      "governance_contract_edits": [
+        "Scaffold.",
+        "Contract edit.",
+        "Policy edit."
+      ],
+      "runtime_edits": [
+        "Context compiler edit.",
+        "Orchestrator edit.",
+        "Agent caller edit.",
+        "Validator edit.",
+        "Probe edit.",
+        "Artifact layout edit."
+      ],
+      "approval_boundary_edits": [
+        "Route expansion.",
+        "Worker adapter edit.",
+        "Implementation mutation."
+      ]
+    },
+    "affected_surfaces": {
+      "role_contracts": [
+        "harness/agents/project_manager.agent.json"
+      ],
+      "runtime_code": [
+        "harness/context/context_compiler.py",
+        "harness/runtime/orchestrator.py",
+        "harness/runtime/agent_callers.py"
+      ],
+      "report_contracts": [
+        "harness/contracts/project_manager_report.schema.json"
+      ],
+      "runtime_artifacts": [
+        "harness/runs/**"
+      ]
+    },
+    "non_affected_surfaces": {
+      "deferred_agent_routes": [
+        "Planner route.",
+        "Adversary route.",
+        "Reviewer route.",
+        "Implementer route.",
+        "Archivist route."
+      ],
+      "deferred_worker_surface": [
+        "Codex worker adapter."
+      ],
+      "deferred_apply_surface": [
+        {
+          "id": "apply_workflow",
+          "status": "deferred"
+        }
+      ],
+      "out_of_scope_surfaces": [
+        "Deployment.",
+        "UI."
+      ]
+    },
     "admissibility_checks": "Must end with either pass, fail, or blocked. If blocked, name the missing basis.",
     "stop_conditions": [
       "Required authority is missing.",
