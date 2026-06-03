@@ -189,6 +189,212 @@
       "Model-generated claim versus deterministic probe result.",
       "Archived history versus active implementation state."
     ],
-    "required_inspectable_surfaces": 
-  }
+    "required_inspectable_surfaces": {
+      "default_location": "harness/runs/<timestamp>/.",
+      "min_required_artifacts": [      
+        "task_brief.json.",
+        "context_packet.json.",
+        "project_manager_report.json."
+      ],
+      "optional_debug_artifacts": [      
+        "Rendered prompt/debug input.",
+        "Validation summary."
+      ],
+      "authoritative_context_artifact": "context_packet.json.",      
+      "authoritative_PM_output_artifact": "project_manager_report.json."
+    },
+    "dependencies": {
+      "first_slice": [
+        "Python runtime.",
+        "OpenAI Agents SDK or OpenAI API call path.",
+        "OPENAI_API_KEY or equivalent configured outside committed files.",
+        "Local filesystem artifacts under harness/runs/**.",
+        "Local git availability where possible.",
+        "No external database.",
+        "No network tools other than the model API call.",
+        "No web search by default.",
+        "No shell tools for agents."
+      ],
+      "when_appropriate": "upgrade to Rust."
+    },
+    "forbidden_or_deffered_surfaces": [
+      "Planner route.",
+      "Adversary route.",
+      "Reviewer route.",
+      "Implementer route.",
+      "Archivist route.",
+      "Codex CLI worker adapter execution.",
+      "File mutation outside harness/runs/**.",
+      "Multi-agent routing.",
+      "Apply workflow.",
+      "Cost/budget enforcement beyond a first budget policy.",
+      "Provider abstraction beyond the first OpenAI route.",
+      "UI beyond terminal output.",
+      "Invoking non-PM agents.",
+      "Editing repo files through an agent.",
+      "Allowing an agent to inspect files directly.",
+      "Treating archived bundles as active state.",
+      "Treating missing optional sources as if they were present.",
+      "Claiming runtime capability without runtime evidence."
+    ]
+  },
+  "runtime_discipline": {
+    "must_exist": [
+      "Loading project-manager.agent.json.",
+      "Compiling context_packet.json.",
+      "Sending the structured packet through the PM route.",
+      "Receiving a structured PM report.",
+      "Validating the PM report.",
+      "Saving required artifacts under a timestamped run directory.",
+      "Running a deterministic probe over those artifacts.",
+      "Printing a truthful terminal summary.",
+      "Stopping before implementation."
+    ],
+    "meaningful_progress_metrics": [
+      "Role contract loading.",
+      "Context packet structure.",
+      "Schema validation.",
+      "Runtime probe reliability.",
+      "Artifact inspectability.",
+      "Permission enforcement.",
+      "Routing determinism.",
+      "Authority separation.",
+      "Cost/budget visibility.",
+      "Clean transition from plan to later apply."
+    ]
+  },
+  "project_quality_bar": {
+    "ux_properties": [
+      "Boring, legible, and bounded CLI.",
+      "Make the routing obvious.",
+      "Make the run path obvious.",
+      "Make pass/fail/block status obvious.",
+      "Make missing basis obvious.",
+      "Avoid verbose terminal dumps by default.",
+      "Save detail to artifacts rather than hiding it in terminal scrollback.",
+      "Avoid surprising mutation.",
+      "Support novice inspection without requiring knowledge of hidden chat context.",
+      "Evidence, provenance, or citations visible."
+    ],
+    "evidence_expectations": [
+      "Task text.",
+      "Role contract identity.",
+      "Context source manifest.",
+      "Missing source manifest.",
+      "Model route.",
+      "Output schema.",
+      "Returned report.",
+      "Validation result.",
+      "Probe result.",
+      "Timestamped artifact path."
+    ],
+    "runtime_expectations": [    
+      "Context compilation should be deterministic and grounded.",
+      "The orchestrator should be explicit rather than agent-directed.",
+      "The first workflow should be hardcoded enough to inspect: plan -> Project Manager -> validate -> save -> probe -> stop.",
+      "Later workflow expansion may add planner/adversary/reviewer/worker/archivist routes, but those routes must be explicit and approval-gated.",
+      "Every claimed runtime behavior must have a named acceptance probe."
+    ],
+    "verification_expectations": {
+      "non_trivial_implementation_must_distinguish": [
+        "Not attempted.",
+        "Scaffold-only.",
+        "Dry-run.",
+        "Runtime-evidenced.",
+        "Blocked."
+      ]
+    },
+    "operator_expectations": [
+      "LLM reports do not substitute for deterministic artifact checks.",
+      "The harness should help the operator avoid accidental autonomy, hidden context contamination, and unreviewed file mutation."
+    ]
+  },
+  "acceptance_probes": [
+    {
+      "id": "first-pm-json-agent-plan-slice",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured context packet, structured report validation, saved artifacts, and deterministic probe evidence?",
+      "runtime_path_required": {
+        "command": "python",
+        "args": [
+          "-m",
+          "harness.runtime.orchestrator", 
+          "plan", 
+          "Assess whether the PM JSON-agent slice is admissible"
+        ]
+      },
+      "evidence_required": {
+        "saved_artifacts": [
+          {
+            "id": "task_brief",
+            "path_pattern": "harness/runs/<timestamp>/task_brief.json",
+            "required": true
+          },
+          {
+            "id": "context_packet",
+            "path_pattern": "harness/runs/<timestamp>/context_packet.json",
+            "required": true
+          },
+          {
+            "id": "project_manager_report",
+            "path_pattern": "harness/runs/<timestamp>/project_manager_report.json",
+            "required": true
+          }
+        ]
+      },
+      "not_proof": [
+        "A manually written PM report.",
+        "A mocked report without runtime route evidence.",
+        "A folder scaffold alone.",
+        "A schema file alone.",
+        "A role JSON file alone.",
+        "A successful API call that does not save artifacts.",
+        "Saved artifacts that do not validate.",
+        "A PM report that claims the slice works without deterministic probe evidence.",
+        "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
+      ]
+    }
+  ],
+  "clarifying_questions": {
+    "material_decisions": [
+      "Whether role contracts should remain strict JSON or allow JSONC.",
+      "Whether the runtime should call the OpenAI Agents SDK specifically or use the lower-level OpenAI API client first.",
+      "Whether schema validation should use JSON Schema directly, Pydantic, or both.",
+      "Whether context_packet.md should remain as a debug artifact or be removed entirely after the transition.",
+      "Whether budget policy enforcement belongs in the first or second vertical slice.",
+      "Whether planner/adversary/reviewer routes should be introduced before worker adapters."
+    ],
+    "material_for_probes": "This repo is it's own harness file.",
+    "external_call_privacy_constraints": [
+      "API calls use billing and must remain bounded.",
+      "Secrets must not be committed.",
+      "Web search is disabled by default.",
+      "Agents may not run shell commands directly.",
+      "Agents may not write files.",
+      "The plan workflow must not mutate repo source files except for saving run artifacts.",
+      "Deployment is out of scope."
+    ],
+    "acceptable_defferences": [
+      "Final packaging.",
+      "Provider abstraction.",
+      "Multi-agent routing.",
+      "Apply workflow.",
+      "Codex worker integration.",
+      "Archive automation.",
+      "long-term cost dashboard.",
+      "UI work.",
+      "Non-OpenAI model support.",
+      "Cross-repo seeding workflow."
+    ]
+  },
+  "project_references": [
+    "Companion governance primitives doc: harness/project-spec/governance-primitives.md.",
+    "Runtime policy: harness/policies/runtime-contract.md.",
+    "Runtime budget policy: harness/policies/runtime-budget.json, when present.",
+    "Project Manager role contract: harness/agents/project-manager.agent.json.",
+    "Project Manager report contract: harness/contracts/project_manager_report.schema.json.",
+    "Task brief contract: harness/contracts/task_brief.schema.json.",
+    "Run artifacts: harness/runs/<timestamp>/.",
+    "Active implementation work: harness/implementation-projects/active/.",
+    "Archived implementation work: harness/implementation-projects/archive/."
+  ]
 }
