@@ -1,10 +1,10 @@
 {
   "metadata": {
     "document_id": "governance-primitives",
-    "title": "Governance Primitives"
+    "title": "Governance Primitives",
+    "context": "Defines project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
+    "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts."
   },
-  "context": "Defines project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
-  "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts.",
   "governance_posture": {
     "hard_preservation_constraints": [
       "The harness as a local CLI governance runtime.",

@@ -1,1 +1,58 @@
-
+{
+  "metadata": {
+    "document_id": "project-spec",
+    "title": "Project Spec",
+    "purpose": "This file, together with the other docs under `harness/project-spec/`, is the authoritative invariant space for harnessed work in this repo."
+  },
+  "project_thesis": {
+    "project_is": [
+      "A local Python/JSON coding-agent CLI harness.",
+      "A system that orchestrates clean-context coding agents through the OpenAI Agents SDK by treating role contracts, context packets, governance policies, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
+      "A harness exists to make agent-assisted software work inspectable, bounded, reproducible, and governed."
+    ],
+    "project_is_not": [
+      "A chatbot UI.",
+      "An IDE extension.",
+      "A generic RAG assistant.",
+      "An autonomous repo mutator.",
+      "A replacement for repo-specific project specs.",
+      "A framework for giving an LLM broad ambient access to files, shell commands, or tools.",
+      "An agent “team” simulation where agents freely call each other.",
+      "A prompt collection where behavior depends on conversational momentum.",
+      "A hidden-memory system that treats prior chat as implementation authority.",
+      "The harness does not try to make coding agents more magical. It tries to make their participation in software work more explicit, auditable, and bounded."
+    ],
+    "core_runtime_shape": [      
+      "A CLI entrypoint receives a user task.",
+      "The orchestrator selects a bounded workflow.",
+      "The context compiler produces a structured context packet.",
+      "Role contracts define what each agent is allowed to do and how it should interpret the packet.",
+      "The OpenAI API is used for bounded semantic transformation calls.",
+      "Report schemas define machine-checkable output shapes.",
+      "Runtime probes and saved artifacts distinguish scaffold claims from live-wired behavior.",
+      "Worker adapters are isolated from governance roles and require explicit authorization before file mutation.",
+      "The system is a governance runtime first, not an autonomy demo."
+    ],
+    "project_exists_to": {
+      "delineate_boundaries": [  
+        "Prompt versus policy.",
+        "Context versus authority.",
+        "Scaffold versus runtime behavior.",
+        "Planning versus implementation.",
+        "Model claim versus probe evidence.",
+        "Agent role versus tool permission.",
+        "User instruction versus project invariant.",
+        "Chat memory versus repo-local implementation state."
+      ],
+      "instantiate_governance": [    
+        "Controlling what context enters each agent call.",
+        "Separating role semantics from runtime mechanics.",
+        "Forcing structured reports instead of vague advice.",
+        "Recording evidence of what actually happened.",
+        "Preventing implementation from being treated as admissible merely because an agent wrote a plausible plan.",
+        "Keeping review and proof tied to repo-local artifacts, not chat history."
+      ]
+    },
+    "authoritative_boundaries"
+  }
+}
