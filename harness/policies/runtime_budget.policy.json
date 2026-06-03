@@ -9,7 +9,8 @@
     "reserved_output_tokens": 4000,
     "oversize_strategy": "fail_or_batch",
     "truncation": "disabled",
-    "default_model": "gpt-5.4"
+    "default_model": "gpt-5.4",
+    "agent_model_overrides": {}
   },
   "tools": {
     "web_search_enabled": false,

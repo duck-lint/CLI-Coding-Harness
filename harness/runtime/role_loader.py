@@ -43,7 +43,8 @@ def load_role(manifest_path: Path) -> RoleConfig:
     context_policy = _section(data, "context_policy")
     return_contract = _section(data, "return_contract")
     permissions = _section(data, "permissions")
-    default_model = _runtime_default_model(manifest_path)
+    role_id = _required_str(agent, "id")
+    default_model = _runtime_default_model(manifest_path, role_id)
 
     output_schema_path = _resolve_existing_path(
         manifest_path, _required_str(return_contract, "schema")
@@ -51,7 +52,7 @@ def load_role(manifest_path: Path) -> RoleConfig:
     output_schema = _load_json(output_schema_path)
 
     config = RoleConfig(
-        role_id=_required_str(agent, "id"),
+        role_id=role_id,
         name=_required_str(agent, "name"),
         mode=_required_str(agent, "mode"),
         model=default_model,
@@ -116,11 +117,35 @@ def _resolve_existing_path(manifest_path: Path, relative_path: str) -> Path:
     return resolved
 
 
-def _runtime_default_model(manifest_path: Path) -> str:
-    budget_path = (manifest_path.parent.parent / "policies" / "runtime_budget.policy.json").resolve()
+def _runtime_default_model(manifest_path: Path, role_id: str) -> str:
+    repo_root = _repo_root_from_manifest(manifest_path)
+    budget_path = (repo_root / "harness" / "policies" / "runtime_budget.policy.json").resolve()
     budget = _load_json(budget_path)
     default = _section(budget, "default")
+    overrides = default.get("agent_model_overrides", {})
+    if overrides is not None and not isinstance(overrides, dict):
+        raise ValueError("agent_model_overrides must be a JSON object when present.")
+
+    if isinstance(overrides, dict):
+        override = overrides.get(role_id)
+        if override is not None:
+            if not isinstance(override, str) or not override.strip():
+                raise ValueError(
+                    f"Invalid model override for {role_id}: expected non-empty string."
+                )
+            return override
+
     return _required_str(default, "default_model")
+
+
+def _repo_root_from_manifest(manifest_path: Path) -> Path:
+    for candidate in [manifest_path, *manifest_path.parents]:
+        harness_dir = candidate / "harness"
+        if harness_dir.is_dir():
+            return candidate
+        if candidate.name == "harness":
+            return candidate.parent
+    return manifest_path.parent.parent.parent
 
 
 def _validate_read_only_role(config: RoleConfig) -> None:
