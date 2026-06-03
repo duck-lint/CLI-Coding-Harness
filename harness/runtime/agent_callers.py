@@ -31,7 +31,7 @@ async def call_project_manager(role: RoleConfig, context_packet_json: str) -> Pr
 
 
 def _context_budget(role: RoleConfig) -> dict[str, int | str]:
-    policy = role.context_policy
+    policy = role.runtime_budget
     return {
         "max_context_packet_tokens": int(policy.get("max_context_packet_tokens", 0)),
         "reserved_output_tokens": int(policy.get("reserved_output_tokens", 0)),
@@ -96,7 +96,6 @@ def build_effective_instruction_contract(role: RoleConfig) -> EffectiveInstructi
             "schema_path": str(role.return_contract.schema_path),
             "schema_title": role.return_contract.schema.get("title"),
             "required_fields": role.return_contract.schema.get("required", []),
-            "strict": role.return_contract.strict,
             "returned_object_must_validate_schema": True,
             "source_coverage_required": "source_coverage"
             in role.return_contract.schema.get("required", []),

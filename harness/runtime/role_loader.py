@@ -19,7 +19,6 @@ class RolePermissions:
 class ReturnContract:
     schema_path: Path
     schema: dict[str, Any]
-    strict: bool
 
 
 @dataclass(frozen=True)
@@ -28,6 +27,7 @@ class RoleConfig:
     name: str
     mode: str
     model: str
+    runtime_budget: dict[str, Any]
     instructions_payload: dict[str, Any]
     context_policy: dict[str, Any]
     return_contract: ReturnContract
@@ -44,7 +44,8 @@ def load_role(manifest_path: Path) -> RoleConfig:
     return_contract = _section(data, "return_contract")
     permissions = _section(data, "permissions")
     role_id = _required_str(agent, "id")
-    default_model = _runtime_default_model(manifest_path, role_id)
+    runtime_budget = _runtime_budget_defaults(manifest_path)
+    default_model = _runtime_default_model(runtime_budget, role_id)
 
     output_schema_path = _resolve_existing_path(
         manifest_path, _required_str(return_contract, "schema")
@@ -56,12 +57,12 @@ def load_role(manifest_path: Path) -> RoleConfig:
         name=_required_str(agent, "name"),
         mode=_required_str(agent, "mode"),
         model=default_model,
+        runtime_budget=runtime_budget,
         instructions_payload=instructions,
         context_policy=context_policy,
         return_contract=ReturnContract(
             schema_path=output_schema_path,
             schema=output_schema,
-            strict=_required_bool(return_contract, "strict"),
         ),
         permissions=RolePermissions(
             may_receive_context_packet=_required_bool(permissions, "may_receive_context_packet"),
@@ -117,11 +118,14 @@ def _resolve_existing_path(manifest_path: Path, relative_path: str) -> Path:
     return resolved
 
 
-def _runtime_default_model(manifest_path: Path, role_id: str) -> str:
+def _runtime_budget_defaults(manifest_path: Path) -> dict[str, Any]:
     repo_root = _repo_root_from_manifest(manifest_path)
     budget_path = (repo_root / "harness" / "policies" / "runtime_budget.policy.json").resolve()
     budget = _load_json(budget_path)
-    default = _section(budget, "default")
+    return _section(budget, "default")
+
+
+def _runtime_default_model(default: dict[str, Any], role_id: str) -> str:
     overrides = default.get("agent_model_overrides", {})
     if overrides is not None and not isinstance(overrides, dict):
         raise ValueError("agent_model_overrides must be a JSON object when present.")

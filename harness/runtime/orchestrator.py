@@ -108,7 +108,7 @@ def _require_openai_key() -> None:
 
 
 def _enforce_context_budget(role, context_packet_json: str) -> None:
-    policy = role.context_policy
+    policy = role.runtime_budget
     max_context_packet_tokens = int(policy.get("max_context_packet_tokens", 0))
     reserved_output_tokens = int(policy.get("reserved_output_tokens", 0))
     oversize_strategy = str(policy.get("oversize_strategy", "fail_or_batch"))

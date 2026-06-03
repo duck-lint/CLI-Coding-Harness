@@ -371,10 +371,10 @@
     ]
   },
   "project_references": {
-    "policies": [
-      "Runtime policy: harness/policies/runtime.policy.json",
-      "Runtime budget policy: harness/policies/runtime_budget.policy.json when present"
-    ],
+      "policies": [
+        "Runtime doctrine: harness/prompts/runtime_doctrine.md",
+        "Runtime budget policy: harness/policies/runtime_budget.policy.json when present"
+      ],
     "role_contracts": [
       "Project Manager role contract: harness/agents/project_manager.agent.json"
     ],

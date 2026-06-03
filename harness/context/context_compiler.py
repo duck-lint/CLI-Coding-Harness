@@ -85,14 +85,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "required": True
         },
         {
-            "id": "runtime_policy",
-            "label": "Runtime Policy",
-            "candidates": [
-                repo_root / "harness" / "policies" / "runtime.policy.json",
-            ],
-            "required": True
-        },
-        {
             "id": "runtime_budget",
             "label": "Runtime Budget",
             "candidates": [

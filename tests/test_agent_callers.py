@@ -57,12 +57,12 @@ class RenderAgentInstructionsTests(unittest.TestCase):
 
         return_contract = contract["return_contract_requirements"]
         self.assertEqual(return_contract["schema_title"], "ProjectManagerReport")
-        self.assertTrue(return_contract["strict"])
         self.assertTrue(return_contract["returned_object_must_validate_schema"])
         self.assertTrue(return_contract["source_coverage_required"])
         self.assertIn("source_coverage", return_contract["required_fields"])
         self.assertNotIn("required_output_type", return_contract)
         self.assertNotIn("assertions", return_contract)
+        self.assertNotIn("strict", return_contract)
         self.assertEqual(
             return_contract["schema_path"],
             str((repo_root / "harness" / "contracts" / "project_manager_report.schema.json").resolve()),
@@ -82,6 +82,9 @@ class RenderAgentInstructionsTests(unittest.TestCase):
 
         self.assertNotIn("model", manifest)
         self.assertEqual(role.model, runtime_budget["default"]["default_model"])
+        self.assertEqual(role.runtime_budget, runtime_budget["default"])
+        self.assertEqual(manifest["context_policy"], {})
+        self.assertNotIn("strict", manifest["return_contract"])
 
     def test_model_selection_uses_agent_override_when_present(self) -> None:
         repo_root = Path(__file__).resolve().parents[1]

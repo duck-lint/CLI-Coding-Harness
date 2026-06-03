@@ -74,21 +74,9 @@
       "optionality_preservation": "does the recommendation reduce that tension while avoiding unnecessary compatibility promises, premature architecture, or hidden project-intent amendments?"
     }
   },
-  "context_policy": {
-    "include_chat_history": false,
-    "include_repo_summary": true,
-    "include_git_status": true,
-    "include_project_spec": true,
-    "include_active_implementation_docs": true,
-    "include_recent_reports": ["task_brief"],
-    "max_context_packet_tokens": 60000,
-    "reserved_output_tokens": 4000,
-    "oversize_strategy": "fail_or_batch",
-    "truncation": "disabled"
-  },
+  "context_policy": {},
   "return_contract": {
-    "schema": "../contracts/project_manager_report.schema.json",
-    "strict": true
+    "schema": "../contracts/project_manager_report.schema.json"
   },
   "permissions": {
     "may_receive_context_packet": true,
