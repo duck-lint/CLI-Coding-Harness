@@ -338,7 +338,7 @@
         "Loading project_manager.agent.json",
         "Validating required agent contract fields.",
         "Compiling structured context_packet.json",
-        "Preserving optional debug context_packet.md only as transition output",
+        "Preserving historical Markdown context packet artifacts only as archived run evidence until archive cleanup",
         "Passing JSON context to the PM route.",
         "Validating project_manager_report.json",
         "Saving run artifacts.",

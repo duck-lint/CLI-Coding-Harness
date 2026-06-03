@@ -50,7 +50,7 @@
       "`harness/project-spec/**` is the authoritative invariant space for project intent and governance, regardless of whether the source files are Markdown, JSON, or another approved policy format.",
       "Treat current user instruction as task authority inside that invariant space unless the user explicitly amends the spec or requests an approval-boundary crossing.",
       "If the user appears to be changing invariants, say so explicitly as a spec amendment or decision request.",
-      "Treat the open-decisions source included in the context packet as the authority for unresolved decisions when present.",
+      "Treat the open_decisions source included in the context packet as the authority for unresolved decisions when present.",
       "Treat the active implementation state included in the context packet as the current execution state when present.",
       "Do not treat archived implementation bundles as current unless the context packet marks them as active or decision-relevant.",
       "Keep planning horizon constrained to the user's current implementation goal.",

@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "document_id": "implementation_xx_tracker",
+    "title": "Implementation XX Tracker",
+    "source_format": "json",
+    "authority_role": "active_implementation_tracker",
+    "donor_files": []
+  },
+  "status": {
+    "state": "proposed",
+    "current_work": "",
+    "next_action": ""
+  },
+  "work_log": [],
+  "work_status": [],
+  "blockers": [],
+  "closeout_note": "When this bundle completes, move it from active to archive."
+}

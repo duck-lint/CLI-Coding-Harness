@@ -1,0 +1,131 @@
+{
+  "metadata": {
+    "document_id": "implementation_02_plan",
+    "title": "Implementation 02 Plan",
+    "source_format": "json",
+    "authority_role": "active_implementation_plan",
+    "donor_sources": [
+      "archived_first_slice_acceptance_probe",
+      "markdown_plan_template_pruned_after_conversion"
+    ]
+  },
+  "intent": "Convert remaining Markdown-shaped harness state surfaces into JSON authority and tracking objects without changing project intent or adding new runtime workflow scope.",
+  "admissibility_report": {
+    "invariant_constraints": [
+      "Keep the first proven workflow PM-only and read-only except for run artifact writes.",
+      "Preserve JSON as the authoritative runtime artifact format where the source is object-shaped.",
+      "Do not add apply workflow execution, new agents, new permissions, or implementation mutation authority."
+    ],
+    "task_constraints": [
+      "Create active JSON implementation plan and tracker objects using Markdown donor files.",
+      "Create JSON templates in the implementation-projects templates folder.",
+      "Convert open decisions and known failures from Markdown donor files into JSON.",
+      "Prune old hyphen or Markdown fallback paths from runtime source routing.",
+      "Track remaining Markdown-to-JSON seams, including agent prompts and archive policy work owned by the user."
+    ],
+    "constraint_conflicts": [],
+    "allowed_transformation_types": [
+      "Contract edit",
+      "Policy edit",
+      "Context compiler edit",
+      "Artifact layout edit"
+    ],
+    "affected_surfaces": [
+      "harness/context/context_compiler.py",
+      "harness/implementation-projects/active/",
+      "harness/implementation-projects/templates/",
+      "harness/project-spec/open_decisions.json",
+      "harness/project-spec/known_failures.json"
+    ],
+    "non_affected_surfaces": [
+      "Planner route",
+      "Adversary route",
+      "Reviewer route",
+      "Implementer route",
+      "Archivist route",
+      "Codex worker adapter",
+      "Apply workflow",
+      "Deployment",
+      "UI"
+    ],
+    "admissibility_checks": {
+      "status": "pass",
+      "basis": "The work stays inside JSON authority/source routing cleanup and does not add runtime workflow scope."
+    },
+    "stop_conditions": [
+      "Required authority is missing.",
+      "JSON validation fails.",
+      "Runtime probe fails.",
+      "Requested work expands beyond source conversion and routing cleanup.",
+      "Requested work adds apply workflow execution or agent file mutation."
+    ]
+  },
+  "planned_work": [
+    {
+      "id": "active_plan_tracker_json",
+      "description": "Create active JSON implementation plan and tracker files for the Markdown-to-JSON conversion bundle.",
+      "status": "active"
+    },
+    {
+      "id": "json_templates",
+      "description": "Add JSON implementation plan and tracker templates under harness/implementation-projects/templates.",
+      "status": "active"
+    },
+    {
+      "id": "open_decisions_json",
+      "description": "Populate open_decisions.json from the Markdown donor.",
+      "status": "active"
+    },
+    {
+      "id": "known_failures_json",
+      "description": "Populate known_failures.json from the Markdown donor.",
+      "status": "active"
+    },
+    {
+      "id": "runtime_source_routing_prune",
+      "description": "Remove old hyphen and root fallback paths for open decisions and known failures from the context compiler.",
+      "status": "active"
+    },
+    {
+      "id": "active_state_context_sources",
+      "description": "Include active implementation plan and tracker JSON files as optional context packet sources.",
+      "status": "active"
+    }
+  ],
+  "non_goals": [
+    "Do not add apply workflow execution.",
+    "Do not add new agent routes or permissions.",
+    "Do not convert user-owned agent prompt/archive policy work in this bundle.",
+    "Do not rewrite project intent."
+  ],
+  "acceptance_criteria": [
+    "Active implementation plan and tracker exist as JSON.",
+    "Implementation plan and tracker templates exist as JSON.",
+    "Open decisions and known failures load as non-empty JSON objects.",
+    "Context compiler source routing prefers only snake_case JSON authority paths for open decisions and known failures.",
+    "Compiler smoke check includes project spec, governance primitives, runtime policy, runtime budget, open decisions, known failures, active plan, and active tracker as JSON sources."
+  ],
+  "current_repo_runtime_state": {
+    "known_live_probe": {
+      "id": "first_pm_plan_slice",
+      "donor_source": "archived_first_slice_acceptance_probe",
+      "result": "First PM slice is live-wired at the scaffold/runtime level; broader implementation claims remain unauthorized."
+    }
+  },
+  "assumptions_and_unknowns": [
+    "Agent prompt Markdown conversion is intentionally left as a user-owned outstanding seam.",
+    "Archive policy Markdown conversion is intentionally left as a user-owned outstanding seam."
+  ],
+  "completion_rule": "Do not mark behavior complete on fixture, mock, dry-run, serialization, type, field, file, path, route, crate, config, or nominal-caller evidence alone.",
+  "approval_gates": {
+    "schema": "not_crossed",
+    "api": "not_crossed",
+    "auth": "not_crossed",
+    "storage": "crossed_for_project_state_files_only",
+    "deployment": "not_crossed",
+    "destructive_operation": "crossed_for_pruning_obsolete_donor_md_files",
+    "broad_architecture": "not_crossed",
+    "project_intent_authority": "not_crossed"
+  },
+  "closeout_note": "When this bundle completes, move it from active to archive."
+}

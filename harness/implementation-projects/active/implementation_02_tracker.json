@@ -1,0 +1,109 @@
+{
+  "metadata": {
+    "document_id": "implementation_02_tracker",
+    "title": "Implementation 02 Tracker",
+    "source_format": "json",
+    "authority_role": "active_implementation_tracker",
+    "donor_sources": [
+      "markdown_tracker_template_pruned_after_conversion"
+    ]
+  },
+  "status": {
+    "state": "active",
+    "current_work": "Markdown-to-JSON conversion for active implementation state, templates, open decisions, known failures, and context compiler fallback pruning.",
+    "next_action": "Review remaining outstanding Markdown-to-JSON seams before closeout."
+  },
+  "work_log": [
+    {
+      "date": "2026-06-03",
+      "agent_role": "codex",
+      "change": "Started active JSON implementation plan and tracker for Markdown-to-JSON conversion bundle.",
+      "evidence": "harness/implementation-projects/active/implementation_02_plan.json and implementation_02_tracker.json",
+      "next": "Review remaining outstanding Markdown-to-JSON seams before closeout."
+    }
+  ],
+  "work_status": [
+    {
+      "id": "active_plan_tracker_json",
+      "work": "Create active JSON implementation plan and tracker from Markdown donor files.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: non-empty harness JSON parse check.",
+      "notes": "Uses archived acceptance probe and Markdown templates as donor material."
+    },
+    {
+      "id": "json_templates",
+      "work": "Add JSON implementation plan and tracker templates.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: non-empty harness JSON parse check.",
+      "notes": "Replaces Markdown template shape with typed JSON skeletons."
+    },
+    {
+      "id": "open_decisions_json",
+      "work": "Convert open decisions donor Markdown to JSON.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: context compiler includes open_decisions as application/json.",
+      "notes": "No current or pending decisions are recorded from donor."
+    },
+    {
+      "id": "known_failures_json",
+      "work": "Convert known failures donor Markdown to JSON.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: context compiler includes known_failures as application/json.",
+      "notes": "No known failure entries are recorded from donor."
+    },
+    {
+      "id": "runtime_source_routing_prune",
+      "work": "Prune old hyphen/root fallback paths for open decisions and known failures.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: compiler no longer references hyphen or root fallback paths for open decisions or known failures.",
+      "notes": "Compiler keeps only snake_case project-spec JSON paths."
+    },
+    {
+      "id": "active_state_context_sources",
+      "work": "Include active implementation plan and tracker JSON files in the context packet.",
+      "owner_agent": "codex",
+      "status": "done",
+      "verification": "Passed: context compiler includes active_implementation_plan and active_implementation_tracker as application/json.",
+      "notes": "Optional sources; missing active state is not fatal."
+    },
+    {
+      "id": "agent_prompts_to_agent_json",
+      "work": "Convert remaining agent prompt Markdown surfaces to .agent.json role contracts.",
+      "owner_agent": "user",
+      "status": "outstanding",
+      "verification": "Not attempted in this bundle.",
+      "notes": "User is working on this seam."
+    },
+    {
+      "id": "archive_policy_json",
+      "work": "Convert archive policy Markdown into JSON authority object.",
+      "owner_agent": "user",
+      "status": "outstanding",
+      "verification": "Not attempted in this bundle.",
+      "notes": "User is working on this seam."
+    },
+    {
+      "id": "canon_policy_json",
+      "work": "Decide whether canon Markdown policy files should become JSON policy objects.",
+      "owner_agent": "project_authority",
+      "status": "outstanding",
+      "verification": "Not attempted.",
+      "notes": "Remaining Markdown policy/canon surface."
+    },
+    {
+      "id": "historical_run_md_artifacts",
+      "work": "Decide whether historical context_packet.md run artifacts should be retained, converted, or ignored as archive evidence.",
+      "owner_agent": "project_authority",
+      "status": "outstanding",
+      "verification": "Not attempted.",
+      "notes": "Historical runs remain evidence, not active runtime authority."
+    }
+  ],
+  "blockers": [],
+  "closeout_note": "When this bundle completes, move it from active to archive."
+}

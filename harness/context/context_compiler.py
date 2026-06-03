@@ -105,8 +105,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Open Decisions",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "open_decisions.json",
-                repo_root / "harness" / "project-spec" / "open-decisions.json",
-                repo_root / "harness" / "open-decisions.json",
             ],
             "required": False
         },
@@ -115,8 +113,22 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Known Failures",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "known_failures.json",
-                repo_root / "harness" / "project-spec" / "known-failures.json",
-                repo_root / "harness" / "known-failures.json",
+            ],
+            "required": False
+        },
+        {
+            "id": "active_implementation_plan",
+            "label": "Active Implementation Plan",
+            "candidates": [
+                repo_root / "harness" / "implementation-projects" / "active" / "implementation_02_plan.json",
+            ],
+            "required": False
+        },
+        {
+            "id": "active_implementation_tracker",
+            "label": "Active Implementation Tracker",
+            "candidates": [
+                repo_root / "harness" / "implementation-projects" / "active" / "implementation_02_tracker.json",
             ],
             "required": False
         }
@@ -251,7 +263,7 @@ def _parse_source_content(*, raw_text: str, content_type: str, path: Path) -> An
     """
     Preserve structured sources as structured objects.
 
-    Markdown/plain text remain strings.
+    Plain text remains a string.
     JSON becomes dict/list/scalar.
     TOML becomes dict when tomllib is available.
     """
@@ -323,9 +335,6 @@ def _guess_content_type(path: Path) -> str:
 
     if suffix == ".json":
         return "application/json"
-
-    if suffix == ".md":
-        return "text/markdown"
 
     if suffix == ".toml":
         return "application/toml"

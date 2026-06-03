@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "document_id": "known_failures",
+    "title": "Known Failures",
+    "source_format": "json",
+    "authority_role": "failure_pattern_authority_object",
+    "converted_from": "markdown_donor_pruned_after_conversion"
+  },
+  "purpose": "Track recurring failure patterns later sessions should detect earlier.",
+  "usage_rules": [
+    "This is not a bug dump and not a decision log.",
+    "Add an entry when a failure recurs, spreads, or exposes a harness weakness.",
+    "Keep entries short and searchable.",
+    "Link to evidence in implementation-project files when available.",
+    "Do not record blame, moods, or one-off noise.",
+    "Promote repeatable prevention into tooling or runtime rules when possible."
+  ],
+  "entry_schema": {
+    "id": "string",
+    "pattern": "string",
+    "trigger": "string",
+    "symptom": "string",
+    "likely_cause": "string",
+    "prevention_rule": "string",
+    "cheapest_check": "string",
+    "last_seen": "string",
+    "status": "string"
+  },
+  "entries": []
+}

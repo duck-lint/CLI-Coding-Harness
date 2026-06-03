@@ -343,7 +343,7 @@
       "Whether role contracts should remain strict JSON or allow JSONC.",
       "Whether the runtime should call the OpenAI Agents SDK specifically or use the lower-level OpenAI API client first.",
       "Whether schema validation should use JSON Schema directly, Pydantic, or both.",
-      "Whether context_packet.md should remain as a debug artifact or be removed entirely after the transition",
+      "Whether historical Markdown context packet artifacts should be retained only as archived run evidence or converted during archive cleanup",
       "Whether budget policy enforcement belongs in the first or second vertical slice.",
       "Whether planner/adversary/reviewer routes should be introduced before worker adapters."
     ],
