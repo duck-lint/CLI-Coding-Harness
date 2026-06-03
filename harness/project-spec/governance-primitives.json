@@ -1,5 +1,8 @@
 {
-  "file": "Governance Primitives",
+  "metadata": {
+    "document_id": "governance-primitives",
+    "title": "Governance Primitives"
+  },
   "context": "Defines project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
   "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts.",
   "governance_posture": {
@@ -49,25 +52,77 @@
   },
   "invariant_authority":{
     "order": [
-      "1. Explicit amendments to the project spec or governance primitives approved by project authority.",
-      "2. This file and the other docs under `harness/project-spec/**`.",
-      "3. Open decisions that interpret the project spec without silently overriding it.",
-      "4. Active plans and trackers implementing an already-authorized objective.",
-      "5. Current user instructions selecting, sequencing, or pausing already-authorized work.",
-      "6. Archived implementation history and prior chat context."
+      {
+        "rank": 1,
+        "id": "approved_spec_or_governance_amendments",
+        "description": "Explicit amendments to the project spec or governance primitives approved by project authority."
+      },
+      {
+        "rank": 2,
+        "id": "project_spec_and_governance",
+        "description": "This file and the other docs under `harness/project-spec/**`."
+      },
+      {
+        "rank": 3,
+        "id": "open_decisions",
+        "description": "Open decisions that interpret the project spec without silently overriding it."
+      },
+      {
+        "rank": 4,
+        "id": "active_implementation",
+        "description": "Active plans and trackers implementing an already-authorized objective."
+      },
+      {
+        "rank": 5,
+        "id": "project_authority_current_instructions",
+        "description": "Current user instructions selecting, sequencing, or pausing already-authorized work."
+      },
+      {
+        "rank": 6,
+        "id": "archive",
+        "description": "Archived implementation history and prior chat context."
+      }
     ],
     "description": "Current instructions may choose work or explicitly amend the spec, but they do not silently override project invariants.",
     "conflict_handling": "If a current instruction conflicts with invariant authority, stop and surface the conflict. If a current instruction appears to amend invariant authority, name it as a project-spec or governance amendment request."
   },
   "task_authority": {
     "order": [
-      "1. Current user instruction for the present task.",
-      "2. Open decisions in the context packet, when present.",
-      "3. Active implementation plan and tracker, when present.",
-      "4. Current repo state surfaced by the context packet.",
-      "5. Relevant repo-local harness policies under `harness/`.",
-      "6. Archived implementation history only when explicitly referenced by active state or decision authority.",
-      "7. Prior chat context only as non-authoritative orientation."
+      {
+        "rank": 1,
+        "id": "project_authority_current_instructions",
+        "description": "Current user instruction for the present task."
+      },
+      {
+        "rank": 2,
+        "id": "open_decisions",
+        "description": "Open decisions in the context packet, when present."
+      },
+      {
+        "rank": 3,
+        "id": "active_implementation",
+        "description": "Active implementation plan and tracker, when present."
+      },
+      {
+        "rank": 4,
+        "id": "current_repo_state",
+        "description": "Current repo state surfaced by the context packet."
+      },
+      {
+        "rank": 5,
+        "id": "harness_policies",
+        "description": "Relevant repo-local harness policies under `harness/`."
+      },
+      {
+        "rank": 6,
+        "id": "explicitly_referenced_archive",
+        "description": "Archived implementation history only when explicitly referenced by active state or decision authority."
+      },
+      {
+        "rank": 7,
+        "id": "prior_chat_context",
+        "description": "Prior chat context only as non-authoritative orientation."
+      }
     ],
     "description": "Current instructions and active plans have authority to select, sequence, and pause work towards already-authorized objectives, but they do not have authority to silently override project invariants or prior authority.",
     "conflict_handling": "If task authority conflicts with invariant authority, stop and surface the conflict instead of improvising around it.",
@@ -114,7 +169,7 @@
         "Return contract path.",
         "Allowed tool behavior."
       ],
-      "api_and_model_behaviour": [
+      "api_and_model_behavior": [
         "OpenAI Agents SDK call path.",
         "lower-level OpenAI API client path.",
         "Model selection.",
@@ -171,12 +226,12 @@
         "Supporting multiple scaffold layouts.",
         "Clean replacement is preferred unless compatibility is explicitly required."
       ],
-      "project_independent_behaviour": [
+      "project_intent_dependent_behavior": [
         "Requires explicit approval when behavior depends on a claim about what the project should become rather than what the current spec already authorizes."
       ]
     }
   },
-  "invariants_and_integrity_contstraints": {
+  "invariants_and_integrity_constraints": {
     "stable_project_truths": [
       "The system is a local Python/JSON coding-agent CLI harness.",
       "The first proven workflow is PM-only planning.",
@@ -370,32 +425,40 @@
       "Explicit remaining risks."
     ]
   },
-  "acceptance_probes": {
-    "probe_name": "`first-pm-json-agent-plan-slice`.",
-    "answering": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured context packet while saving valid runtime evidence and stopping before implementation?",
-    "runtime_path_required": "`python -m harness.runtime.orchestrator plan 'Assess whether the PM JSON-agent slice is admissible'`",
-    "evidence_required": {
-      "saves": [
-        "`harness/runs/<timestamp>/task_brief.json.`",
-        "`harness/runs/<timestamp>/context_packet.json.`",
-        "`harness/runs/<timestamp>/project_manager_report.json.`"
-      ],
-      "terminal_output": [
-        "Route.",
-        "Status.",
-        "Run path.",
-        "Probe result.",
-        "Summary.",
-        "Next admissible transition."
-      ],
-      "probe_confirms": [
-        "Required artifacts exist.",
-        "PM report validates.",
-        "Context packet exists as JSON.",
-        "Route is PM-only.",
-        "Workflow stopped before implementation."
-      ]
-    },
+  "acceptance_probes": [
+    {
+      "id": "first-pm-json-agent-plan-slice",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured context packet while saving valid runtime evidence and stopping before implementation?",
+      "runtime_path_required": {
+        "command": "python",
+        "args": [
+          "-m",
+          "harness.runtime.orchestrator",
+          "plan",
+          "Assess whether the PM JSON-agent slice is admissible"
+        ]
+      },
+      "evidence_required": {
+        "saved_artifacts": [
+          {
+            "id": "task_brief",
+            "path_pattern": "harness/runs/<timestamp>/task_brief.json",
+            "required": true
+          },
+          {
+            "id": "context_packet",
+            "path_pattern": "harness/runs/<timestamp>/context_packet.json",
+            "required": true
+          },
+          {
+            "id": "project_manager_report",
+            "path_pattern": "harness/runs/<timestamp>/project_manager_report.json",
+            "required": true
+          }
+        ]
+      }
+    }
+  ],
     "not_proof": [
       "Manually pasted PM report.",
       "Mock report.",
@@ -407,8 +470,7 @@
       "Validation without real model route where the claim concerns model call behavior.",
       "PM statement that the probe passed without deterministic probe evidence.",
       "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
-    ]
-  },
+    ],
   "named_admissibility_inputs": {
     "invariant_constraints": [
       "Project thesis.",
