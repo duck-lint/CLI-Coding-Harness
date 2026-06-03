@@ -317,7 +317,7 @@
   "admissible_transformations": {
     "transformation_or_change_types": {
       "preserve_project_spec": [
-        "Loading project-manager.agent.json.",
+        "Loading project_manager.agent.json.",
         "Validating required agent contract fields.",
         "Compiling structured context_packet.json.",
         "Preserving optional debug context_packet.md only as transition output.",
@@ -435,7 +435,7 @@
           "-m",
           "harness.runtime.orchestrator",
           "plan",
-          "Assess whether the PM JSON-agent slice is admissible"
+          "TASK TEXT"
         ]
       },
       "evidence_required": {
@@ -505,7 +505,7 @@
       "Implementation mutation."
     ],
     "affected_surfaces": [
-      "harness/agents/project-manager.agent.json.",
+      "harness/agents/project_manager.agent.json.",
       "harness/context/context_compiler.py.",
       "harness/runtime/orchestrator.py.",
       "harness/runtime/agent_callers.py.",

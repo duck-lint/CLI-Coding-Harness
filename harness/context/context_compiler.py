@@ -72,7 +72,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "project_spec",
             "label": "Project Spec",
             "candidates": [
-                repo_root / "harness" / "project-spec" / "project-spec.json",
+                repo_root / "harness" / "project-spec" / "project_spec.json",
             ],
             "required": True
         },
@@ -80,7 +80,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "governance_primitives",
             "label": "Governance Primitives",
             "candidates": [
-                repo_root / "harness" / "project-spec" / "governance-primitives.json",
+                repo_root / "harness" / "project-spec" / "governance_primitives.json",
             ],
             "required": True
         },
@@ -96,8 +96,8 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "runtime_budget",
             "label": "Runtime Budget",
             "candidates": [
-                repo_root / "harness" / "policies" / "runtime-budget.json",
-                repo_root / "harness" / "policies" / "runtime-budget.toml"
+                repo_root / "harness" / "policies" / "runtime_budget.policy.json",
+                repo_root / "harness" / "policies" / "runtime_budget.policy.json"
             ],
             "required": False
         },

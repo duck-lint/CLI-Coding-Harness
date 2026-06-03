@@ -41,7 +41,7 @@ async def _run_plan(task_text: str) -> int:
     _load_local_openai_key(repo_root / ".env.local")
     _require_openai_key()
 
-    role = load_role(repo_root / "harness" / "agents" / "project-manager.agent.json")
+    role = load_role(repo_root / "harness" / "agents" / "project_manager.agent.json")
     context_packet = compile_context_packet(task_text, repo_root)
     run_id = _timestamp()
     run_dir = repo_root / "harness" / "runs" / run_id

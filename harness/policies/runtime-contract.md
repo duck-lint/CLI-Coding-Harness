@@ -17,7 +17,7 @@ This document defines the standing behavior for the harness orchestrator and age
 ## Canonical Memory Rule
 
 - Treat `harness/` as the only canonical repo-local memory for project continuity.
-- Canonical continuity lives in `harness/implementation-projects/archive/`, `harness/open-decisions.md`, and `harness/known-failures.md`.
+- Canonical continuity lives in `harness/implementation-projects/archive/`, `harness/open_decisions.json`, and `harness/known_failures.json`.
 - Do not create, update, or rely on repo-root `memories/`, `memories/repo/`, or similar host-runtime memory files for implementation history, decision authority, risk state, or verification evidence.
 - If a host tool provides repo-memory features, ignore them for authoritative project state and inspect the canonical harness surfaces instead.
 

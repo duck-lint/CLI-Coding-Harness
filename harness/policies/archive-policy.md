@@ -9,7 +9,7 @@ Archive completed implementation work so later sessions can resume from repo-loc
 - decisions are recorded
 - known failures are updated or ruled out
 - remaining risks are explicit
-- the same turn also updates `harness/open-decisions.md` and any paused or deferred pointers that still target the completed bundle
+- the same turn also updates `harness/open_decisions.json` and any paused or deferred pointers that still target the completed bundle
 
 ## Archive Summary Must Include
 
@@ -38,5 +38,5 @@ When work changes implementation state from active to complete, do the archive m
 
 - move the numbered bundle from `active/` to `archive/`
 - add or update the archive summary
-- repoint `harness/open-decisions.md` and any paused or deferred references that still target old active paths
+- repoint `harness/open_decisions.json` and any paused or deferred references that still target old active paths
 - if any of this cannot be completed, mark closeout blocked with owner
