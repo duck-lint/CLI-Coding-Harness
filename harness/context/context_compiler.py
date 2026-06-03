@@ -73,7 +73,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Project Spec",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "project-spec.json",
-                repo_root / "harness" / "project-spec" / "project-spec.md"
             ],
             "required": True
         },
@@ -82,7 +81,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Governance Primitives",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "governance-primitives.json",
-                repo_root / "harness" / "project-spec" / "governance-primitives.md"
             ],
             "required": True
         },
@@ -91,7 +89,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Runtime Contract",
             "candidates": [
                 repo_root / "harness" / "policies" / "runtime-contract.json",
-                repo_root / "harness" / "policies" / "runtime-contract.md"
             ],
             "required": True
         },
@@ -109,9 +106,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Open Decisions",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "open-decisions.json",
-                repo_root / "harness" / "project-spec" / "open-decisions.md",
                 repo_root / "harness" / "open-decisions.json",
-                repo_root / "harness" / "open-decisions.md"
             ],
             "required": False
         },
@@ -120,9 +115,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "label": "Known Failures",
             "candidates": [
                 repo_root / "harness" / "project-spec" / "known-failures.json",
-                repo_root / "harness" / "project-spec" / "known-failures.md",
                 repo_root / "harness" / "known-failures.json",
-                repo_root / "harness" / "known-failures.md"
             ],
             "required": False
         }
