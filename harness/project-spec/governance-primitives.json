@@ -8,7 +8,7 @@
   "governance_posture": {
     "hard_preservation_constraints": [
       "The harness as a local CLI governance runtime.",
-      "Repo-local authority under `harness/`.",
+      "Repo-local authority under harness/.",
       "Explicit separation between project invariants and current task authority.",
       "Explicit separation between role contract, context packet, output schema, returned report, and runtime probe.",
       "PM-only, read-only behavior for the first vertical slice.",
@@ -17,14 +17,14 @@
       "No agent file inspection outside the compiled context packet.",
       "No agent file mutation.",
       "No agent shell execution.",
-      "No worker adapter invocation from the `plan` workflow.",
+      "No worker adapter invocation from the plan workflow.",
       "No runtime capability claim without acceptance probe evidence.",
       "No silent compatibility shims or legacy behavior preservation unless explicitly approved."
     ],
     "observability_scaffolding": [
-      "`task_brief.json`.",
-      "`context_packet.json`.",
-      "`project_manager_report.json`.",
+      "task_brief.json.",
+      "context_packet.json.",
+      "project_manager_report.json.",
       "Role contract path and identity.",
       "Schema path and validation result.",
       "Run directory path.",
@@ -33,7 +33,7 @@
       "Included source manifest.",
       "Missing source manifest.",
       "Git status when available.",
-      "Explicit status values such as `pass`, `fail`, `blocked`, `scaffold-only`, or `runtime-evidenced`."
+      "Explicit status values such as pass, fail, blocked, scaffold-only, or runtime-evidenced."
     ],
     "explicit_distinctions": [
       "Invariant authority versus task authority.",
@@ -60,7 +60,7 @@
       {
         "rank": 2,
         "id": "project_spec_and_governance",
-        "description": "This file and the other docs under `harness/project-spec/**`."
+        "description": "This file and the other docs under harness/project-spec/**."
       },
       {
         "rank": 3,
@@ -111,7 +111,7 @@
       {
         "rank": 5,
         "id": "harness_policies",
-        "description": "Relevant repo-local harness policies under `harness/`."
+        "description": "Relevant repo-local harness policies under harness/."
       },
       {
         "rank": 6,
@@ -151,7 +151,7 @@
         "Source-of-truth rules."
       ],
       "schema": [
-        "`harness/contracts/*.schema.json`.",
+        "harness/contracts/*.schema.json.",
         "Pydantic models used as output contracts.",
         "Required report fields.",
         "Status enum semantics.",
@@ -159,7 +159,7 @@
         "Artifact shape expected by downstream runtime code."
       ],
       "agent_contract": [
-        "`harness/agents/*.agent.json`.",
+        "harness/agents/*.agent.json.",
         "Role identity.",
         "Role mode.",
         "Instruction contract.",
@@ -189,7 +189,7 @@
         "Secrets must never be committed."
       ],
       "storage": [
-        "`harness/runs/<timestamp>/` layout.",
+        "harness/runs/<timestamp>/ layout.",
         "Required artifact names.",
         "Artifact formats.",
         "Archive layout.",
@@ -317,12 +317,12 @@
   "admissible_transformations": {
     "transformation_or_change_types": {
       "preserve_project_spec": [
-        "Loading `project-manager.agent.json`.",
+        "Loading project-manager.agent.json.",
         "Validating required agent contract fields.",
-        "Compiling structured `context_packet.json`.",
-        "Preserving optional debug `context_packet.md` only as transition output.",
+        "Compiling structured context_packet.json.",
+        "Preserving optional debug context_packet.md only as transition output.",
         "Passing JSON context to the PM route.",
-        "Validating `project_manager_report.json`.",
+        "Validating project_manager_report.json.",
         "Saving run artifacts.",
         "Printing a short terminal summary.",
         "Implementing deterministic artifact probes.",
@@ -372,7 +372,7 @@
         "Silently continuing after missing required context.",
         "Invoking non-PM agents in the first slice.",
         "Giving the PM file or shell tools.",
-        "Writing implementation changes during `plan`.",
+        "Writing implementation changes during plan.",
         "Preserving obsolete compatibility paths without approval."
       ]
     },
@@ -505,12 +505,12 @@
       "Implementation mutation."
     ],
     "affected_surfaces": [
-      "`harness/agents/project-manager.agent.json`.",
-      "`harness/context/context_compiler.py`.",
-      "`harness/runtime/orchestrator.py`.",
-      "`harness/runtime/agent_callers.py`.",
-      "`harness/contracts/project_manager_report.schema.json`.",
-      "`harness/runs/**`."
+      "harness/agents/project-manager.agent.json.",
+      "harness/context/context_compiler.py.",
+      "harness/runtime/orchestrator.py.",
+      "harness/runtime/agent_callers.py.",
+      "harness/contracts/project_manager_report.schema.json.",
+      "harness/runs/**."
     ],
     "non_affected_surfaces": [
       "Planner route.",
