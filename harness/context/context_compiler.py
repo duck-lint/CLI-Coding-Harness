@@ -85,10 +85,10 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "required": True
         },
         {
-            "id": "runtime_contract",
-            "label": "Runtime Contract",
+            "id": "runtime_policy",
+            "label": "Runtime Policy",
             "candidates": [
-                repo_root / "harness" / "policies" / "runtime-contract.json",
+                repo_root / "harness" / "policies" / "runtime.policy.json",
             ],
             "required": True
         },
@@ -96,7 +96,6 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "runtime_budget",
             "label": "Runtime Budget",
             "candidates": [
-                repo_root / "harness" / "policies" / "runtime_budget.policy.json",
                 repo_root / "harness" / "policies" / "runtime_budget.policy.json"
             ],
             "required": False
@@ -105,6 +104,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "open_decisions",
             "label": "Open Decisions",
             "candidates": [
+                repo_root / "harness" / "project-spec" / "open_decisions.json",
                 repo_root / "harness" / "project-spec" / "open-decisions.json",
                 repo_root / "harness" / "open-decisions.json",
             ],
@@ -114,6 +114,7 @@ def compile_context_packet(task_text: str, repo_root: Path) -> ContextPacket:
             "id": "known_failures",
             "label": "Known Failures",
             "candidates": [
+                repo_root / "harness" / "project-spec" / "known_failures.json",
                 repo_root / "harness" / "project-spec" / "known-failures.json",
                 repo_root / "harness" / "known-failures.json",
             ],
@@ -158,7 +159,13 @@ def _add_source_from_candidates(
     repo_root: Path,
     required: bool
 ) -> None:
-    existing_path = next((path for path in candidates if path.exists()), None)
+    existing_path = next(
+        (
+            path for path in candidates
+            if path.exists() and (required or path.read_text(encoding="utf-8").strip())
+        ),
+        None
+    )
 
     if existing_path is None:
         candidate_labels = [_relative_label(path, repo_root) for path in candidates]
