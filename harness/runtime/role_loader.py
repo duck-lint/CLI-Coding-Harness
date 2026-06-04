@@ -4,7 +4,9 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 from typing import Any
-
+from harness.policies.runtime_budget import RuntimeBudgetPolicy, RuntimeBudgetDefaults
+raw = json.loads(Path("harness/policies/runtime_budget.policy.json").read_text())
+policy = RuntimeBudgetPolicy.model_validate(raw)
 
 @dataclass(frozen=True)
 class RolePermissions:
@@ -27,7 +29,7 @@ class RoleConfig:
     name: str
     mode: str
     model: str
-    runtime_budget: dict[str, Any]
+    runtime_budget: RuntimeBudgetDefaults
     instructions_payload: dict[str, Any]
     context_policy: dict[str, Any]
     return_contract: ReturnContract
@@ -44,7 +46,7 @@ def load_role(manifest_path: Path) -> RoleConfig:
     return_contract = _section(data, "return_contract")
     permissions = _section(data, "permissions")
     role_id = _required_str(agent, "id")
-    runtime_budget = _runtime_budget_defaults(manifest_path)
+    runtime_budget = RuntimeBudgetPolicy
     default_model = _runtime_default_model(runtime_budget, role_id)
 
     output_schema_path = _resolve_existing_path(
@@ -118,11 +120,15 @@ def _resolve_existing_path(manifest_path: Path, relative_path: str) -> Path:
     return resolved
 
 
-def _runtime_budget_defaults(manifest_path: Path) -> dict[str, Any]:
+def _load_runtime_budget_policy(manifest_path: Path) -> RuntimeBudgetPolicy:
     repo_root = _repo_root_from_manifest(manifest_path)
     budget_path = (repo_root / "harness" / "policies" / "runtime_budget.policy.json").resolve()
-    budget = _load_json(budget_path)
-    return _section(budget, "default")
+    raw_budget = _load_json(budget_path)
+    return RuntimeBudgetPolicy.model_validate(raw_budget)
+
+
+def _runtime_budget_defaults(manifest_path: Path) -> RuntimeBudgetDefaults:
+    return _load_runtime_budget_policy(manifest_path).default
 
 
 def _runtime_default_model(default: dict[str, Any], role_id: str) -> str:
