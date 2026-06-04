@@ -1,4 +1,5 @@
 {
+  "$schema": "RuntimeBudgetPolicy.schema.json",
   "default": {
     "max_context_packet_tokens": 60000,
     "reserved_output_tokens": 4000,
