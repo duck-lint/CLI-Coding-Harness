@@ -1,0 +1,60 @@
+{
+  "$defs": {
+    "RuntimeBudgetDefaults": {
+      "additionalProperties": false,
+      "properties": {
+        "max_context_packet_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Max Context Packet Tokens",
+          "type": "integer"
+        },
+        "reserved_output_tokens": {
+          "exclusiveMinimum": 0,
+          "title": "Reserved Output Tokens",
+          "type": "integer"
+        },
+        "oversize_strategy": {
+          "const": "fail_or_batch",
+          "title": "Oversize Strategy",
+          "type": "string"
+        },
+        "truncation": {
+          "const": "disabled",
+          "title": "Truncation",
+          "type": "string"
+        },
+        "default_model": {
+          "title": "Default Model",
+          "type": "string"
+        },
+        "agent_model_overrides": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Agent Model Overrides",
+          "type": "object"
+        }
+      },
+      "required": [
+        "max_context_packet_tokens",
+        "reserved_output_tokens",
+        "oversize_strategy",
+        "truncation",
+        "default_model"
+      ],
+      "title": "RuntimeBudgetDefaults",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "default": {
+      "$ref": "#/$defs/RuntimeBudgetDefaults"
+    }
+  },
+  "required": [
+    "default"
+  ],
+  "title": "RuntimeBudgetPolicy",
+  "type": "object"
+}

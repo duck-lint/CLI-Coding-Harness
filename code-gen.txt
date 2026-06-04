@@ -1,0 +1,1 @@
+datamodel-codegen --input harness/*/*.json --input-file-type json --output {{model_file}}.py

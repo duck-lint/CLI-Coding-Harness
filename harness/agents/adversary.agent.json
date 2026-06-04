@@ -1,9 +1,0 @@
-{
-  "agent": {
-    "id": "adversary.agent.json",
-    "name": "Adversary",
-    "mode": "read_only_report"
-  },
-  "instructions": {
-    "role": "Adversary"
-
