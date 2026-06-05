@@ -1,6 +1,24 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "DriftDetection": {
+      "additionalProperties": false,
+      "properties": {
+        "drift_detected": {
+          "title": "Drift Detected",
+          "type": "boolean"
+        },
+        "description_if_present": {
+          "title": "Description If Present",
+          "type": "string"
+        }
+      },
+      "required": [
+        "drift_detected",
+        "description_if_present"
+      ],
+      "title": "DriftDetection",
+      "type": "object"
+    },
     "ProofFrontier": {
       "additionalProperties": false,
       "properties": {
@@ -90,6 +108,9 @@
           "title": "Thesis Attractor",
           "type": "string"
         },
+        "drift_detection": {
+          "$ref": "#/$defs/DriftDetection"
+        },
         "invariant_constraints": {
           "items": {
             "type": "string"
@@ -112,6 +133,7 @@
       "required": [
         "current_posture",
         "thesis_attractor",
+        "drift_detection",
         "invariant_constraints",
         "task_constraints",
         "structural_tension"

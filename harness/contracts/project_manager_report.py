@@ -14,12 +14,19 @@ class SourceCoverageItem(BaseModel):
     consumed: bool
     basis: list[str]
 
+class DriftDetection(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    drift_detected: bool
+    description_if_present: str
+
 
 class TrajectoryReview(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     current_posture: str
     thesis_attractor: str
+    drift_detection: DriftDetection
     invariant_constraints: list[str]
     task_constraints: list[str]
     structural_tension: str

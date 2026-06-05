@@ -111,5 +111,5 @@ class ProjectManagerAgent(BaseModel):
     field_schema: str = Field(..., alias='$schema')
     metadata: Metadata
     instructions: Instructions
-    inputs: list[Input]
-    outputs: list[Output]
+    input: list[Input]
+    output: list[Output]

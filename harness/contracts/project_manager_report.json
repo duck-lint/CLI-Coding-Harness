@@ -1,4 +1,5 @@
 {
+  "$schema": "./ProjectManagerReport.schema.json",
   "report": "Project Manager Report",
   "status": "admissible | admissibility_blocked | rejected | needs_clarification",
   "summary": "Short report summary.",
@@ -14,6 +15,10 @@
   "trajectory_review": {
     "current_posture": "Concrete repo-state evidenced from the provided context.",
     "thesis_attractor": "Direction implied by project spec without invented roadmap.",
+    "drift_detection": {
+      "drift_detected": "true | false", 
+      "description_if_present": "Description of drift if detected."
+    },
     "invariant_constraints": [
       "Constraint from project context."
     ],
