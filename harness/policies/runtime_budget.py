@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class RuntimeBudgetDefaults(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    max_context_packet_tokens: int = Field(gt=0)
+    max_compiled_context_tokens: int = Field(gt=0)
     reserved_output_tokens: int = Field(gt=0)
     oversize_strategy: Literal ["fail_or_batch"]
     truncation: Literal ["disabled"]

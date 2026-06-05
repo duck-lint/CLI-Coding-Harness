@@ -1,0 +1,326 @@
+{
+  "$defs": {
+    "ContextPacket": {
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "schema"
+      ],
+      "title": "ContextPacket",
+      "type": "object"
+    },
+    "DerivationRules": {
+      "properties": {
+        "evaluation_basis": {
+          "title": "Evaluation Basis",
+          "type": "string"
+        },
+        "drift_checks": {
+          "title": "Drift Checks",
+          "type": "string"
+        },
+        "next_step_recommendations": {
+          "title": "Next Step Recommendations",
+          "type": "string"
+        },
+        "repository_state": {
+          "title": "Repository State",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evaluation_basis",
+        "drift_checks",
+        "next_step_recommendations",
+        "repository_state"
+      ],
+      "title": "DerivationRules",
+      "type": "object"
+    },
+    "Input": {
+      "properties": {
+        "compiled_context": {
+          "$ref": "#/$defs/ContextPacket"
+        },
+        "task": {
+          "$ref": "#/$defs/Task"
+        }
+      },
+      "required": [
+        "compiled_context",
+        "task"
+      ],
+      "title": "Input",
+      "type": "object"
+    },
+    "Instructions": {
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "posture": {
+          "title": "Posture",
+          "type": "string"
+        },
+        "trajectory_review": {
+          "$ref": "#/$defs/TrajectoryReview"
+        },
+        "validity_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validity Conditions",
+          "type": "array"
+        },
+        "derivation_rules": {
+          "$ref": "#/$defs/DerivationRules"
+        },
+        "conduct_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conduct Rules",
+          "type": "array"
+        },
+        "review_lenses": {
+          "$ref": "#/$defs/ReviewLenses"
+        }
+      },
+      "required": [
+        "role",
+        "posture",
+        "trajectory_review",
+        "validity_conditions",
+        "derivation_rules",
+        "conduct_rules",
+        "review_lenses"
+      ],
+      "title": "Instructions",
+      "type": "object"
+    },
+    "Metadata": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "mode": {
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "mode"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "ReturnContract": {
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "schema"
+      ],
+      "title": "ReturnContract",
+      "type": "object"
+    },
+    "ReviewLenses": {
+      "properties": {
+        "invariant_coverage": {
+          "title": "Invariant Coverage",
+          "type": "string"
+        },
+        "task_coverage": {
+          "title": "Task Coverage",
+          "type": "string"
+        },
+        "source_coverage_truthfulness": {
+          "title": "Source Coverage Truthfulness",
+          "type": "string"
+        },
+        "conflict_visibility": {
+          "title": "Conflict Visibility",
+          "type": "string"
+        },
+        "admissible_transformation_coverage": {
+          "title": "Admissible Transformation Coverage",
+          "type": "string"
+        },
+        "surface_truthfulness": {
+          "title": "Surface Truthfulness",
+          "type": "string"
+        },
+        "evidence_quality": {
+          "title": "Evidence Quality",
+          "type": "string"
+        },
+        "fixture_truthfulness": {
+          "title": "Fixture Truthfulness",
+          "type": "string"
+        },
+        "posture_concreteness": {
+          "title": "Posture Concreteness",
+          "type": "string"
+        },
+        "thesis_attractor_discipline": {
+          "title": "Thesis Attractor Discipline",
+          "type": "string"
+        },
+        "tension_selection": {
+          "title": "Tension Selection",
+          "type": "string"
+        },
+        "frontier_selection": {
+          "title": "Frontier Selection",
+          "type": "string"
+        },
+        "optionality_preservation": {
+          "title": "Optionality Preservation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "invariant_coverage",
+        "task_coverage",
+        "source_coverage_truthfulness",
+        "conflict_visibility",
+        "admissible_transformation_coverage",
+        "surface_truthfulness",
+        "evidence_quality",
+        "fixture_truthfulness",
+        "posture_concreteness",
+        "thesis_attractor_discipline",
+        "tension_selection",
+        "frontier_selection",
+        "optionality_preservation"
+      ],
+      "title": "ReviewLenses",
+      "type": "object"
+    },
+    "Task": {
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "schema"
+      ],
+      "title": "Task",
+      "type": "object"
+    },
+    "TrajectoryReview": {
+      "properties": {
+        "objective": {
+          "title": "Objective",
+          "type": "string"
+        },
+        "primary_functions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Primary Functions",
+          "type": "array"
+        },
+        "current_posture": {
+          "title": "Current Posture",
+          "type": "string"
+        },
+        "thesis_attractor": {
+          "title": "Thesis Attractor",
+          "type": "string"
+        },
+        "structural_tension": {
+          "title": "Structural Tension",
+          "type": "string"
+        },
+        "dominant_tension_justification": {
+          "title": "Dominant Tension Justification",
+          "type": "string"
+        },
+        "proof_frontier": {
+          "title": "Proof Frontier",
+          "type": "string"
+        },
+        "next_admissible_transition": {
+          "title": "Next Admissible Transition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "objective",
+        "primary_functions",
+        "current_posture",
+        "thesis_attractor",
+        "structural_tension",
+        "dominant_tension_justification",
+        "proof_frontier",
+        "next_admissible_transition"
+      ],
+      "title": "TrajectoryReview",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "instructions": {
+      "$ref": "#/$defs/Instructions"
+    },
+    "inputs": {
+      "items": {
+        "$ref": "#/$defs/Input"
+      },
+      "title": "Inputs",
+      "type": "array"
+    },
+    "return_contract": {
+      "$ref": "#/$defs/ReturnContract"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "instructions",
+    "inputs",
+    "return_contract"
+  ],
+  "title": "ProjectManagerAgent",
+  "type": "object"
+}

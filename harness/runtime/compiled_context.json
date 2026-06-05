@@ -1,0 +1,10 @@
+{
+  "static": [
+    "project spec",
+    "project governance",
+    "known failures",
+    "open decisions",
+    "runtime doctrine"
+  ],
+  "dynamic": "agent specific stuffs"
+}

@@ -3,9 +3,9 @@
     "RuntimeBudgetDefaults": {
       "additionalProperties": false,
       "properties": {
-        "max_context_packet_tokens": {
+        "max_compiled_context_tokens": {
           "exclusiveMinimum": 0,
-          "title": "Max Context Packet Tokens",
+          "title": "Max Compiled Context Tokens",
           "type": "integer"
         },
         "reserved_output_tokens": {
@@ -36,7 +36,7 @@
         }
       },
       "required": [
-        "max_context_packet_tokens",
+        "max_compiled_context_tokens",
         "reserved_output_tokens",
         "oversize_strategy",
         "truncation",

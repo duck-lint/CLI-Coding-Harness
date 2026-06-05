@@ -9,7 +9,7 @@
   "project_thesis": {
     "project_is": [
       "A local Python/JSON coding-agent CLI harness.",
-      "A system that orchestrates clean-context coding agents through the OpenAI Agents SDK by treating role contracts, context packets, governance policies, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
+      "A system that orchestrates clean-context coding agents through the OpenAI Agents SDK by treating role contracts, compiled contexts, governance policies, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
       "A harness exists to make agent-assisted software work inspectable, bounded, reproducible, and governed."
     ],
     "project_is_not": {
@@ -31,7 +31,7 @@
     "core_runtime_shape": [
       "A CLI entrypoint receives a user task.",
       "The orchestrator selects a bounded workflow.",
-      "The context compiler produces a structured context packet.",
+      "The context compiler produces a structured compiled context.",
       "Role contracts define what each agent is allowed to do and how it should interpret the packet.",
       "The OpenAI API is used for bounded semantic transformation calls.",
       "Report schemas define machine-checkable output shapes.",
@@ -87,12 +87,12 @@
         "TASK TEXT"
       ],
       "expectations": [
-        "Compile repo-local context into a structured context packet.",
+        "Compile repo-local context into a structured compiled context.",
         "Load the relevant role contract.",
         "Call the Project Manager route through the OpenAI Agents SDK.",
         "Receive a structured admissibility report.",
         "Validate that report against the schema.",
-        "Save the task brief, context packet, and report under harness/runs/<timestamp>/",
+        "Save the task brief, compiled context, and report under harness/runs/<timestamp>/",
         "Print a short terminal summary.",
         "Identify the next admissible transition."
       ],
@@ -148,7 +148,7 @@
     "required_evidence_boundaries": [
       "Role contract versus output schema.",
       "Output schema versus returned report.",
-      "Context packet versus repo files.",
+      "Compiled Context versus repo files.",
       "Project spec versus current user task.",
       "Invariant authority versus task authority.",
       "Scaffold evidence versus runtime evidence.",
@@ -161,14 +161,14 @@
       "default_location": "harness/runs/<timestamp>/",
       "min_required_artifacts": [
         "task_brief.json",
-        "context_packet.json",
+        "compiled_context.json",
         "project_manager_report.json"
       ],
       "optional_debug_artifacts": [
         "Rendered prompt/debug input.",
         "Validation summary."
       ],
-      "authoritative_context_artifact": "context_packet.json",
+      "authoritative_context_artifact": "compiled_context.json",
       "authoritative_pm_output_artifact": "project_manager_report.json"
     },
     "dependencies": {
@@ -223,7 +223,7 @@
   "runtime_discipline": {
     "must_exist": [
       "Loading project_manager.agent.json",
-      "Compiling context_packet.json",
+      "Compiling compiled_context.json",
       "Sending the structured packet through the PM route.",
       "Receiving a structured PM report.",
       "Validating the PM report.",
@@ -234,7 +234,7 @@
     ],
     "meaningful_progress_metrics": [
       "Role contract loading.",
-      "Context packet structure.",
+      "Compiled Context structure.",
       "Schema validation.",
       "Runtime probe reliability.",
       "Artifact inspectability.",
@@ -296,7 +296,7 @@
   "acceptance_probes": [
     {
       "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured context packet, structured report validation, saved artifacts, and deterministic probe evidence?",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured compiled context, structured report validation, saved artifacts, and deterministic probe evidence?",
       "runtime_path_required": {
         "command": "python",
         "args": [
@@ -314,8 +314,8 @@
             "required": true
           },
           {
-            "id": "context_packet",
-            "path_pattern": "harness/runs/<timestamp>/context_packet.json",
+            "id": "compiled_context",
+            "path_pattern": "harness/runs/<timestamp>/compiled_context.json",
             "required": true
           },
           {
@@ -343,7 +343,7 @@
       "Whether role contracts should remain strict JSON or allow JSONC.",
       "Whether the runtime should call the OpenAI Agents SDK specifically or use the lower-level OpenAI API client first.",
       "Whether schema validation should use JSON Schema directly, Pydantic, or both.",
-      "Whether historical Markdown context packet artifacts should be retained only as archived run evidence or converted during archive cleanup",
+      "Whether historical Markdown compiled context artifacts should be retained only as archived run evidence or converted during archive cleanup",
       "Whether budget policy enforcement belongs in the first or second vertical slice.",
       "Whether planner/adversary/reviewer routes should be introduced before worker adapters."
     ],

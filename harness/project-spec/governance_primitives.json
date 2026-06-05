@@ -12,11 +12,11 @@
       "The harness as a local CLI governance runtime.",
       "Repo-local authority under harness/",
       "Explicit separation between project invariants and current task authority.",
-      "Explicit separation between role contract, context packet, output schema, returned report, and runtime probe.",
+      "Explicit separation between role contract, compiled context, output schema, returned report, and runtime probe.",
       "PM-only, read-only behavior for the first vertical slice.",
-      "Structured JSON as the authoritative runtime artifact format for role contracts, context packets, reports, policies, and saved evidence where the source is object-shaped.",
+      "Structured JSON as the authoritative runtime artifact format for role contracts, compiled contexts, reports, policies, and saved evidence where the source is object-shaped.",
       "Deterministic orchestration for the first slice.",
-      "No agent file inspection outside the compiled context packet.",
+      "No agent file inspection outside the compiled compiled context.",
       "No agent file mutation.",
       "No agent shell execution.",
       "No worker adapter invocation from the plan workflow.",
@@ -26,7 +26,7 @@
     "observability_scaffolding": {
       "artifact_paths": [
         "task_brief.json",
-        "context_packet.json",
+        "compiled_context.json",
         "project_manager_report.json"
       ],
       "runtime_identity": [
@@ -57,7 +57,7 @@
       "Invariant authority versus task authority.",
       "Policy versus prompt.",
       "Prompt/role contract versus output schema.",
-      "Context packet versus raw repo files.",
+      "Compiled Context versus raw repo files.",
       "Generated report versus deterministic probe.",
       "Scaffold-only evidence versus runtime-evidenced behavior.",
       "Planning versus implementation.",
@@ -114,7 +114,7 @@
       {
         "rank": 2,
         "id": "open_decisions",
-        "description": "Open decisions in the context packet, when present."
+        "description": "Open decisions in the compiled context, when present."
       },
       {
         "rank": 3,
@@ -124,7 +124,7 @@
       {
         "rank": 4,
         "id": "current_repo_state",
-        "description": "Current repo state surfaced by the context packet."
+        "description": "Current repo state surfaced by the compiled context."
       },
       {
         "rank": 5,
@@ -337,8 +337,8 @@
       "preserve_project_spec": [
         "Loading project_manager.agent.json",
         "Validating required agent contract fields.",
-        "Compiling structured context_packet.json",
-        "Preserving historical Markdown context packet artifacts only as archived run evidence until archive cleanup",
+        "Compiling structured compiled_context.json",
+        "Preserving historical Markdown compiled context artifacts only as archived run evidence until archive cleanup",
         "Passing JSON context to the PM route.",
         "Validating project_manager_report.json",
         "Saving run artifacts.",
@@ -417,7 +417,7 @@
         "Route selected.",
         "Role contract path.",
         "Model route.",
-        "Context packet path.",
+        "Compiled Context path.",
         "Output schema path.",
         "Report path.",
         "Validation result.",
@@ -446,7 +446,7 @@
   "acceptance_probes": [
     {
       "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured context packet while saving valid runtime evidence and stopping before implementation?",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured compiled context while saving valid runtime evidence and stopping before implementation?",
       "runtime_path_required": {
         "command": "python",
         "args": [
@@ -464,8 +464,8 @@
             "required": true
           },
           {
-            "id": "context_packet",
-            "path_pattern": "harness/runs/<timestamp>/context_packet.json",
+            "id": "compiled_context",
+            "path_pattern": "harness/runs/<timestamp>/compiled_context.json",
             "required": true
           },
           {
