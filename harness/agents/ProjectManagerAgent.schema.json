@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "InputItem": {
+    "Input": {
       "additionalProperties": false,
       "properties": {
         "project_context_packet": {
@@ -15,7 +15,7 @@
         "project_context_packet",
         "task"
       ],
-      "title": "InputItem",
+      "title": "Input",
       "type": "object"
     },
     "Instructions": {
@@ -90,17 +90,17 @@
       "title": "Metadata",
       "type": "object"
     },
-    "OutputItem": {
+    "Output": {
       "additionalProperties": false,
       "properties": {
-        "return_contract": {
-          "$ref": "#/$defs/ReturnContract"
+        "project_manager_report": {
+          "$ref": "#/$defs/ProjectManagerReport"
         }
       },
       "required": [
-        "return_contract"
+        "project_manager_report"
       ],
-      "title": "OutputItem",
+      "title": "Output",
       "type": "object"
     },
     "ProjectContextPacket": {
@@ -126,6 +126,26 @@
         "schema_ref"
       ],
       "title": "ProjectContextPacket",
+      "type": "object"
+    },
+    "ProjectManagerReport": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../contracts/ProjectManagerReport.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "schema_ref"
+      ],
+      "title": "ProjectManagerReport",
       "type": "object"
     },
     "ReportDerivationRules": {
@@ -155,26 +175,6 @@
         "repository_state"
       ],
       "title": "ReportDerivationRules",
-      "type": "object"
-    },
-    "ReturnContract": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "schema_ref": {
-          "const": "../contracts/ProjectManagerReport.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "schema_ref"
-      ],
-      "title": "ReturnContract",
       "type": "object"
     },
     "ReviewLenses": {
@@ -290,18 +290,10 @@
       "$ref": "#/$defs/Instructions"
     },
     "input": {
-      "items": {
-        "$ref": "#/$defs/InputItem"
-      },
-      "title": "Input",
-      "type": "array"
+      "$ref": "#/$defs/Input"
     },
     "output": {
-      "items": {
-        "$ref": "#/$defs/OutputItem"
-      },
-      "title": "Output",
-      "type": "array"
+      "$ref": "#/$defs/Output"
     }
   },
   "required": [

@@ -59,8 +59,7 @@
       "optionality_preservation": "does the recommendation reduce that tension while avoiding unnecessary compatibility promises, premature architecture, or hidden project-intent amendments?"
       }
     },
-  "input": [
-    {
+    "input": {
       "project_context_packet": {
         "required": true,
         "authoritative": true,
@@ -71,14 +70,11 @@
         "authoritative": true,
         "schema_ref": "../runtime/Task.schema.json"
       }
-    }
-  ],
-  "output": [
-    {
-      "return_contract": {
+    },
+    "output": {
+      "project_manager_report": {
         "required": true,
         "schema_ref": "../contracts/ProjectManagerReport.schema.json"
       }
     }
-  ]
 }
