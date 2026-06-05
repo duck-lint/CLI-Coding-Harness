@@ -13,11 +13,13 @@
           "type": "boolean"
         },
         "document": {
+          "const": "./governance_primitives.json",
           "title": "Document",
           "type": "string"
         },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "./GovernancePrimitives.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
@@ -25,7 +27,7 @@
         "required",
         "authoritative",
         "document",
-        "schema"
+        "schema_ref"
       ],
       "title": "GovernancePrimitives",
       "type": "object"
@@ -42,11 +44,13 @@
           "type": "boolean"
         },
         "document": {
+          "const": "./known_failures.json",
           "title": "Document",
           "type": "string"
         },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "./KnownFailures.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
@@ -54,7 +58,7 @@
         "required",
         "authoritative",
         "document",
-        "schema"
+        "schema_ref"
       ],
       "title": "KnownFailures",
       "type": "object"
@@ -90,11 +94,13 @@
           "type": "boolean"
         },
         "document": {
+          "const": "./open_decisions.json",
           "title": "Document",
           "type": "string"
         },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "./OpenDecisions.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
@@ -102,7 +108,7 @@
         "required",
         "authoritative",
         "document",
-        "schema"
+        "schema_ref"
       ],
       "title": "OpenDecisions",
       "type": "object"
@@ -119,11 +125,13 @@
           "type": "boolean"
         },
         "document": {
+          "const": "./project_spec.json",
           "title": "Document",
           "type": "string"
         },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "./ProjectSpec.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
@@ -131,7 +139,7 @@
         "required",
         "authoritative",
         "document",
-        "schema"
+        "schema_ref"
       ],
       "title": "ProjectSpec",
       "type": "object"

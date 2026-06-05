@@ -1,7 +1,135 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "DerivationRules": {
+    "InputItem": {
+      "additionalProperties": false,
+      "properties": {
+        "project_context_packet": {
+          "$ref": "#/$defs/ProjectContextPacket"
+        },
+        "task": {
+          "$ref": "#/$defs/Task"
+        }
+      },
+      "required": [
+        "project_context_packet",
+        "task"
+      ],
+      "title": "InputItem",
+      "type": "object"
+    },
+    "Instructions": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "posture": {
+          "title": "Posture",
+          "type": "string"
+        },
+        "objective": {
+          "title": "Objective",
+          "type": "string"
+        },
+        "validity_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validity Conditions",
+          "type": "array"
+        },
+        "report_derivation_rules": {
+          "$ref": "#/$defs/ReportDerivationRules"
+        },
+        "conduct_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conduct Rules",
+          "type": "array"
+        },
+        "review_lenses": {
+          "$ref": "#/$defs/ReviewLenses"
+        }
+      },
+      "required": [
+        "role",
+        "posture",
+        "objective",
+        "validity_conditions",
+        "report_derivation_rules",
+        "conduct_rules",
+        "review_lenses"
+      ],
+      "title": "Instructions",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "agent_name": {
+          "title": "Agent Name",
+          "type": "string"
+        },
+        "mode": {
+          "title": "Mode",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "agent_name",
+        "mode"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "OutputItem": {
+      "additionalProperties": false,
+      "properties": {
+        "return_contract": {
+          "$ref": "#/$defs/ReturnContract"
+        }
+      },
+      "required": [
+        "return_contract"
+      ],
+      "title": "OutputItem",
+      "type": "object"
+    },
+    "ProjectContextPacket": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../project-spec/ProjectContextPacket.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "schema_ref"
+      ],
+      "title": "ProjectContextPacket",
+      "type": "object"
+    },
+    "ReportDerivationRules": {
+      "additionalProperties": false,
       "properties": {
         "evaluation_basis": {
           "title": "Evaluation Basis",
@@ -26,153 +154,31 @@
         "next_step_recommendations",
         "repository_state"
       ],
-      "title": "DerivationRules",
-      "type": "object"
-    },
-    "Input": {
-      "properties": {
-        "project_context_packet": {
-          "$ref": "#/$defs/ProjectContextPacket"
-        },
-        "task": {
-          "$ref": "#/$defs/Task"
-        }
-      },
-      "required": [
-        "project_context_packet",
-        "task"
-      ],
-      "title": "Input",
-      "type": "object"
-    },
-    "Instructions": {
-      "properties": {
-        "role": {
-          "title": "Role",
-          "type": "string"
-        },
-        "posture": {
-          "title": "Posture",
-          "type": "string"
-        },
-        "trajectory_review": {
-          "$ref": "#/$defs/TrajectoryReview"
-        },
-        "validity_conditions": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Validity Conditions",
-          "type": "array"
-        },
-        "derivation_rules": {
-          "$ref": "#/$defs/DerivationRules"
-        },
-        "conduct_rules": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Conduct Rules",
-          "type": "array"
-        },
-        "review_lenses": {
-          "$ref": "#/$defs/ReviewLenses"
-        }
-      },
-      "required": [
-        "role",
-        "posture",
-        "trajectory_review",
-        "validity_conditions",
-        "derivation_rules",
-        "conduct_rules",
-        "review_lenses"
-      ],
-      "title": "Instructions",
-      "type": "object"
-    },
-    "Metadata": {
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "name": {
-          "title": "Name",
-          "type": "string"
-        },
-        "mode": {
-          "title": "Mode",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "name",
-        "mode"
-      ],
-      "title": "Metadata",
-      "type": "object"
-    },
-    "Output": {
-      "properties": {
-        "return_contract": {
-          "$ref": "#/$defs/ReturnContract"
-        }
-      },
-      "required": [
-        "return_contract"
-      ],
-      "title": "Output",
-      "type": "object"
-    },
-    "ProjectContextPacket": {
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
-        },
-        "document": {
-          "title": "Document",
-          "type": "string"
-        },
-        "schema": {
-          "title": "Schema",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "authoritative",
-        "document",
-        "schema"
-      ],
-      "title": "ProjectContextPacket",
+      "title": "ReportDerivationRules",
       "type": "object"
     },
     "ReturnContract": {
+      "additionalProperties": false,
       "properties": {
         "required": {
           "title": "Required",
           "type": "boolean"
         },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "../contracts/ProjectManagerReport.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
       "required": [
         "required",
-        "schema"
+        "schema_ref"
       ],
       "title": "ReturnContract",
       "type": "object"
     },
     "ReviewLenses": {
+      "additionalProperties": false,
       "properties": {
         "invariant_coverage": {
           "title": "Invariant Coverage",
@@ -246,6 +252,7 @@
       "type": "object"
     },
     "Task": {
+      "additionalProperties": false,
       "properties": {
         "required": {
           "title": "Required",
@@ -255,76 +262,22 @@
           "title": "Authoritative",
           "type": "boolean"
         },
-        "document": {
-          "title": "Document",
-          "type": "string"
-        },
-        "schema": {
-          "title": "Schema",
+        "schema_ref": {
+          "const": "../runtime/Task.schema.json",
+          "title": "Schema Ref",
           "type": "string"
         }
       },
       "required": [
         "required",
         "authoritative",
-        "document",
-        "schema"
+        "schema_ref"
       ],
       "title": "Task",
       "type": "object"
-    },
-    "TrajectoryReview": {
-      "properties": {
-        "objective": {
-          "title": "Objective",
-          "type": "string"
-        },
-        "primary_functions": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Primary Functions",
-          "type": "array"
-        },
-        "current_posture": {
-          "title": "Current Posture",
-          "type": "string"
-        },
-        "thesis_attractor": {
-          "title": "Thesis Attractor",
-          "type": "string"
-        },
-        "structural_tension": {
-          "title": "Structural Tension",
-          "type": "string"
-        },
-        "dominant_tension_justification": {
-          "title": "Dominant Tension Justification",
-          "type": "string"
-        },
-        "proof_frontier": {
-          "title": "Proof Frontier",
-          "type": "string"
-        },
-        "next_admissible_transition": {
-          "title": "Next Admissible Transition",
-          "type": "string"
-        }
-      },
-      "required": [
-        "objective",
-        "primary_functions",
-        "current_posture",
-        "thesis_attractor",
-        "structural_tension",
-        "dominant_tension_justification",
-        "proof_frontier",
-        "next_admissible_transition"
-      ],
-      "title": "TrajectoryReview",
-      "type": "object"
     }
   },
+  "additionalProperties": false,
   "properties": {
     "$schema": {
       "title": "$Schema",
@@ -336,18 +289,18 @@
     "instructions": {
       "$ref": "#/$defs/Instructions"
     },
-    "inputs": {
+    "input": {
       "items": {
-        "$ref": "#/$defs/Input"
+        "$ref": "#/$defs/InputItem"
       },
-      "title": "Inputs",
+      "title": "Input",
       "type": "array"
     },
-    "outputs": {
+    "output": {
       "items": {
-        "$ref": "#/$defs/Output"
+        "$ref": "#/$defs/OutputItem"
       },
-      "title": "Outputs",
+      "title": "Output",
       "type": "array"
     }
   },
@@ -355,8 +308,8 @@
     "$schema",
     "metadata",
     "instructions",
-    "inputs",
-    "outputs"
+    "input",
+    "output"
   ],
   "title": "ProjectManagerAgent",
   "type": "object"

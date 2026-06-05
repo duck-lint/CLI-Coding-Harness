@@ -8,24 +8,24 @@
     "required": true,
     "authoritative": true,
     "document": "./project_spec.json",
-    "schema": "./project_spec.schema.json"
+    "schema_ref": "./ProjectSpec.schema.json"
   },
   "governance_primitives": {
     "required": true,
     "authoritative": true,
     "document": "./governance_primitives.json",
-    "schema": "./governance_primitives.schema.json"
+    "schema_ref": "./GovernancePrimitives.schema.json"
   },
   "known_failures": {
     "required": true,
     "authoritative": true,
     "document": "./known_failures.json",
-    "schema": "./known_failures.schema.json"
+    "schema_ref": "./KnownFailures.schema.json"
   },
   "open_decisions": {
     "required": true,
     "authoritative": true,
     "document": "./open_decisions.json",
-    "schema": "./open_decisions.schema.json"
+    "schema_ref": "./OpenDecisions.schema.json"
   }
 }

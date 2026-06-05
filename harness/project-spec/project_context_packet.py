@@ -19,8 +19,8 @@ class ProjectSpec(BaseModel):
     
     required: bool
     authoritative: bool
-    document: str
-    schema_: str = Field(..., alias='schema')
+    document: Literal["./project_spec.json"]
+    schema_ref: Literal["./ProjectSpec.schema.json"]
 
 
 class GovernancePrimitives(BaseModel):
@@ -28,8 +28,8 @@ class GovernancePrimitives(BaseModel):
 
     required: bool
     authoritative: bool
-    document: str
-    schema_: str = Field(..., alias='schema')
+    document: Literal["./governance_primitives.json"]
+    schema_ref: Literal["./GovernancePrimitives.schema.json"]
 
 
 class KnownFailures(BaseModel):
@@ -37,8 +37,8 @@ class KnownFailures(BaseModel):
 
     required: bool
     authoritative: bool
-    document: str
-    schema_: str = Field(..., alias='schema')
+    document: Literal["./known_failures.json"]
+    schema_ref: Literal["./KnownFailures.schema.json"]
 
 
 class OpenDecisions(BaseModel):
@@ -46,8 +46,8 @@ class OpenDecisions(BaseModel):
 
     required: bool
     authoritative: bool
-    document: str
-    schema_: str = Field(..., alias='schema')
+    document: Literal["./open_decisions.json"]
+    schema_ref: Literal["./OpenDecisions.schema.json"]
 
 
 class ProjectContextPacket(BaseModel):
