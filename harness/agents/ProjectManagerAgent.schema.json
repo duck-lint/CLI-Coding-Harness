@@ -1,23 +1,5 @@
 {
   "$defs": {
-    "ContextPacket": {
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "schema": {
-          "title": "Schema",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "schema"
-      ],
-      "title": "ContextPacket",
-      "type": "object"
-    },
     "DerivationRules": {
       "properties": {
         "evaluation_basis": {
@@ -48,15 +30,15 @@
     },
     "Input": {
       "properties": {
-        "compiled_context": {
-          "$ref": "#/$defs/ContextPacket"
+        "project_context_packet": {
+          "$ref": "#/$defs/ProjectContextPacket"
         },
         "task": {
           "$ref": "#/$defs/Task"
         }
       },
       "required": [
-        "compiled_context",
+        "project_context_packet",
         "task"
       ],
       "title": "Input",
@@ -129,6 +111,46 @@
         "mode"
       ],
       "title": "Metadata",
+      "type": "object"
+    },
+    "Output": {
+      "properties": {
+        "return_contract": {
+          "$ref": "#/$defs/ReturnContract"
+        }
+      },
+      "required": [
+        "return_contract"
+      ],
+      "title": "Output",
+      "type": "object"
+    },
+    "ProjectContextPacket": {
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema"
+      ],
+      "title": "ProjectContextPacket",
       "type": "object"
     },
     "ReturnContract": {
@@ -228,6 +250,14 @@
           "title": "Required",
           "type": "boolean"
         },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
         "schema": {
           "title": "Schema",
           "type": "string"
@@ -235,6 +265,8 @@
       },
       "required": [
         "required",
+        "authoritative",
+        "document",
         "schema"
       ],
       "title": "Task",
@@ -310,8 +342,12 @@
       "title": "Inputs",
       "type": "array"
     },
-    "return_contract": {
-      "$ref": "#/$defs/ReturnContract"
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/Output"
+      },
+      "title": "Outputs",
+      "type": "array"
     }
   },
   "required": [
@@ -319,7 +355,7 @@
     "metadata",
     "instructions",
     "inputs",
-    "return_contract"
+    "outputs"
   ],
   "title": "ProjectManagerAgent",
   "type": "object"

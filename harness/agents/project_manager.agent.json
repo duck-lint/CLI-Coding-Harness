@@ -77,18 +77,26 @@
   },
   "inputs": [
     {
-      "compiled_context": {
+      "project_context_packet": {
         "required": true,
-        "schema": "../context/compiled_context.schema.json"
+        "authoritative": true,
+        "document": "../project-spec/project_context_packet.json",
+        "schema": "../project-spec/project_context_packet.schema.json"
       },
       "task": {
         "required": true,
-        "schema": "../context/task.schema.json"
+        "authoritative": true,
+        "document": "../runtime/task.json",
+        "schema": "../runtime/task.schema.json"
       }
     }
   ],
-  "return_contract": {
-    "required": true,
-    "schema": "../contracts/project_manager_report.schema.json"
-  }
+  "outputs": [
+    {
+      "return_contract": {
+        "required": true,
+        "schema": "../contracts/project_manager_report.schema.json"
+      }
+    }
+  ]
 }

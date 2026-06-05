@@ -1,0 +1,178 @@
+{
+  "$defs": {
+    "GovernancePrimitives": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema"
+      ],
+      "title": "GovernancePrimitives",
+      "type": "object"
+    },
+    "KnownFailures": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema"
+      ],
+      "title": "KnownFailures",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "OpenDecisions": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema"
+      ],
+      "title": "OpenDecisions",
+      "type": "object"
+    },
+    "ProjectSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "title": "Document",
+          "type": "string"
+        },
+        "schema": {
+          "title": "Schema",
+          "type": "string"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema"
+      ],
+      "title": "ProjectSpec",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "$Schema"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "project_spec": {
+      "$ref": "#/$defs/ProjectSpec"
+    },
+    "governance_primitives": {
+      "$ref": "#/$defs/GovernancePrimitives"
+    },
+    "known_failures": {
+      "$ref": "#/$defs/KnownFailures"
+    },
+    "open_decisions": {
+      "$ref": "#/$defs/OpenDecisions"
+    }
+  },
+  "required": [
+    "metadata",
+    "project_spec",
+    "governance_primitives",
+    "known_failures",
+    "open_decisions"
+  ],
+  "title": "ProjectContextPacket",
+  "type": "object"
+}
