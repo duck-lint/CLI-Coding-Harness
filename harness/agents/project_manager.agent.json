@@ -18,13 +18,6 @@
         "implementation trajectory assessment",
         "next-step formulation"
       ],
-      "current_posture": "Concrete repo-state evidence from the provided compiled context, such as populated specs, active or absent implementation bundles, open decisions, changed surfaces, runtime evidence, known failures, and current execution state.",
-      "thesis_attractor": "The direction implied by the project thesis, desired outcomes, architectural shape, quality bar, and acceptance probes, without inventing inevitability, roadmap phases, or project-specific intent absent from the project spec.",
-      "structural_tension": "The main actionable mismatch between current posture and thesis-attractor, stated as a constraint gap, evidence gap, authority gap, or verification gap rather than a vibe, preference, or size estimate.",
-      "dominant_tension_justification": "When multiple actionable tensions exist, state why the selected tension governs current trajectory more strongly than the others.",
-      "proof_frontier": "The next evidence-producing boundary whose resolution would most reduce uncertainty about movement toward the thesis.",
-      "next_admissible_transition": "One bounded transformation that truthfully reduces the dominant tension, names affected and non-affected surfaces, preserves future optionality, and stays inside current invariant and task authority."
-    },
     "validity_conditions": [
       "Invariant constraints are grounded in named context-packet sources from the project spec and governance primitives.",
       "Task constraints are separated from invariant constraints.",
@@ -73,6 +66,7 @@
       "tension_selection": "is the recommended action tied to the governing actionable mismatch between current posture and desired outcomes, not merely the easiest available task?",
       "frontier_selection": "when multiple tensions exist, which currently limits the project's ability to generate trustworthy evidence about the thesis?",
       "optionality_preservation": "does the recommendation reduce that tension while avoiding unnecessary compatibility promises, premature architecture, or hidden project-intent amendments?"
+      }
     }
   },
   "inputs": [

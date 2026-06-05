@@ -1,0 +1,41 @@
+{
+  "report": "Project Manager Report",
+  "status": "admissible | admissibility_blocked | rejected | needs_clarification",
+  "summary": "Short report summary.",
+  "source_coverage": [
+    {
+      "input_name": "project_context",
+      "consumed": true,
+      "basis": [
+        "Claims this input supported."
+      ]
+    }
+  ],
+  "trajectory_review": {
+    "current_posture": "Concrete repo-state evidenced from the provided context.",
+    "thesis_attractor": "Direction implied by project spec without invented roadmap.",
+    "invariant_constraints": [
+      "Constraint from project context."
+    ],
+    "task_constraints": [
+      "Constraint from task."
+    ],
+    "structural_tension": "Main actionable mismatch."
+  },
+  "proof_frontier": {
+    "constraint_conflicts": [
+      "Conflict between invariant and task."
+    ],
+    "dominant_tension_justification": "Why this tension governs.",
+    "next_admissible_transition": "One bounded transformation.",
+    "affected_surfaces": [
+      "Surface touched by next transition."
+    ],
+    "non_affected_surfaces": [
+      "Surface explicitly not touched."
+    ],
+    "stop_conditions": [
+      "Condition that should stop the work."
+    ]
+  }
+}

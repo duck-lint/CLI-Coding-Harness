@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "ProofFrontier": {
+      "additionalProperties": false,
+      "properties": {
+        "constraint_conflicts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraint Conflicts",
+          "type": "array"
+        },
+        "dominant_tension_justification": {
+          "title": "Dominant Tension Justification",
+          "type": "string"
+        },
+        "next_admissible_transition": {
+          "title": "Next Admissible Transition",
+          "type": "string"
+        },
+        "affected_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Surfaces",
+          "type": "array"
+        },
+        "non_affected_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Non Affected Surfaces",
+          "type": "array"
+        },
+        "stop_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Stop Conditions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "constraint_conflicts",
+        "dominant_tension_justification",
+        "next_admissible_transition",
+        "affected_surfaces",
+        "non_affected_surfaces",
+        "stop_conditions"
+      ],
+      "title": "ProofFrontier",
+      "type": "object"
+    },
+    "SourceCoverageItem": {
+      "additionalProperties": false,
+      "properties": {
+        "input_name": {
+          "title": "Input Name",
+          "type": "string"
+        },
+        "consumed": {
+          "title": "Consumed",
+          "type": "boolean"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        }
+      },
+      "required": [
+        "input_name",
+        "consumed",
+        "basis"
+      ],
+      "title": "SourceCoverageItem",
+      "type": "object"
+    },
+    "TrajectoryReview": {
+      "additionalProperties": false,
+      "properties": {
+        "current_posture": {
+          "title": "Current Posture",
+          "type": "string"
+        },
+        "thesis_attractor": {
+          "title": "Thesis Attractor",
+          "type": "string"
+        },
+        "invariant_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Invariant Constraints",
+          "type": "array"
+        },
+        "task_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Task Constraints",
+          "type": "array"
+        },
+        "structural_tension": {
+          "title": "Structural Tension",
+          "type": "string"
+        }
+      },
+      "required": [
+        "current_posture",
+        "thesis_attractor",
+        "invariant_constraints",
+        "task_constraints",
+        "structural_tension"
+      ],
+      "title": "TrajectoryReview",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "report": {
+      "const": "Project Manager Report",
+      "title": "Report",
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "admissible",
+        "admissibility_blocked",
+        "rejected",
+        "needs_clarification"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    },
+    "source_coverage": {
+      "items": {
+        "$ref": "#/$defs/SourceCoverageItem"
+      },
+      "minItems": 1,
+      "title": "Source Coverage",
+      "type": "array"
+    },
+    "trajectory_review": {
+      "$ref": "#/$defs/TrajectoryReview"
+    },
+    "proof_frontier": {
+      "$ref": "#/$defs/ProofFrontier"
+    }
+  },
+  "required": [
+    "report",
+    "status",
+    "summary",
+    "source_coverage",
+    "trajectory_review",
+    "proof_frontier"
+  ],
+  "title": "ProjectManagerReport",
+  "type": "object"
+}
