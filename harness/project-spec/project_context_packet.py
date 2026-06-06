@@ -49,6 +49,20 @@ class OpenDecisions(BaseModel):
     document: Literal["./open_decisions.json"]
     schema_ref: Literal["./OpenDecisions.schema.json"]
 
+class CurrentImplementation(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    required: bool
+    authoritative: bool
+    document: list[Literal[
+        "../implementations/active/implementation_plan_**.md",
+        "../implementations/active/implementation_tracker_**.md"
+        ]]
+    schema_ref: list[Literal[
+        "../implementations/active/ImplementationPlan.schema.json",
+        "../implementations/active/ImplementationTracker.schema.json"
+        ]]
+
 
 class ProjectContextPacket(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -59,3 +73,4 @@ class ProjectContextPacket(BaseModel):
     governance_primitives: GovernancePrimitives
     known_failures: KnownFailures
     open_decisions: OpenDecisions
+    current_implementation: CurrentImplementation

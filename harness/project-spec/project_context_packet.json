@@ -27,5 +27,17 @@
     "authoritative": true,
     "document": "./open_decisions.json",
     "schema_ref": "./OpenDecisions.schema.json"
+  },
+  "current_implementation": {
+    "required": true,
+    "authoritative": true,
+    "document": [
+      "../implementations/active/implementation_plan_**.md", 
+      "../implementations/active/implementation_tracker_**.md"
+    ],
+    "schema_ref": [
+      "../implementations/active/ImplementationPlan.schema.json",
+      "../implementations/active/ImplementationTracker.schema.json"
+    ]
   }
 }

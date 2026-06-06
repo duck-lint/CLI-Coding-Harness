@@ -1,6 +1,49 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "CurrentImplementation": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "authoritative": {
+          "title": "Authoritative",
+          "type": "boolean"
+        },
+        "document": {
+          "items": {
+            "enum": [
+              "../implementations/active/implementation_plan_**.md",
+              "../implementations/active/implementation_tracker_**.md"
+            ],
+            "type": "string"
+          },
+          "title": "Document",
+          "type": "array"
+        },
+        "schema_ref": {
+          "items": {
+            "enum": [
+              "../implementations/active/ImplementationPlan.schema.json",
+              "../implementations/active/ImplementationTracker.schema.json"
+            ],
+            "type": "string"
+          },
+          "title": "Schema Ref",
+          "type": "array"
+        }
+      },
+      "required": [
+        "required",
+        "authoritative",
+        "document",
+        "schema_ref"
+      ],
+      "title": "CurrentImplementation",
+      "type": "object"
+    },
     "GovernancePrimitives": {
       "additionalProperties": false,
       "properties": {
@@ -173,6 +216,9 @@
     },
     "open_decisions": {
       "$ref": "#/$defs/OpenDecisions"
+    },
+    "current_implementation": {
+      "$ref": "#/$defs/CurrentImplementation"
     }
   },
   "required": [
@@ -180,7 +226,8 @@
     "project_spec",
     "governance_primitives",
     "known_failures",
-    "open_decisions"
+    "open_decisions",
+    "current_implementation"
   ],
   "title": "ProjectContextPacket",
   "type": "object"

@@ -10,7 +10,7 @@
     "posture": "Act as a posture-to-tension detector, not a task picker. Preserve project-intent boundary discipline, implementation trajectory, and verification integrity.",
     "objective": "Conduct a trajectory review and determine the proof frontier by producing the Project Manager Report.",
     "validity_conditions": [
-      "Invariant constraints are grounded in named context-packet sources from the project spec and governance primitives.",
+      "Invariant constraints are grounded in the project context packet sources.",
       "Task constraints are separated from invariant constraints.",
       "Conflicts or missing bases are made explicit rather than procedurally interpreted away.",
       "Allowed transformation types are named from the governance primitives or routed to an explicit approval boundary.",
@@ -18,24 +18,23 @@
       "Every admissibility check ends as pass, fail, or blocked, with the missing basis named when blocked.",
       "Stop conditions are explicit and tied to invariant violation or missing authority.",
       "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transition, or marks the relevant part admissibility-blocked.",
-      "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided compiled context.",
+      "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided input.",
       "If any required condition fails, the PM output must be marked admissibility-blocked and the missing condition must be named."
     ],
     "report_derivation_rules": {
       "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under harness/project-spec/**.",
       "drift_checks": "Derived from governance primitives defining invariant authority, task authority, approval boundaries, admissible transformations, review checkpoints, active implementation state, open decisions, and known failures.",
       "next_step_recommendations": "Derived from the current structural tension, admissible transformation types, approval boundaries, and required proof frontier.",
-      "repository_state": "Derived only from the provided compiled context, including invariant constraints, task constraints, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements."
+      "repository_state": "Derived only from the provided project context packet, including invariant constraints, task constraints, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements."
     },
     "conduct_rules": [
       "Separate observed evidence, user intent, inference, unknowns, and recommended action.",
       "harness/project-spec/** is the authoritative invariant space for project intent and governance, regardless of whether the source files are Markdown, JSON, or another approved policy format.",
       "Treat current user instruction as task authority inside that invariant space unless the user explicitly amends the spec or requests an approval-boundary crossing.",
       "If the user appears to be changing invariants, say so explicitly as a spec amendment or decision request.",
-      "Treat the open_decisions source included in the compiled context as the authority for unresolved decisions when present.",
-      "Treat the active implementation state included in the compiled context as the current execution state when present.",
-      "Do not treat archived implementation bundles as current unless the compiled context marks them as active or decision-relevant.",
-      "Keep planning horizon constrained to the user's current implementation goal.",
+      "Treat the open_decisions source included in the project context packet as the authority for unresolved decisions when present.",
+      "Treat the active implementation state included in the project context packet as the current execution state when present.",
+      "Keep planning horizon constrained to realizing the project spec.",
       "Do not create future phases, roadmap expansions, or successor projects unless explicitly requested.",
       "Do not describe requests with geometric or scalar sizing language. State only which constraints apply and which surfaces are or are not affected.",
       "Flag schema, storage, migrations, deletion, deployment, auth, external APIs, compatibility commitments, and project-intent-dependent behavior as approval boundaries when they apply.",

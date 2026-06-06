@@ -12,11 +12,11 @@
       "The harness as a local CLI governance runtime.",
       "Repo-local authority under harness/",
       "Explicit separation between project invariants and current task authority.",
-      "Explicit separation between role contract, compiled context, output schema, returned report, and runtime probe.",
+      "Explicit separation between role contract, project context packet, output schema, returned report, and runtime probe.",
       "PM-only, read-only behavior for the first vertical slice.",
-      "Structured JSON as the authoritative runtime artifact format for role contracts, compiled contexts, reports, policies, and saved evidence where the source is object-shaped.",
+      "Structured JSON as the authoritative runtime artifact format for role contracts, project context packet, reports, policies, and saved evidence where the source is object-shaped.",
       "Deterministic orchestration for the first slice.",
-      "No agent file inspection outside the compiled compiled context.",
+      "No agent file inspection outside the provided input.",
       "No agent file mutation.",
       "No agent shell execution.",
       "No worker adapter invocation from the plan workflow.",
@@ -25,8 +25,8 @@
     ],
     "observability_scaffolding": {
       "artifact_paths": [
-        "task_brief.json",
-        "compiled_context.json",
+        "task.json",
+        "project_context_packet.json",
         "project_manager_report.json"
       ],
       "runtime_identity": [
@@ -57,7 +57,7 @@
       "Invariant authority versus task authority.",
       "Policy versus prompt.",
       "Prompt/role contract versus output schema.",
-      "Compiled Context versus raw repo files.",
+      "Input/project context packet versus raw repo files.",
       "Generated report versus deterministic probe.",
       "Scaffold-only evidence versus runtime-evidenced behavior.",
       "Planning versus implementation.",
@@ -92,7 +92,7 @@
       },
       {
         "rank": 5,
-        "id": "project_authority_current_instructions",
+        "id": "current_instructions",
         "description": "Current user instructions selecting, sequencing, or pausing already-authorized work."
       },
       {
@@ -114,7 +114,7 @@
       {
         "rank": 2,
         "id": "open_decisions",
-        "description": "Open decisions in the compiled context, when present."
+        "description": "Open decisions in the project context packet, when present."
       },
       {
         "rank": 3,
@@ -124,7 +124,7 @@
       {
         "rank": 4,
         "id": "current_repo_state",
-        "description": "Current repo state surfaced by the compiled context."
+        "description": "Current repo state surfaced by the provided input."
       },
       {
         "rank": 5,
@@ -188,8 +188,8 @@
         "Allowed tool behavior."
       ],
       "api_and_model_behavior": [
-        "OpenAI Agents SDK call path.",
-        "lower-level OpenAI API client path.",
+        "OpenAI Response API client.",
+        "Structured outputs using json schemas.",
         "Model selection.",
         "Retry behavior.",
         "Structured output mode.",
@@ -254,7 +254,7 @@
       "The system is a local Python/JSON coding-agent CLI harness.",
       "The first proven workflow is PM-only planning.",
       "The first workflow is read-only except for writing run artifacts.",
-      "The PM receives compiled context and does not inspect files directly.",
+      "The PM receives project context packet through input and does not inspect files directly.",
       "Runtime compiles context; the model evaluates it.",
       "Python owns mechanics and enforcement.",
       "JSON role/policy/context/report objects own structured semantics.",
@@ -337,8 +337,7 @@
       "preserve_project_spec": [
         "Loading project_manager.agent.json",
         "Validating required agent contract fields.",
-        "Compiling structured compiled_context.json",
-        "Preserving historical Markdown compiled context artifacts only as archived run evidence until archive cleanup",
+        "Compiling structured project_context_packet.json",
         "Passing JSON context to the PM route.",
         "Validating project_manager_report.json",
         "Saving run artifacts.",
@@ -417,7 +416,7 @@
         "Route selected.",
         "Role contract path.",
         "Model route.",
-        "Compiled Context path.",
+        "Project Context Packet path.",
         "Output schema path.",
         "Report path.",
         "Validation result.",
@@ -446,7 +445,7 @@
   "acceptance_probes": [
     {
       "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured compiled context while saving valid runtime evidence and stopping before implementation?",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured input while saving valid runtime evidence and stopping before implementation?",
       "runtime_path_required": {
         "command": "python",
         "args": [
@@ -459,13 +458,13 @@
       "evidence_required": {
         "saved_artifacts": [
           {
-            "id": "task_brief",
-            "path_pattern": "harness/runs/<timestamp>/task_brief.json",
+            "id": "task",
+            "path_pattern": "harness/runs/<timestamp>/task.json",
             "required": true
           },
           {
-            "id": "compiled_context",
-            "path_pattern": "harness/runs/<timestamp>/compiled_context.json",
+            "id": "project_context_packet",
+            "path_pattern": "./project_spec/project_context_packet.json",
             "required": true
           },
           {

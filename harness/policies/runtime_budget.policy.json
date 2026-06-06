@@ -1,7 +1,7 @@
 {
   "$schema": "RuntimeBudgetPolicy.schema.json",
   "default": {
-    "max_compiled_context_tokens": 60000,
+    "max_input_tokens": 60000,
     "reserved_output_tokens": 4000,
     "oversize_strategy": "fail_or_batch",
     "truncation": "disabled",
