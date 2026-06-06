@@ -1,11 +1,10 @@
 {
-  "$schema": "ProjectSpec.schema.json",
   "metadata": {
-    "document_id": "project_spec.json",
+    "document_id": "project_spec",
     "title": "Project Spec",
     "purpose": "This file, together with the other docs under ./project-spec/, is the authoritative invariant space for harnessed work in this repo",
     "source_format": "json",
-    "document_authority": "invariant_authority_object"
+    "authority_role": "invariant_authority_object"
   },
   "project_thesis": {
     "project_is": [
@@ -29,6 +28,17 @@
       ],
       "design_guardrail": "The harness does not try to make coding agents more magical. It tries to make their participation in software work more explicit, auditable, and bounded."
     },
+    "core_runtime_shape": [
+      "A CLI entrypoint receives a user task.",
+      "The orchestrator selects a bounded workflow.",
+      "The context compiler produces a structured compiled context.",
+      "Role contracts define what each agent is allowed to do and how it should interpret the packet.",
+      "The OpenAI API is used for bounded semantic transformation calls.",
+      "Report schemas define machine-checkable output shapes.",
+      "Runtime probes and saved artifacts distinguish scaffold claims from live-wired behavior.",
+      "Worker adapters are isolated from governance roles and require explicit authorization before file mutation.",
+      "The system is a governance runtime first, not an autonomy demo."
+    ],
     "project_exists_to": {
       "delineate_boundaries": [
         "Prompt versus policy.",
@@ -48,18 +58,9 @@
         "Preventing implementation from being treated as admissible merely because an agent wrote a plausible plan.",
         "Keeping review and proof tied to repo-local artifacts, not chat history."
       ]
-    },
-    "core_runtime_shape": [
-      "A CLI entrypoint receives a user task.",
-      "The orchestrator selects a bounded workflow.",
-      "The context compiler produces a structured compiled context.",
-      "Role contracts define what each agent is allowed to do and how it should interpret the packet.",
-      "The OpenAI API is used for bounded semantic transformation calls.",
-      "Report schemas define machine-checkable output shapes.",
-      "Runtime probes and saved artifacts distinguish scaffold claims from live-wired behavior.",
-      "Worker adapters are isolated from governance roles and require explicit authorization before file mutation.",
-      "The system is a governance runtime first, not an autonomy demo."
-    ],
+    }
+  },
+  "desired_user_outcomes": {
     "primary_operator": "Primary operator is the project authority using agent assistance to build software wanting stronger control over context, authority, permissions, and evidence than a normal chat interface or IDE extension provides.",
     "highest_value_workflow": {
       "command": "python",
@@ -79,7 +80,13 @@
         "Print a short terminal summary.",
         "Identify the next admissible transition."
       ],
-      "stop_condition": "Stop before implementation"
+      "stop_condition": "Stop before implementation",
+      "deferred_transition": {
+        "id": "apply_workflow",
+        "status": "deferred",
+        "authorization_required": true,
+        "command": null
+      }
     }
   },
   "non_goals": {
@@ -149,24 +156,29 @@
       "authoritative_pm_output_artifact": "project_manager_report.json"
     },
     "dependencies": {
-      "required": [
+      "first_slice": {
+        "required": [
           "Python runtime.",
           "OpenAI Agents SDK or OpenAI API call path.",
           "OPENAI_API_KEY or equivalent configured outside committed files",
           "Local filesystem artifacts under harness/runs/**",
           "Local git availability where possible."
-      ],
-      "excluded": [
+        ],
+        "excluded": [
           "No external database.",
           "No network tools other than the model API call.",
           "No web search by default.",
           "No shell tools for agents."
-      ]
+        ]
+      },
+      "when_appropriate": {
+        "candidate_upgrade": "Rust"
+      }
     },
-    "runtime_constraints": [
+    "first_slice_runtime_constraints": [
       "The first working implementation may be Python-only."
     ],
-    "governance_primitives_constraints": [
+    "governance_representation_constraints": [
       "The first durable representation of governance should be JSON-first where the source is object-shaped."
     ],
     "forbidden_surfaces": [
@@ -217,27 +229,18 @@
       "Clean transition from plan to later apply."
     ],
     "authoritative_boundaries": {
-      "authoritative_sources": [
-        "User requests.",
-        "./governance_primitives.json",
-        "./runtime/runtime_doctrine.md",
-        "./policies/runtime_budget.policy.json"
-    ],
-      "authoritative_memory": [
-        "../implementation-projects/**",
-        "./known_failures",
-        "./open_decisions"
-      ],
-      "agents_must_respect": [
+      "authoritative_substrate": "local_repository",
+      "authoritative_memory": "harness/",
+      "harness_must_respect": [
         "The current filesystem state of the repo.",
         "The current git state where available.",
-        "The structured files under ../project-spec/**",
-        "The structured policies under ../policies/**",
-        "The structured role contracts under ../agents/**",
-        "The output contracts under ../contracts/**",
-        "Active implementation state under ../implementation-projects/active/**",
-        "Archived implementation evidence under ../implementation-projects/archive/**",
-        "Saved runtime artifacts under ../runs/**",
+        "The structured files under harness/project-spec/**",
+        "The structured policies under harness/policies/**",
+        "The structured role contracts under harness/agents/**",
+        "The output contracts under harness/contracts/**",
+        "Active implementation state under harness/implementation-projects/active/**",
+        "Archived implementation evidence under harness/implementation-projects/archive/**",
+        "Saved runtime artifacts under harness/runs/**",
         "Explicit user approval for approval-boundary crossings."
       ]
     }
@@ -272,13 +275,15 @@
       "Later workflow expansion may add planner/adversary/reviewer/worker/archivist routes, but those routes must be explicit and approval-gated.",
       "Every claimed runtime behavior must have a named acceptance probe."
     ],
-    "non_trivial_quality_markers": [
-      "Not attempted.",
-      "Scaffold-only.",
-      "Dry-run.",
-      "Runtime-evidenced.",
-      "Blocked."
-    ],
+    "verification_expectations": {
+      "non_trivial_implementation_must_distinguish": [
+        "Not attempted.",
+        "Scaffold-only.",
+        "Dry-run.",
+        "Runtime-evidenced.",
+        "Blocked."
+      ]
+    },
     "operator_expectations": [
       "LLM reports do not substitute for deterministic artifact checks.",
       "The harness should help the operator avoid accidental autonomy, hidden context contamination, and unreviewed file mutation."
@@ -342,7 +347,7 @@
       "Whether budget policy enforcement belongs in the first or second vertical slice.",
       "Whether planner/adversary/reviewer routes should be introduced before worker adapters."
     ],
-    "probe_sources": "The safe early probe sources are this repository's own files.",
+    "material_for_probes": "The safe early probe corpus is this repository's own harness files.",
     "external_call_privacy_constraints": [
       "API calls use billing and must remain bounded.",
       "Secrets must not be committed.",

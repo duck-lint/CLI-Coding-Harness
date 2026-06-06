@@ -46,6 +46,7 @@ class ProofFrontier(BaseModel):
 class ProjectManagerReport(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
+    schema_ref: str | None = Field(default=None, alias="$schema")
     report: Literal["Project Manager Report"]
     status: Literal[
         "admissible", 

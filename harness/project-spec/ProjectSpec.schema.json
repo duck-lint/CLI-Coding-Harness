@@ -1,0 +1,644 @@
+{
+  "$defs": {
+    "AcceptanceProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "runtime_path_required": {
+          "$ref": "#/$defs/RuntimePathRequired"
+        },
+        "evidence_required": {
+          "$ref": "#/$defs/EvidenceRequired"
+        },
+        "not_proof": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Not Proof",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "runtime_path_required",
+        "evidence_required",
+        "not_proof"
+      ],
+      "title": "AcceptanceProbe",
+      "type": "object"
+    },
+    "ArchitecturalShape": {
+      "additionalProperties": false,
+      "properties": {
+        "required_runtime_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Runtime Surfaces",
+          "type": "array"
+        },
+        "required_evidence_boundaries": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Evidence Boundaries",
+          "type": "array"
+        },
+        "required_inspectable_surfaces": {
+          "$ref": "#/$defs/RequiredInspectableSurfaces"
+        },
+        "dependencies": {
+          "$ref": "#/$defs/Dependencies"
+        },
+        "runtime_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtime Constraints",
+          "type": "array"
+        },
+        "governance_primitives_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Governance Primitives Constraints",
+          "type": "array"
+        },
+        "forbidden_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Surfaces",
+          "type": "array"
+        },
+        "deferred_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deferred Surfaces",
+          "type": "array"
+        }
+      },
+      "required": [
+        "required_runtime_surfaces",
+        "required_evidence_boundaries",
+        "required_inspectable_surfaces",
+        "dependencies",
+        "runtime_constraints",
+        "governance_primitives_constraints",
+        "forbidden_surfaces",
+        "deferred_surfaces"
+      ],
+      "title": "ArchitecturalShape",
+      "type": "object"
+    },
+    "AuthoritativeBoundaries": {
+      "additionalProperties": false,
+      "properties": {
+        "authoritative_sources": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authoritative Sources",
+          "type": "array"
+        },
+        "authoritative_memory": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authoritative Memory",
+          "type": "array"
+        },
+        "agents_must_respect": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Agents Must Respect",
+          "type": "array"
+        }
+      },
+      "required": [
+        "authoritative_sources",
+        "authoritative_memory",
+        "agents_must_respect"
+      ],
+      "title": "AuthoritativeBoundaries",
+      "type": "object"
+    },
+    "ClarifyingQuestions": {
+      "additionalProperties": false,
+      "properties": {
+        "material_decisions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Material Decisions",
+          "type": "array"
+        },
+        "probe_sources": {
+          "title": "Probe Sources",
+          "type": "string"
+        },
+        "external_call_privacy_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "External Call Privacy Constraints",
+          "type": "array"
+        },
+        "acceptable_deferrals": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Acceptable Deferrals",
+          "type": "array"
+        }
+      },
+      "required": [
+        "material_decisions",
+        "probe_sources",
+        "external_call_privacy_constraints",
+        "acceptable_deferrals"
+      ],
+      "title": "ClarifyingQuestions",
+      "type": "object"
+    },
+    "Dependencies": {
+      "additionalProperties": false,
+      "properties": {
+        "required": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required",
+          "type": "array"
+        },
+        "excluded": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Excluded",
+          "type": "array"
+        }
+      },
+      "required": [
+        "required",
+        "excluded"
+      ],
+      "title": "Dependencies",
+      "type": "object"
+    },
+    "EvidenceRequired": {
+      "additionalProperties": false,
+      "properties": {
+        "saved_artifacts": {
+          "items": {
+            "$ref": "#/$defs/SavedArtifact"
+          },
+          "title": "Saved Artifacts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "saved_artifacts"
+      ],
+      "title": "EvidenceRequired",
+      "type": "object"
+    },
+    "HighestValueWorkflow": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Args",
+          "type": "array"
+        },
+        "expectations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expectations",
+          "type": "array"
+        },
+        "stop_condition": {
+          "title": "Stop Condition",
+          "type": "string"
+        }
+      },
+      "required": [
+        "command",
+        "args",
+        "expectations",
+        "stop_condition"
+      ],
+      "title": "HighestValueWorkflow",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "NonGoals": {
+      "additionalProperties": false,
+      "properties": {
+        "do_not_build": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Do Not Build",
+          "type": "array"
+        },
+        "do_not_fake": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Do Not Fake",
+          "type": "array"
+        },
+        "do_not_smooth_over": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Do Not Smooth Over",
+          "type": "array"
+        },
+        "do_not_preserve_without_approval": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Do Not Preserve Without Approval",
+          "type": "array"
+        }
+      },
+      "required": [
+        "do_not_build",
+        "do_not_fake",
+        "do_not_smooth_over",
+        "do_not_preserve_without_approval"
+      ],
+      "title": "NonGoals",
+      "type": "object"
+    },
+    "ProjectExistsTo": {
+      "additionalProperties": false,
+      "properties": {
+        "delineate_boundaries": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Delineate Boundaries",
+          "type": "array"
+        },
+        "instantiate_governance": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Instantiate Governance",
+          "type": "array"
+        }
+      },
+      "required": [
+        "delineate_boundaries",
+        "instantiate_governance"
+      ],
+      "title": "ProjectExistsTo",
+      "type": "object"
+    },
+    "ProjectIsNot": {
+      "additionalProperties": false,
+      "properties": {
+        "excluded_product_forms": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Excluded Product Forms",
+          "type": "array"
+        },
+        "excluded_agent_patterns": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Excluded Agent Patterns",
+          "type": "array"
+        },
+        "design_guardrail": {
+          "title": "Design Guardrail",
+          "type": "string"
+        }
+      },
+      "required": [
+        "excluded_product_forms",
+        "excluded_agent_patterns",
+        "design_guardrail"
+      ],
+      "title": "ProjectIsNot",
+      "type": "object"
+    },
+    "ProjectQualityBar": {
+      "additionalProperties": false,
+      "properties": {
+        "ux_properties": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ux Properties",
+          "type": "array"
+        },
+        "evidence_expectations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Expectations",
+          "type": "array"
+        },
+        "runtime_expectations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtime Expectations",
+          "type": "array"
+        },
+        "non_trivial_quality_markers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Non Trivial Quality Markers",
+          "type": "array"
+        },
+        "operator_expectations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Operator Expectations",
+          "type": "array"
+        },
+        "inspectability_properties": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Inspectability Properties",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ux_properties",
+        "evidence_expectations",
+        "runtime_expectations",
+        "non_trivial_quality_markers",
+        "operator_expectations",
+        "inspectability_properties"
+      ],
+      "title": "ProjectQualityBar",
+      "type": "object"
+    },
+    "ProjectThesis": {
+      "additionalProperties": false,
+      "properties": {
+        "project_is": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Project Is",
+          "type": "array"
+        },
+        "project_is_not": {
+          "$ref": "#/$defs/ProjectIsNot"
+        },
+        "project_exists_to": {
+          "$ref": "#/$defs/ProjectExistsTo"
+        },
+        "core_runtime_shape": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Core Runtime Shape",
+          "type": "array"
+        },
+        "primary_operator": {
+          "title": "Primary Operator",
+          "type": "string"
+        },
+        "highest_value_workflow": {
+          "$ref": "#/$defs/HighestValueWorkflow"
+        }
+      },
+      "required": [
+        "project_is",
+        "project_is_not",
+        "project_exists_to",
+        "core_runtime_shape",
+        "primary_operator",
+        "highest_value_workflow"
+      ],
+      "title": "ProjectThesis",
+      "type": "object"
+    },
+    "RequiredInspectableSurfaces": {
+      "additionalProperties": false,
+      "properties": {
+        "default_location": {
+          "title": "Default Location",
+          "type": "string"
+        },
+        "min_required_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Min Required Artifacts",
+          "type": "array"
+        },
+        "optional_debug_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Optional Debug Artifacts",
+          "type": "array"
+        },
+        "authoritative_context_artifact": {
+          "title": "Authoritative Context Artifact",
+          "type": "string"
+        },
+        "authoritative_pm_output_artifact": {
+          "title": "Authoritative Pm Output Artifact",
+          "type": "string"
+        }
+      },
+      "required": [
+        "default_location",
+        "min_required_artifacts",
+        "optional_debug_artifacts",
+        "authoritative_context_artifact",
+        "authoritative_pm_output_artifact"
+      ],
+      "title": "RequiredInspectableSurfaces",
+      "type": "object"
+    },
+    "RuntimeDiscipline": {
+      "additionalProperties": false,
+      "properties": {
+        "must_exist": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Must Exist",
+          "type": "array"
+        },
+        "meaningful_progress_metrics": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Meaningful Progress Metrics",
+          "type": "array"
+        },
+        "authoritative_boundaries": {
+          "$ref": "#/$defs/AuthoritativeBoundaries"
+        }
+      },
+      "required": [
+        "must_exist",
+        "meaningful_progress_metrics",
+        "authoritative_boundaries"
+      ],
+      "title": "RuntimeDiscipline",
+      "type": "object"
+    },
+    "RuntimePathRequired": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Args",
+          "type": "array"
+        }
+      },
+      "required": [
+        "command",
+        "args"
+      ],
+      "title": "RuntimePathRequired",
+      "type": "object"
+    },
+    "SavedArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "path_pattern": {
+          "title": "Path Pattern",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "path_pattern",
+        "required"
+      ],
+      "title": "SavedArtifact",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "project_thesis": {
+      "$ref": "#/$defs/ProjectThesis"
+    },
+    "non_goals": {
+      "$ref": "#/$defs/NonGoals"
+    },
+    "architectural_shape": {
+      "$ref": "#/$defs/ArchitecturalShape"
+    },
+    "runtime_discipline": {
+      "$ref": "#/$defs/RuntimeDiscipline"
+    },
+    "project_quality_bar": {
+      "$ref": "#/$defs/ProjectQualityBar"
+    },
+    "acceptance_probes": {
+      "items": {
+        "$ref": "#/$defs/AcceptanceProbe"
+      },
+      "title": "Acceptance Probes",
+      "type": "array"
+    },
+    "clarifying_questions": {
+      "$ref": "#/$defs/ClarifyingQuestions"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "project_thesis",
+    "non_goals",
+    "architectural_shape",
+    "runtime_discipline",
+    "project_quality_bar",
+    "acceptance_probes",
+    "clarifying_questions"
+  ],
+  "title": "ProjectSpec",
+  "type": "object"
+}

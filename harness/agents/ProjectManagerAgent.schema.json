@@ -70,14 +70,17 @@
       "additionalProperties": false,
       "properties": {
         "id": {
+          "const": "project_manager.agent.json",
           "title": "Id",
           "type": "string"
         },
         "agent_name": {
+          "const": "Project Manager",
           "title": "Agent Name",
           "type": "string"
         },
         "mode": {
+          "const": "read_only_report",
           "title": "Mode",
           "type": "string"
         }

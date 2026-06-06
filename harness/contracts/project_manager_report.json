@@ -1,7 +1,7 @@
 {
   "$schema": "./ProjectManagerReport.schema.json",
   "report": "Project Manager Report",
-  "status": "admissible | admissibility_blocked | rejected | needs_clarification",
+  "status": "admissible",
   "summary": "Short report summary.",
   "source_coverage": [
     {
@@ -16,7 +16,7 @@
     "current_posture": "Concrete repo-state evidenced from the provided context.",
     "thesis_attractor": "Direction implied by project spec without invented roadmap.",
     "drift_detection": {
-      "drift_detected": "true | false", 
+      "drift_detected": true, 
       "description_if_present": "Description of drift if detected."
     },
     "invariant_constraints": [

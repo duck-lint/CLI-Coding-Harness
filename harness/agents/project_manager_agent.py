@@ -9,9 +9,9 @@ from pydantic import BaseModel, ConfigDict, Field
 class Metadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    id: str
-    agent_name: str
-    mode: str
+    id: Literal["project_manager.agent.json"]
+    agent_name: Literal["Project Manager"]
+    mode: Literal["read_only_report"]
 
 
 class ReportDerivationRules(BaseModel):
