@@ -1,5 +1,5 @@
 {
-    "$schema": "./RuntimeDoctrine.schema.json",
+  "$schema": "./RuntimeDoctrine.schema.json",
   "metadata": {
     "document_id": "runtime_doctrine.json",
     "title": "Runtime Doctrine",

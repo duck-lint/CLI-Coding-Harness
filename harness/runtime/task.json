@@ -1,0 +1,18 @@
+{
+  "$schema": "./Task.schema.json",
+  "metadata": {
+    "document_id": "task.json",
+    "title": "Task",
+    "purpose": "This file assigns the task to the agent.",
+    "source_format": "json",
+    "document_authority": "invariant_authority_object"
+  },
+  "task": [
+    {
+      "task_text": "Text passed through the terminal that assigns the task to the agent/model.",
+      "created_at": "<date_and_timestamp>",
+      "requested_agent": "../agents/**",
+      "run_id": "string"
+    }
+  ]
+}

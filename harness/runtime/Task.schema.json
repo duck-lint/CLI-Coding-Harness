@@ -1,48 +1,97 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "task.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Task",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "This file assigns the task to the agent.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "invariant_authority_object",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "TaskItem": {
+      "additionalProperties": false,
+      "properties": {
+        "task_text": {
+          "title": "Task Text",
+          "type": "string"
+        },
+        "created_at": {
+          "title": "Created At",
+          "type": "string"
+        },
+        "requested_agent": {
+          "title": "Requested Agent",
+          "type": "string"
+        },
+        "run_id": {
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_text",
+        "created_at",
+        "requested_agent",
+        "run_id"
+      ],
+      "title": "TaskItem",
+      "type": "object"
+    }
+  },
   "additionalProperties": false,
   "properties": {
-    "context_sources": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "task": {
       "items": {
-        "type": "string"
+        "$ref": "#/$defs/TaskItem"
       },
-      "title": "Context Sources",
+      "title": "Task",
       "type": "array"
-    },
-    "created_at": {
-      "format": "date-time",
-      "title": "Created At",
-      "type": "string"
-    },
-    "mode": {
-      "title": "Mode",
-      "type": "string"
-    },
-    "role_id": {
-      "title": "Role Id",
-      "type": "string"
-    },
-    "role_name": {
-      "title": "Role Name",
-      "type": "string"
-    },
-    "run_id": {
-      "title": "Run Id",
-      "type": "string"
-    },
-    "task_text": {
-      "title": "Task Text",
-      "type": "string"
     }
   },
   "required": [
-    "task_text",
-    "created_at",
-    "role_id",
-    "role_name",
-    "mode",
-    "run_id",
-    "context_sources"
+    "$schema",
+    "metadata",
+    "task"
   ],
-  "title": "TaskBrief",
+  "title": "Task",
   "type": "object"
 }
