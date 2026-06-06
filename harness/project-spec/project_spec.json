@@ -343,8 +343,8 @@
       "API calls use billing and must remain bounded.",
       "Secrets must not be committed.",
       "Web search is disabled by default.",
-      "Agents may not run shell commands directly.",
-      "Agents may not write files.",
+      "Agents will not run shell commands directly.",
+      "Agents will not write files.",
       "The plan workflow must not mutate repo source files except for saving run artifacts.",
       "Deployment is out of scope."
     ],
