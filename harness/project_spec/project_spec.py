@@ -22,7 +22,7 @@ class ProjectIsNot(BaseModel):
 
     excluded_product_forms: list[str]
     excluded_agent_patterns: list[str]
-    design_guardrail: str
+    design_guardrail: list[str]
 
 
 class ProjectExistsTo(BaseModel):

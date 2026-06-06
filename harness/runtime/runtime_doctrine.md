@@ -21,14 +21,14 @@
 
 ## Authority Lens
 
-- Invariant authority lives in `harness/project-spec/**` and defines what the project is allowed to become.
+- Invariant authority lives in `harness/project_spec/**` and defines what the project is allowed to become.
 - Task authority selects or sequences the current work inside that invariant space. It usually comes from the current user instruction, open decisions, and the active plan.
-- Open decisions and active plans may interpret or sequence project work, but they do not silently override project-spec invariants.
+- Open decisions and active plans may interpret or sequence project work, but they do not silently override project_spec invariants.
 - If task authority conflicts with invariant authority, stop and surface the conflict instead of improvising around it.
 
 ## Project Admissibility Report
 
-The project admissibility report carries relevant project constraints from `harness/project-spec/**` through PM review, planning, implementation, review, and archive. It is not a new project ontology or authority layer. It is a report format for naming what is admissible under the current project spec and request.
+The project admissibility report carries relevant project constraints from `harness/project_spec/**` through PM review, planning, implementation, review, and archive. It is not a new project ontology or authority layer. It is a report format for naming what is admissible under the current project spec and request.
 
 Use it for non-trivial work and preserve these properties:
 

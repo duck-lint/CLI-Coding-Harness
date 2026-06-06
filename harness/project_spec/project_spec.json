@@ -3,7 +3,7 @@
   "metadata": {
     "document_id": "project_spec.json",
     "title": "Project Spec",
-    "purpose": "This file, together with the other docs under ./project-spec/, is the authoritative invariant space for harnessed work in this repo",
+    "purpose": "This file, together with the other docs under ./project_spec/, is the authoritative invariant space for harnessed work in this repo",
     "source_format": "json",
     "document_authority": "invariant_authority_object"
   },
@@ -27,7 +27,9 @@
         "A prompt collection where behavior depends on conversational momentum.",
         "A hidden-memory system that treats prior chat as implementation authority."
       ],
-      "design_guardrail": "The harness does not try to make coding agents more magical. It tries to make their participation in software work more explicit, auditable, and bounded."
+      "design_guardrail": [
+        "The harness does not try to make coding agents more magical. It tries to make their participation in software work more explicit, auditable, and bounded."
+      ]
     },
     "project_exists_to": {
       "delineate_boundaries": [
@@ -229,7 +231,7 @@
       "agents_must_respect": [
         "The current filesystem state of the repo.",
         "The current git state where available.",
-        "The structured files under ../project-spec/**",
+        "The structured files under ../project_spec/**",
         "The structured policies under ../policies/**",
         "The structured role contracts under ../agents/**",
         "The output contracts under ../contracts/**",

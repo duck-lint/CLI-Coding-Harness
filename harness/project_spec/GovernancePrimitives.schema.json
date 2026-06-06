@@ -1,0 +1,738 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "AcceptanceProbe": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "runtime_path_required": {
+          "$ref": "#/$defs/RuntimePathRequired"
+        },
+        "evidence_required": {
+          "$ref": "#/$defs/EvidenceRequired"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "runtime_path_required",
+        "evidence_required"
+      ],
+      "title": "AcceptanceProbe",
+      "type": "object"
+    },
+    "AdmissibleTransformations": {
+      "additionalProperties": false,
+      "properties": {
+        "preserve_project_spec": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserve Project Spec",
+          "type": "array"
+        },
+        "require_open_decision": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Require Open Decision",
+          "type": "array"
+        },
+        "amend_project_spec_or_governance": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Amend Project Spec Or Governance",
+          "type": "array"
+        },
+        "preserve_provenance_or_inspectability": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserve Provenance Or Inspectability",
+          "type": "array"
+        },
+        "forbidden_shortcuts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Shortcuts",
+          "type": "array"
+        },
+        "evidence_minimum": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Minimum",
+          "type": "array"
+        }
+      },
+      "required": [
+        "preserve_project_spec",
+        "require_open_decision",
+        "amend_project_spec_or_governance",
+        "preserve_provenance_or_inspectability",
+        "forbidden_shortcuts",
+        "evidence_minimum"
+      ],
+      "title": "AdmissibleTransformations",
+      "type": "object"
+    },
+    "AmbiguityUncertainty": {
+      "additionalProperties": false,
+      "properties": {
+        "preserve_visibility": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Preserve Visibility",
+          "type": "array"
+        }
+      },
+      "required": [
+        "preserve_visibility"
+      ],
+      "title": "AmbiguityUncertainty",
+      "type": "object"
+    },
+    "ApprovalBoundaries": {
+      "additionalProperties": false,
+      "properties": {
+        "explicit_approval_required_to_modify": {
+          "$ref": "#/$defs/ExplicitApprovalRequiredToModify"
+        }
+      },
+      "required": [
+        "explicit_approval_required_to_modify"
+      ],
+      "title": "ApprovalBoundaries",
+      "type": "object"
+    },
+    "EvidenceRequired": {
+      "additionalProperties": false,
+      "properties": {
+        "saved_artifacts": {
+          "items": {
+            "$ref": "#/$defs/SavedArtifact"
+          },
+          "title": "Saved Artifacts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "saved_artifacts"
+      ],
+      "title": "EvidenceRequired",
+      "type": "object"
+    },
+    "ExplicitApprovalRequiredToModify": {
+      "additionalProperties": false,
+      "properties": {
+        "governance_project_spec": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Governance Project Spec",
+          "type": "array"
+        },
+        "schema": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Schema",
+          "type": "array"
+        },
+        "agent_contract": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Agent Contract",
+          "type": "array"
+        },
+        "api_and_model_behavior": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Api And Model Behavior",
+          "type": "array"
+        },
+        "auth": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Auth",
+          "type": "array"
+        },
+        "storage": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Storage",
+          "type": "array"
+        },
+        "deployment": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Deployment",
+          "type": "array"
+        },
+        "destructive_operation": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Destructive Operation",
+          "type": "array"
+        },
+        "broad_architecture": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Broad Architecture",
+          "type": "array"
+        },
+        "compatibility_and_fallback_commitment": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Compatibility And Fallback Commitment",
+          "type": "array"
+        },
+        "project_intent_dependent_behavior": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Project Intent Dependent Behavior",
+          "type": "array"
+        }
+      },
+      "required": [
+        "governance_project_spec",
+        "schema",
+        "agent_contract",
+        "api_and_model_behavior",
+        "auth",
+        "storage",
+        "deployment",
+        "destructive_operation",
+        "broad_architecture",
+        "compatibility_and_fallback_commitment",
+        "project_intent_dependent_behavior"
+      ],
+      "title": "ExplicitApprovalRequiredToModify",
+      "type": "object"
+    },
+    "GovernancePosture": {
+      "additionalProperties": false,
+      "properties": {
+        "invariant_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Invariant Constraints",
+          "type": "array"
+        },
+        "observability_scaffolding": {
+          "$ref": "#/$defs/ObservabilityScaffolding"
+        },
+        "explicit_distinctions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Explicit Distinctions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "invariant_constraints",
+        "observability_scaffolding",
+        "explicit_distinctions"
+      ],
+      "title": "GovernancePosture",
+      "type": "object"
+    },
+    "InvariantsAndIntegrityConstraints": {
+      "additionalProperties": false,
+      "properties": {
+        "task_authority": {
+          "$ref": "#/$defs/TaskAuthority"
+        },
+        "project_thesis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Project Thesis",
+          "type": "array"
+        },
+        "sources": {
+          "$ref": "#/$defs/Sources"
+        },
+        "fixtures_samples_test_roles": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fixtures Samples Test Roles",
+          "type": "array"
+        },
+        "compatibility_commitments": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Compatibility Commitments",
+          "type": "array"
+        },
+        "verification_duties": {
+          "$ref": "#/$defs/VerificationDuties"
+        },
+        "ambiguity_uncertainty": {
+          "$ref": "#/$defs/AmbiguityUncertainty"
+        },
+        "named_admissibility_inputs": {
+          "$ref": "#/$defs/NamedAdmissibilityInputs"
+        }
+      },
+      "required": [
+        "task_authority",
+        "project_thesis",
+        "sources",
+        "fixtures_samples_test_roles",
+        "compatibility_commitments",
+        "verification_duties",
+        "ambiguity_uncertainty",
+        "named_admissibility_inputs"
+      ],
+      "title": "InvariantsAndIntegrityConstraints",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "governance_primitives.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Governance Primitives",
+          "title": "Title",
+          "type": "string"
+        },
+        "context": {
+          "const": "Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
+          "title": "Context",
+          "type": "string"
+        },
+        "purpose": {
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "invariant_authority_object",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "context",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "NamedAdmissibilityInputs": {
+      "additionalProperties": false,
+      "properties": {
+        "invariant_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Invariant Constraints",
+          "type": "array"
+        },
+        "task_constraints": {
+          "title": "Task Constraints",
+          "type": "string"
+        },
+        "constraint_conflicts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraint Conflicts",
+          "type": "array"
+        },
+        "admissibility_checks": {
+          "title": "Admissibility Checks",
+          "type": "string"
+        },
+        "stop_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Stop Conditions",
+          "type": "array"
+        }
+      },
+      "required": [
+        "invariant_constraints",
+        "task_constraints",
+        "constraint_conflicts",
+        "admissibility_checks",
+        "stop_conditions"
+      ],
+      "title": "NamedAdmissibilityInputs",
+      "type": "object"
+    },
+    "ObservabilityScaffolding": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Artifact Paths",
+          "type": "array"
+        },
+        "runtime_identity": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtime Identity",
+          "type": "array"
+        },
+        "runtime_results": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtime Results",
+          "type": "array"
+        },
+        "authority_manifests": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Manifests",
+          "type": "array"
+        },
+        "repo_state": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Repo State",
+          "type": "array"
+        },
+        "status_values": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Status Values",
+          "type": "array"
+        }
+      },
+      "required": [
+        "artifact_paths",
+        "runtime_identity",
+        "runtime_results",
+        "authority_manifests",
+        "repo_state",
+        "status_values"
+      ],
+      "title": "ObservabilityScaffolding",
+      "type": "object"
+    },
+    "OrderItem": {
+      "additionalProperties": false,
+      "properties": {
+        "rank": {
+          "title": "Rank",
+          "type": "integer"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rank",
+        "id",
+        "description"
+      ],
+      "title": "OrderItem",
+      "type": "object"
+    },
+    "ReviewCheckpoints": {
+      "additionalProperties": false,
+      "properties": {
+        "visible_before_trusting": {
+          "$ref": "#/$defs/VisibleBeforeTrusting"
+        },
+        "visible_before_closing_work": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Visible Before Closing Work",
+          "type": "array"
+        }
+      },
+      "required": [
+        "visible_before_trusting",
+        "visible_before_closing_work"
+      ],
+      "title": "ReviewCheckpoints",
+      "type": "object"
+    },
+    "RuntimePathRequired": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "args": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Args",
+          "type": "array"
+        }
+      },
+      "required": [
+        "command",
+        "args"
+      ],
+      "title": "RuntimePathRequired",
+      "type": "object"
+    },
+    "SavedArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "path_pattern": {
+          "title": "Path Pattern",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "path_pattern",
+        "required"
+      ],
+      "title": "SavedArtifact",
+      "type": "object"
+    },
+    "Sources": {
+      "additionalProperties": false,
+      "properties": {
+        "authoritative_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authoritative Artifacts",
+          "type": "array"
+        },
+        "derived_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived Artifacts",
+          "type": "array"
+        },
+        "operational_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Operational Artifacts",
+          "type": "array"
+        },
+        "presentation_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Presentation Artifacts",
+          "type": "array"
+        },
+        "order": {
+          "title": "Order",
+          "type": "string"
+        }
+      },
+      "required": [
+        "authoritative_artifacts",
+        "derived_artifacts",
+        "operational_artifacts",
+        "presentation_artifacts",
+        "order"
+      ],
+      "title": "Sources",
+      "type": "object"
+    },
+    "TaskAuthority": {
+      "additionalProperties": false,
+      "properties": {
+        "order": {
+          "items": {
+            "$ref": "#/$defs/OrderItem"
+          },
+          "title": "Order",
+          "type": "array"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "conflict_handling": {
+          "title": "Conflict Handling",
+          "type": "string"
+        },
+        "task_authorization": {
+          "title": "Task Authorization",
+          "type": "string"
+        },
+        "agent_authority_boundary": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Agent Authority Boundary",
+          "type": "array"
+        }
+      },
+      "required": [
+        "order",
+        "description",
+        "conflict_handling",
+        "task_authorization",
+        "agent_authority_boundary"
+      ],
+      "title": "TaskAuthority",
+      "type": "object"
+    },
+    "VerificationDuties": {
+      "additionalProperties": false,
+      "properties": {
+        "must_not_skip": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Must Not Skip",
+          "type": "array"
+        }
+      },
+      "required": [
+        "must_not_skip"
+      ],
+      "title": "VerificationDuties",
+      "type": "object"
+    },
+    "VisibleBeforeTrusting": {
+      "additionalProperties": false,
+      "properties": {
+        "source_authority": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Authority",
+          "type": "array"
+        },
+        "derived_or_operational_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Derived Or Operational Artifacts",
+          "type": "array"
+        },
+        "synthesis_automation_ux": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Synthesis Automation Ux",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source_authority",
+        "derived_or_operational_artifacts",
+        "synthesis_automation_ux"
+      ],
+      "title": "VisibleBeforeTrusting",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "governance_posture": {
+      "$ref": "#/$defs/GovernancePosture"
+    },
+    "approval_boundaries": {
+      "$ref": "#/$defs/ApprovalBoundaries"
+    },
+    "invariants_and_integrity_constraints": {
+      "$ref": "#/$defs/InvariantsAndIntegrityConstraints"
+    },
+    "admissible_transformations": {
+      "$ref": "#/$defs/AdmissibleTransformations"
+    },
+    "review_checkpoints": {
+      "$ref": "#/$defs/ReviewCheckpoints"
+    },
+    "acceptance_probes": {
+      "items": {
+        "$ref": "#/$defs/AcceptanceProbe"
+      },
+      "title": "Acceptance Probes",
+      "type": "array"
+    },
+    "not_proof": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Not Proof",
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "governance_posture",
+    "approval_boundaries",
+    "invariants_and_integrity_constraints",
+    "admissible_transformations",
+    "review_checkpoints",
+    "acceptance_probes",
+    "not_proof"
+  ],
+  "title": "GovernancePrimitives",
+  "type": "object"
+}

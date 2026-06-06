@@ -58,7 +58,7 @@ class ProjectContextPacket(BaseModel):
 
     required: bool
     authoritative: bool
-    schema_ref: Literal["../project-spec/ProjectContextPacket.schema.json"]
+    schema_ref: Literal["../project_spec/ProjectContextPacket.schema.json"]
 
 
 class Task(BaseModel):

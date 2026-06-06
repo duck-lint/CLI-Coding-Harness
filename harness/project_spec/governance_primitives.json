@@ -26,9 +26,9 @@
     ],
     "observability_scaffolding": {
       "artifact_paths": [
-        "task.json",
-        "project_context_packet.json",
-        "project_manager_report.json"
+        "../runtime/task.json",
+        "./project_context_packet.json",
+        "./project_manager_report.json"
       ],
       "runtime_identity": [
         "Role contract path and identity.",
@@ -63,7 +63,7 @@
       "Scaffold-only evidence versus runtime-evidenced behavior.",
       "Planning versus implementation.",
       "Governance role versus worker adapter.",
-      "User instruction versus project-spec amendment.",
+      "User instruction versus project_spec amendment.",
       "Active implementation state versus archived history.",
       "Missing source versus included source.",
       "Model output versus project authority."
@@ -121,7 +121,7 @@
         "Secrets must never be committed."
       ],
       "storage": [
-        "harness/runs/<timestamp>/ layout",
+        "../runs/**",
         "Required artifact names.",
         "Artifact formats.",
         "Archive layout.",
@@ -174,7 +174,7 @@
         {
           "rank": 2,
           "id": "project_spec_and_governance",
-          "description": "This file and the other docs under harness/project-spec/**"
+          "description": "This file and the other docs under harness/project_spec/**"
         },
         {
           "rank": 3,
@@ -210,18 +210,6 @@
         "Agent will not turn an agent recommendation into permission to mutate files."
       ]
     },
-    "project_thesis": [
-      "The system is a local Python/JSON coding-agent CLI harness.",
-      "The first proven workflow is PM-only planning.",
-      "The first workflow is read-only except for writing run artifacts.",
-      "The PM receives project context packet through input and does not inspect files directly.",
-      "Runtime compiles context; the model evaluates it.",
-      "Python owns mechanics and enforcement.",
-      "JSON role/policy/context/report objects own structured semantics.",
-      "Output schemas own returned report shape.",
-      "Runtime probes own evidence of behavior.",
-      "Worker adapters do not run from the first PM slice."
-    ],
     "sources": {
       "authoritative_artifacts": [
         "Project spec.",

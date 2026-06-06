@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "AcceptanceProbe": {
       "additionalProperties": false,
@@ -252,10 +253,12 @@
       "additionalProperties": false,
       "properties": {
         "document_id": {
+          "const": "project_spec.json",
           "title": "Document Id",
           "type": "string"
         },
         "title": {
+          "const": "Project Spec",
           "title": "Title",
           "type": "string"
         },
@@ -264,10 +267,12 @@
           "type": "string"
         },
         "source_format": {
+          "const": "json",
           "title": "Source Format",
           "type": "string"
         },
         "document_authority": {
+          "const": "invariant_authority_object",
           "title": "Document Authority",
           "type": "string"
         }
@@ -366,8 +371,11 @@
           "type": "array"
         },
         "design_guardrail": {
+          "items": {
+            "type": "string"
+          },
           "title": "Design Guardrail",
-          "type": "string"
+          "type": "array"
         }
       },
       "required": [

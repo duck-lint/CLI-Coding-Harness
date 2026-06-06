@@ -10,12 +10,12 @@ from pydantic import BaseModel, ConfigDict, Field
 class Metadata(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    document_id: str
-    title: str
-    context: str
+    document_id: Literal["governance_primitives.json"]
+    title: Literal["Governance Primitives"]
+    context: Literal["Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding."]
     purpose: str
-    source_format: str
-    document_authority: str
+    source_format: Literal["json"]
+    document_authority: Literal["invariant_authority_object"]
 
 
 class ObservabilityScaffolding(BaseModel):
