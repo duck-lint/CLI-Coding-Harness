@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "known_failures.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Known Failures",
+          "title": "Title",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "invariant_authority_object",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "purpose": {
+      "title": "Purpose",
+      "type": "string"
+    },
+    "usage_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Usage Rules",
+      "type": "array"
+    },
+    "entries_schema_ref": {
+      "const": "./KnownFailureEntry.schema.json",
+      "title": "Entries Schema Ref",
+      "type": "string"
+    },
+    "entries": {
+      "items": {},
+      "title": "Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "purpose",
+    "usage_rules",
+    "entries_schema_ref",
+    "entries"
+  ],
+  "title": "KnownFailures",
+  "type": "object"
+}

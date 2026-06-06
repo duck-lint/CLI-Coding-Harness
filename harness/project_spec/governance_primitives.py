@@ -19,6 +19,8 @@ class Metadata(BaseModel):
 
 
 class ObservabilityScaffolding(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     artifact_paths: list[str]
     runtime_identity: list[str]
     runtime_results: list[str]
@@ -28,12 +30,16 @@ class ObservabilityScaffolding(BaseModel):
 
 
 class GovernancePosture(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     invariant_constraints: list[str]
     observability_scaffolding: ObservabilityScaffolding
     explicit_distinctions: list[str]
 
 
 class ExplicitApprovalRequiredToModify(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     governance_project_spec: list[str]
     schema_: list[str] = Field(..., alias='schema')
     agent_contract: list[str]
@@ -48,16 +54,22 @@ class ExplicitApprovalRequiredToModify(BaseModel):
 
 
 class ApprovalBoundaries(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     explicit_approval_required_to_modify: ExplicitApprovalRequiredToModify
 
 
 class OrderItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     rank: int
     id: str
     description: str
 
 
 class TaskAuthority(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     order: list[OrderItem]
     description: str
     conflict_handling: str
@@ -66,6 +78,8 @@ class TaskAuthority(BaseModel):
 
 
 class Sources(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     authoritative_artifacts: list[str]
     derived_artifacts: list[str]
     operational_artifacts: list[str]
@@ -74,14 +88,20 @@ class Sources(BaseModel):
 
 
 class VerificationDuties(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     must_not_skip: list[str]
 
 
 class AmbiguityUncertainty(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     preserve_visibility: list[str]
 
 
 class NamedAdmissibilityInputs(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     invariant_constraints: list[str]
     task_constraints: str
     constraint_conflicts: list[str]
@@ -90,6 +110,8 @@ class NamedAdmissibilityInputs(BaseModel):
 
 
 class InvariantsAndIntegrityConstraints(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     task_authority: TaskAuthority
     sources: Sources
     fixtures_samples_test_roles: list[str]
@@ -100,6 +122,8 @@ class InvariantsAndIntegrityConstraints(BaseModel):
 
 
 class AdmissibleTransformations(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     preserve_project_spec: list[str]
     require_open_decision: list[str]
     amend_project_spec_or_governance: list[str]
@@ -109,32 +133,44 @@ class AdmissibleTransformations(BaseModel):
 
 
 class VisibleBeforeTrusting(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     source_authority: list[str]
     derived_or_operational_artifacts: list[str]
     synthesis_automation_ux: list[str]
 
 
 class ReviewCheckpoints(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     visible_before_trusting: VisibleBeforeTrusting
     visible_before_closing_work: list[str]
 
 
 class RuntimePathRequired(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     command: str
     args: list[str]
 
 
 class SavedArtifact(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     id: str
     path_pattern: str
     required: bool
 
 
 class EvidenceRequired(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     saved_artifacts: list[SavedArtifact]
 
 
 class AcceptanceProbe(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     id: str
     question: str
     runtime_path_required: RuntimePathRequired
@@ -142,6 +178,8 @@ class AcceptanceProbe(BaseModel):
 
 
 class GovernancePrimitives(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     field_schema: str = Field(..., alias='$schema')
     metadata: Metadata
     governance_posture: GovernancePosture

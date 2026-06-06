@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "AcceptanceProbe": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -28,6 +29,7 @@
       "type": "object"
     },
     "AdmissibleTransformations": {
+      "additionalProperties": false,
       "properties": {
         "preserve_project_spec": {
           "items": {
@@ -84,6 +86,7 @@
       "type": "object"
     },
     "AmbiguityUncertainty": {
+      "additionalProperties": false,
       "properties": {
         "preserve_visibility": {
           "items": {
@@ -100,6 +103,7 @@
       "type": "object"
     },
     "ApprovalBoundaries": {
+      "additionalProperties": false,
       "properties": {
         "explicit_approval_required_to_modify": {
           "$ref": "#/$defs/ExplicitApprovalRequiredToModify"
@@ -112,6 +116,7 @@
       "type": "object"
     },
     "EvidenceRequired": {
+      "additionalProperties": false,
       "properties": {
         "saved_artifacts": {
           "items": {
@@ -128,6 +133,7 @@
       "type": "object"
     },
     "ExplicitApprovalRequiredToModify": {
+      "additionalProperties": false,
       "properties": {
         "governance_project_spec": {
           "items": {
@@ -224,6 +230,7 @@
       "type": "object"
     },
     "GovernancePosture": {
+      "additionalProperties": false,
       "properties": {
         "invariant_constraints": {
           "items": {
@@ -252,6 +259,7 @@
       "type": "object"
     },
     "InvariantsAndIntegrityConstraints": {
+      "additionalProperties": false,
       "properties": {
         "task_authority": {
           "$ref": "#/$defs/TaskAuthority"
@@ -340,6 +348,7 @@
       "type": "object"
     },
     "NamedAdmissibilityInputs": {
+      "additionalProperties": false,
       "properties": {
         "invariant_constraints": {
           "items": {
@@ -382,6 +391,7 @@
       "type": "object"
     },
     "ObservabilityScaffolding": {
+      "additionalProperties": false,
       "properties": {
         "artifact_paths": {
           "items": {
@@ -438,6 +448,7 @@
       "type": "object"
     },
     "OrderItem": {
+      "additionalProperties": false,
       "properties": {
         "rank": {
           "title": "Rank",
@@ -461,6 +472,7 @@
       "type": "object"
     },
     "ReviewCheckpoints": {
+      "additionalProperties": false,
       "properties": {
         "visible_before_trusting": {
           "$ref": "#/$defs/VisibleBeforeTrusting"
@@ -481,6 +493,7 @@
       "type": "object"
     },
     "RuntimePathRequired": {
+      "additionalProperties": false,
       "properties": {
         "command": {
           "title": "Command",
@@ -502,6 +515,7 @@
       "type": "object"
     },
     "SavedArtifact": {
+      "additionalProperties": false,
       "properties": {
         "id": {
           "title": "Id",
@@ -525,6 +539,7 @@
       "type": "object"
     },
     "Sources": {
+      "additionalProperties": false,
       "properties": {
         "authoritative_artifacts": {
           "items": {
@@ -570,6 +585,7 @@
       "type": "object"
     },
     "TaskAuthority": {
+      "additionalProperties": false,
       "properties": {
         "order": {
           "items": {
@@ -609,6 +625,7 @@
       "type": "object"
     },
     "VerificationDuties": {
+      "additionalProperties": false,
       "properties": {
         "must_not_skip": {
           "items": {
@@ -625,6 +642,7 @@
       "type": "object"
     },
     "VisibleBeforeTrusting": {
+      "additionalProperties": false,
       "properties": {
         "source_authority": {
           "items": {
@@ -657,6 +675,7 @@
       "type": "object"
     }
   },
+  "additionalProperties": false,
   "properties": {
     "$schema": {
       "title": "$Schema",

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "open_decisions.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Open Decisions",
+          "title": "Title",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "invariant_authority_object",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "purpose": {
+      "title": "Purpose",
+      "type": "string"
+    },
+    "usage_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Usage Rules",
+      "type": "array"
+    },
+    "current_decisions": {
+      "items": {},
+      "title": "Current Decisions",
+      "type": "array"
+    },
+    "pending_decisions": {
+      "items": {},
+      "title": "Pending Decisions",
+      "type": "array"
+    },
+    "notes": {
+      "items": {},
+      "title": "Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "purpose",
+    "usage_rules",
+    "current_decisions",
+    "pending_decisions",
+    "notes"
+  ],
+  "title": "OpenDecisions",
+  "type": "object"
+}

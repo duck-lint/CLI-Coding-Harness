@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "pattern": {
+      "title": "Pattern",
+      "type": "string"
+    },
+    "trigger": {
+      "title": "Trigger",
+      "type": "string"
+    },
+    "symptom": {
+      "title": "Symptom",
+      "type": "string"
+    },
+    "likely_cause": {
+      "title": "Likely Cause",
+      "type": "string"
+    },
+    "prevention_rule": {
+      "title": "Prevention Rule",
+      "type": "string"
+    },
+    "cheapest_check": {
+      "title": "Cheapest Check",
+      "type": "string"
+    },
+    "last_seen": {
+      "title": "Last Seen",
+      "type": "string"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "pattern",
+    "trigger",
+    "symptom",
+    "likely_cause",
+    "prevention_rule",
+    "cheapest_check",
+    "last_seen",
+    "status"
+  ],
+  "title": "KnownFailureEntry",
+  "type": "object"
+}

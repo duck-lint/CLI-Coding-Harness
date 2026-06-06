@@ -1,10 +1,10 @@
 {
+  "$schema": "./KnownFailures.schema.json",
   "metadata": {
-    "document_id": "known_failures",
+    "document_id": "known_failures.json",
     "title": "Known Failures",
     "source_format": "json",
-    "authority_role": "failure_pattern_authority_object",
-    "converted_from": "markdown_donor_pruned_after_conversion"
+    "document_authority": "invariant_authority_object"
   },
   "purpose": "Track recurring failure patterns later sessions should detect earlier.",
   "usage_rules": [
@@ -15,16 +15,6 @@
     "Do not record blame, moods, or one-off noise.",
     "Promote repeatable prevention into tooling or runtime rules when possible."
   ],
-  "entry_schema": {
-    "id": "string",
-    "pattern": "string",
-    "trigger": "string",
-    "symptom": "string",
-    "likely_cause": "string",
-    "prevention_rule": "string",
-    "cheapest_check": "string",
-    "last_seen": "string",
-    "status": "string"
-  },
+  "entries_schema_ref": "./KnownFailureEntry.schema.json",
   "entries": []
 }
