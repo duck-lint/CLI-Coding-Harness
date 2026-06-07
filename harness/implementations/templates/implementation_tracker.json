@@ -1,32 +1,33 @@
 {
-  
+  "$schema": "./ImplementationTracker.schema.json",
+  "metadata": {
+    "document_id": "implementation_tracker.json",
+    "title": "Implementation <#> Tracker",
+    "purpose": "This file tracks an implementation plan.",
+    "source_format": "json",
+    "document_authority": "generated_artifact"
+  },
+  "status": "",
+  "state": "proposed | active | blocked | reviewing | archived",
+  "tracker": [
+    {
+      "date": "date",
+      "seam": "implementation seam number",
+      "agent": "agent role",
+      "change": "work being done",
+      "evidence": "evidence of completion",
+      "status": "proposed | active | blocked | reviewing | complete"
+    }
+  ],
+  "blockers": [
+    {
+      "blocker": "",
+      "boundary": "",
+      "owner_agent": "",
+      "resolution": ""
+    }
+  ],
+  "closeout_notes": [
+    "When this bundle completes, move it from ./active/ to ./archive/."
+  ]
 }
-# Implementation XX Tracker
-
-## Status
-
-- State: proposed | active | blocked | reviewing | archived
-- Current work:
-- Next action:
-
-## Work Log
-
-| Date | Agent Role | Change | Evidence | Next |
-| --- | --- | --- | --- | --- |
-|  |  |  |  |  |
-
-## Work Status
-
-| Work | Owner Agent | Status | Verification | Notes |
-| --- | --- | --- | --- | --- |
-|  |  | proposed |  |  |
-
-## Blockers
-
-| Blocker | Boundary | Owner Agent | Resolution |
-| --- | --- | --- | --- |
-|  |  |  |  |
-
-## Closeout Note
-
-- When this bundle completes, move it from `active/` to `archive/`.

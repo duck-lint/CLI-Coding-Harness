@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Blocker": {
+      "additionalProperties": false,
+      "properties": {
+        "blocker": {
+          "title": "Blocker",
+          "type": "string"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "owner_agent": {
+          "title": "Owner Agent",
+          "type": "string"
+        },
+        "resolution": {
+          "title": "Resolution",
+          "type": "string"
+        }
+      },
+      "required": [
+        "blocker",
+        "boundary",
+        "owner_agent",
+        "resolution"
+      ],
+      "title": "Blocker",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "implementation_tracker.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Implementation <#> Tracker",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "This file tracks an implementation plan.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "TrackerItem": {
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "title": "Date",
+          "type": "string"
+        },
+        "seam": {
+          "title": "Seam",
+          "type": "string"
+        },
+        "agent": {
+          "title": "Agent",
+          "type": "string"
+        },
+        "change": {
+          "title": "Change",
+          "type": "string"
+        },
+        "evidence": {
+          "title": "Evidence",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "proposed",
+            "active",
+            "blocked",
+            "reviewing",
+            "archived"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "date",
+        "seam",
+        "agent",
+        "change",
+        "evidence",
+        "status"
+      ],
+      "title": "TrackerItem",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "status": {
+      "title": "Status",
+      "type": "string"
+    },
+    "state": {
+      "enum": [
+        "proposed",
+        "active",
+        "blocked",
+        "reviewing",
+        "archived"
+      ],
+      "title": "State",
+      "type": "string"
+    },
+    "tracker": {
+      "items": {
+        "$ref": "#/$defs/TrackerItem"
+      },
+      "title": "Tracker",
+      "type": "array"
+    },
+    "blockers": {
+      "items": {
+        "$ref": "#/$defs/Blocker"
+      },
+      "title": "Blockers",
+      "type": "array"
+    },
+    "closeout_notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Closeout Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "status",
+    "state",
+    "tracker",
+    "blockers",
+    "closeout_notes"
+  ],
+  "title": "ImplementationTracker",
+  "type": "object"
+}
