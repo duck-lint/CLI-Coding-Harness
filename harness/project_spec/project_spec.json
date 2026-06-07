@@ -79,7 +79,7 @@
         "Validate that report against the schema.",
         "Save the task brief, project context packet, and report under harness/runs/<timestamp>/",
         "Print a short terminal summary.",
-        "Identify the next admissible transition."
+        "Identify the next admissible transformation."
       ],
       "stop_condition": "Stop before implementation"
     }

@@ -34,8 +34,8 @@
           "title": "Dominant Tension Justification",
           "type": "string"
         },
-        "next_admissible_transition": {
-          "title": "Next Admissible Transition",
+        "next_admissible_transformation": {
+          "title": "next admissible transformation",
           "type": "string"
         },
         "affected_surfaces": {
@@ -63,7 +63,7 @@
       "required": [
         "constraint_conflicts",
         "dominant_tension_justification",
-        "next_admissible_transition",
+        "next_admissible_transformation",
         "affected_surfaces",
         "non_affected_surfaces",
         "stop_conditions"

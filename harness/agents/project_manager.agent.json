@@ -17,7 +17,7 @@
       "Affected and non-affected surfaces are named rather than inferred or sized.",
       "Every admissibility check ends as pass, fail, or blocked, with the missing basis named when blocked.",
       "Stop conditions are explicit and tied to invariant violation or missing authority.",
-      "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transition, or marks the relevant part admissibility-blocked.",
+      "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transformation, or marks the relevant part admissibility-blocked.",
       "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided input.",
       "If any required condition fails, the PM output must be marked admissibility-blocked and the missing condition must be named."
     ],

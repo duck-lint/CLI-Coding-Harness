@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "implementation_plan.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Implementation <#> Plan",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "This file outlines an implementation plan.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "title": "$Schema",
+      "type": "string"
+    },
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
+    },
+    "implementation_intent": {
+      "items": {},
+      "title": "Implementation Intent",
+      "type": "array"
+    },
+    "project_manager_report": {
+      "title": "Project Manager Report",
+      "type": "string"
+    },
+    "planned_work": {
+      "items": {},
+      "title": "Planned Work",
+      "type": "array"
+    },
+    "non_goals": {
+      "items": {},
+      "title": "Non Goals",
+      "type": "array"
+    },
+    "acceptance_criteria": {
+      "items": {},
+      "title": "Acceptance Criteria",
+      "type": "array"
+    },
+    "current_repo_runtime_state": {
+      "items": {},
+      "title": "Current Repo Runtime State",
+      "type": "array"
+    },
+    "assumptions_and_unknowns": {
+      "items": {},
+      "title": "Assumptions And Unknowns",
+      "type": "array"
+    },
+    "affected_surfaces": {
+      "items": {},
+      "title": "Affected Surfaces",
+      "type": "array"
+    },
+    "non_affected_surfaces": {
+      "items": {},
+      "title": "Non Affected Surfaces",
+      "type": "array"
+    },
+    "completion_rules": {
+      "items": {},
+      "title": "Completion Rules",
+      "type": "array"
+    },
+    "approval_gates": {
+      "items": {},
+      "title": "Approval Gates",
+      "type": "array"
+    },
+    "closeout_notes": {
+      "items": {},
+      "title": "Closeout Notes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "$schema",
+    "metadata",
+    "implementation_intent",
+    "project_manager_report",
+    "planned_work",
+    "non_goals",
+    "acceptance_criteria",
+    "current_repo_runtime_state",
+    "assumptions_and_unknowns",
+    "affected_surfaces",
+    "non_affected_surfaces",
+    "completion_rules",
+    "approval_gates",
+    "closeout_notes"
+  ],
+  "title": "ImplementationPlan",
+  "type": "object"
+}

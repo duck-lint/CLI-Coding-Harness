@@ -32,7 +32,7 @@
       "Conflict between invariant and task."
     ],
     "dominant_tension_justification": "Why this tension governs.",
-    "next_admissible_transition": "One bounded transformation.",
+    "next_admissible_transformation": "One bounded transformation.",
     "affected_surfaces": [
       "Surface touched by next transition."
     ],

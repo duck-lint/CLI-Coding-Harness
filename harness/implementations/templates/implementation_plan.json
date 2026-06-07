@@ -1,0 +1,26 @@
+{
+  "$schema": "./ImplementationPlan.schema.json",
+  "metadata": {
+    "document_id": "implementation_plan.json",
+    "title": "Implementation <#> Plan",
+    "purpose": "This file outlines an implementation plan.",
+    "source_format": "json",
+    "document_authority": "generated_artifact"
+  },
+  "implementation_intent": [],
+  "project_manager_report": "",
+  "planned_work": [],
+  "non_goals": [],
+  "acceptance_criteria": [],
+  "current_repo_runtime_state": [],
+  "assumptions_and_unknowns": [],
+  "affected_surfaces": [],
+  "non_affected_surfaces": [],
+  "completion_rules": [
+    "Do not mark behavior complete on fixture, mock, dry-run, serialization, type, field, file, path, route, crate, config, or nominal-caller evidence alone."
+  ],
+  "approval_gates": [],
+  "closeout_notes": [
+    "When this bundle completes, move it from ./active/ to ./archive/."
+]
+}
