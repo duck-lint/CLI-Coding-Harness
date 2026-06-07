@@ -8,21 +8,21 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["open_decisions.json"]
-    title: Literal["Open Decisions"]
-    source_format: Literal["json"]
-    document_authority: Literal["invariant_authority_object"]
+  document_id: Literal["open_decisions.json"]
+  title: Literal["Open Decisions"]
+  source_format: Literal["json"]
+  document_authority: Literal["invariant_authority_object"]
 
 
 class OpenDecisions(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    purpose: str
-    usage_rules: list[str]
-    current_decisions: list[Any]
-    pending_decisions: list[Any]
-    notes: list[Any]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  purpose: str
+  usage_rules: list[str]
+  current_decisions: list[Any]
+  pending_decisions: list[Any]
+  notes: list[Any]

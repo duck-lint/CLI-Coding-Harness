@@ -8,53 +8,53 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class SourceCoverageItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    input_name: str
-    consumed: bool
-    basis: list[str]
+  input_name: str
+  consumed: bool
+  basis: list[str]
 
 class DriftDetection(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    drift_detected: bool
-    description_if_present: str
+  drift_detected: bool
+  description_if_present: str
 
 
 class TrajectoryReview(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    current_posture: str
-    thesis_attractor: str
-    drift_detection: DriftDetection
-    invariant_constraints: list[str]
-    task_constraints: list[str]
-    structural_tension: str
+  current_posture: str
+  thesis_attractor: str
+  drift_detection: DriftDetection
+  invariant_constraints: list[str]
+  task_constraints: list[str]
+  structural_tension: str
 
 
 class ProofFrontier(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    constraint_conflicts: list[str]
-    dominant_tension_justification: str
-    next_admissible_transformation: str
-    affected_surfaces: list[str]
-    non_affected_surfaces: list[str]
-    stop_conditions: list[str]
+  constraint_conflicts: list[str]
+  dominant_tension_justification: str
+  next_admissible_transformation: str
+  affected_surfaces: list[str]
+  non_affected_surfaces: list[str]
+  stop_conditions: list[str]
 
 
 class ProjectManagerReport(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    schema_ref: str | None = Field(default=None, alias="$schema")
-    report: Literal["Project Manager Report"]
-    status: Literal[
-        "admissible", 
-        "admissibility_blocked", 
-        "rejected", 
-        "needs_clarification"
-        ]
-    summary: str
-    source_coverage: list[SourceCoverageItem] = Field(min_length=1)
-    trajectory_review: TrajectoryReview
-    proof_frontier: ProofFrontier
+  schema_ref: str | None = Field(default=None, alias="$schema")
+  report: Literal["Project Manager Report"]
+  status: Literal[
+      "admissible", 
+      "admissibility_blocked", 
+      "rejected", 
+      "needs_clarification"
+      ]
+  summary: str
+  source_coverage: list[SourceCoverageItem] = Field(min_length=1)
+  trajectory_review: TrajectoryReview
+  proof_frontier: ProofFrontier

@@ -8,20 +8,20 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["known_failures.json"]
-    title: Literal["Known Failures"]
-    source_format: Literal["json"]
-    document_authority: Literal["invariant_authority_object"]
+  document_id: Literal["known_failures.json"]
+  title: Literal["Known Failures"]
+  source_format: Literal["json"]
+  document_authority: Literal["invariant_authority_object"]
 
 
 class KnownFailures(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    purpose: str
-    usage_rules: list[str]
-    entries_schema_ref: Literal["./KnownFailureEntry.schema.json"]
-    entries: list[Any]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  purpose: str
+  usage_rules: list[str]
+  entries_schema_ref: Literal["./KnownFailureEntry.schema.json"]
+  entries: list[Any]

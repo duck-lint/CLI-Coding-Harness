@@ -8,27 +8,27 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["task.json"]
-    title: Literal["Task"]
-    purpose: Literal["This file assigns the task to the agent."]
-    source_format: Literal["json"]
-    document_authority: Literal["invariant_authority_object"]
+  document_id: Literal["task.json"]
+  title: Literal["Task"]
+  purpose: Literal["This file assigns the task to the agent."]
+  source_format: Literal["json"]
+  document_authority: Literal["invariant_authority_object"]
 
 
 class TaskItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    task_text: str
-    created_at: str
-    requested_agent: str
-    run_id: str
+  task_text: str
+  created_at: str
+  requested_agent: str
+  run_id: str
 
 
 class Task(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    task: list[TaskItem]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  task: list[TaskItem]

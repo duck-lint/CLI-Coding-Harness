@@ -8,69 +8,69 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    id: str
-    name: str
+  id: str
+  name: str
 
 
 class ProjectSpec(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    
-    required: bool
-    authoritative: bool
-    document: Literal["./project_spec.json"]
-    schema_ref: Literal["./ProjectSpec.schema.json"]
+  model_config = ConfigDict(extra="forbid")
+  
+  required: bool
+  authoritative: bool
+  document: Literal["./project_spec.json"]
+  schema_ref: Literal["./ProjectSpec.schema.json"]
 
 
 class GovernancePrimitives(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    document: Literal["./governance_primitives.json"]
-    schema_ref: Literal["./GovernancePrimitives.schema.json"]
+  required: bool
+  authoritative: bool
+  document: Literal["./governance_primitives.json"]
+  schema_ref: Literal["./GovernancePrimitives.schema.json"]
 
 
 class KnownFailures(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    document: Literal["./known_failures.json"]
-    schema_ref: Literal["./KnownFailures.schema.json"]
+  required: bool
+  authoritative: bool
+  document: Literal["./known_failures.json"]
+  schema_ref: Literal["./KnownFailures.schema.json"]
 
 
 class OpenDecisions(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    document: Literal["./open_decisions.json"]
-    schema_ref: Literal["./OpenDecisions.schema.json"]
+  required: bool
+  authoritative: bool
+  document: Literal["./open_decisions.json"]
+  schema_ref: Literal["./OpenDecisions.schema.json"]
 
 class CurrentImplementation(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    document: list[Literal[
-        "../implementations/active/implementation_plan_**.md",
-        "../implementations/active/implementation_tracker_**.md"
-        ]]
-    schema_ref: list[Literal[
-        "../implementations/active/ImplementationPlan.schema.json",
-        "../implementations/active/ImplementationTracker.schema.json"
-        ]]
+  required: bool
+  authoritative: bool
+  document: list[Literal[
+      "../implementations/active/implementation_plan_**.md",
+      "../implementations/active/implementation_tracker_**.md"
+      ]]
+  schema_ref: list[Literal[
+      "../implementations/active/ImplementationPlan.schema.json",
+      "../implementations/active/ImplementationTracker.schema.json"
+      ]]
 
 
 class ProjectContextPacket(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    schema_ref: str | None = Field(default=None, alias="$schema")
-    metadata: Metadata
-    project_spec: ProjectSpec
-    governance_primitives: GovernancePrimitives
-    known_failures: KnownFailures
-    open_decisions: OpenDecisions
-    current_implementation: CurrentImplementation
+  schema_ref: str | None = Field(default=None, alias="$schema")
+  metadata: Metadata
+  project_spec: ProjectSpec
+  governance_primitives: GovernancePrimitives
+  known_failures: KnownFailures
+  open_decisions: OpenDecisions
+  current_implementation: CurrentImplementation

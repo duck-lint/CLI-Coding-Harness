@@ -8,31 +8,31 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["runtime_doctrine.json"]
-    title: Literal["Runtime Doctrine"]
-    purpose: Literal["This file governs runtime orchestration."]
-    source_format: Literal["json"]
-    document_authority: Literal["invariant_authority_object"]
+  document_id: Literal["runtime_doctrine.json"]
+  title: Literal["Runtime Doctrine"]
+  purpose: Literal["This file governs runtime orchestration."]
+  source_format: Literal["json"]
+  document_authority: Literal["invariant_authority_object"]
 
 
 class ProjectManagerReport(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    description: str
-    invariant_properties: list[str]
-    conflict_handling: str
+  description: str
+  invariant_properties: list[str]
+  conflict_handling: str
 
 
 class RuntimeDoctrine(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    runtime_job: list[str]
-    canonical_memory_rules: list[str]
-    authority_lenses: list[str]
-    project_manager_report: ProjectManagerReport
-    behavior_discipline: list[str]
-    done_criteria: list[str]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  runtime_job: list[str]
+  canonical_memory_rules: list[str]
+  authority_lenses: list[str]
+  project_manager_report: ProjectManagerReport
+  behavior_discipline: list[str]
+  done_criteria: list[str]

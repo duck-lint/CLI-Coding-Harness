@@ -8,184 +8,184 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["governance_primitives.json"]
-    title: Literal["Governance Primitives"]
-    context: Literal["Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding."]
-    purpose: str
-    source_format: Literal["json"]
-    document_authority: Literal["invariant_authority_object"]
+  document_id: Literal["governance_primitives.json"]
+  title: Literal["Governance Primitives"]
+  context: Literal["Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding."]
+  purpose: str
+  source_format: Literal["json"]
+  document_authority: Literal["invariant_authority_object"]
 
 
 class ObservabilityScaffolding(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    artifact_paths: list[str]
-    runtime_identity: list[str]
-    runtime_results: list[str]
-    authority_manifests: list[str]
-    repo_state: list[str]
-    status_values: list[str]
+  artifact_paths: list[str]
+  runtime_identity: list[str]
+  runtime_results: list[str]
+  authority_manifests: list[str]
+  repo_state: list[str]
+  status_values: list[str]
 
 
 class GovernancePosture(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    invariant_constraints: list[str]
-    observability_scaffolding: ObservabilityScaffolding
-    explicit_distinctions: list[str]
+  invariant_constraints: list[str]
+  observability_scaffolding: ObservabilityScaffolding
+  explicit_distinctions: list[str]
 
 
 class ExplicitApprovalRequiredToModify(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    governance_project_spec: list[str]
-    schema_: list[str] = Field(..., alias='schema')
-    agent_contract: list[str]
-    api_and_model_behavior: list[str]
-    auth: list[str]
-    storage: list[str]
-    deployment: list[str]
-    destructive_operation: list[str]
-    broad_architecture: list[str]
-    compatibility_and_fallback_commitment: list[str]
-    project_intent_dependent_behavior: list[str]
+  governance_project_spec: list[str]
+  schema_: list[str] = Field(..., alias='schema')
+  agent_contract: list[str]
+  api_and_model_behavior: list[str]
+  auth: list[str]
+  storage: list[str]
+  deployment: list[str]
+  destructive_operation: list[str]
+  broad_architecture: list[str]
+  compatibility_and_fallback_commitment: list[str]
+  project_intent_dependent_behavior: list[str]
 
 
 class ApprovalBoundaries(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    explicit_approval_required_to_modify: ExplicitApprovalRequiredToModify
+  explicit_approval_required_to_modify: ExplicitApprovalRequiredToModify
 
 
 class OrderItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    rank: int
-    id: str
-    description: str
+  rank: int
+  id: str
+  description: str
 
 
 class TaskAuthority(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    order: list[OrderItem]
-    description: str
-    conflict_handling: str
-    task_authorization: str
-    agent_authority_boundary: list[str]
+  order: list[OrderItem]
+  description: str
+  conflict_handling: str
+  task_authorization: str
+  agent_authority_boundary: list[str]
 
 
 class Sources(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    authoritative_artifacts: list[str]
-    derived_artifacts: list[str]
-    operational_artifacts: list[str]
-    presentation_artifacts: list[str]
-    order: str
+  authoritative_artifacts: list[str]
+  derived_artifacts: list[str]
+  operational_artifacts: list[str]
+  presentation_artifacts: list[str]
+  order: str
 
 
 class VerificationDuties(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    must_not_skip: list[str]
+  must_not_skip: list[str]
 
 
 class AmbiguityUncertainty(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    preserve_visibility: list[str]
+  preserve_visibility: list[str]
 
 
 class NamedAdmissibilityInputs(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    invariant_constraints: list[str]
-    task_constraints: str
-    constraint_conflicts: list[str]
-    admissibility_checks: str
-    stop_conditions: list[str]
+  invariant_constraints: list[str]
+  task_constraints: str
+  constraint_conflicts: list[str]
+  admissibility_checks: str
+  stop_conditions: list[str]
 
 
 class InvariantsAndIntegrityConstraints(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    task_authority: TaskAuthority
-    sources: Sources
-    fixtures_samples_test_roles: list[str]
-    compatibility_commitments: list[str]
-    verification_duties: VerificationDuties
-    ambiguity_uncertainty: AmbiguityUncertainty
-    named_admissibility_inputs: NamedAdmissibilityInputs
+  task_authority: TaskAuthority
+  sources: Sources
+  fixtures_samples_test_roles: list[str]
+  compatibility_commitments: list[str]
+  verification_duties: VerificationDuties
+  ambiguity_uncertainty: AmbiguityUncertainty
+  named_admissibility_inputs: NamedAdmissibilityInputs
 
 
 class AdmissibleTransformations(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    preserve_project_spec: list[str]
-    require_open_decision: list[str]
-    amend_project_spec_or_governance: list[str]
-    preserve_provenance_or_inspectability: list[str]
-    forbidden_shortcuts: list[str]
-    evidence_minimum: list[str]
+  preserve_project_spec: list[str]
+  require_open_decision: list[str]
+  amend_project_spec_or_governance: list[str]
+  preserve_provenance_or_inspectability: list[str]
+  forbidden_shortcuts: list[str]
+  evidence_minimum: list[str]
 
 
 class VisibleBeforeTrusting(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    source_authority: list[str]
-    derived_or_operational_artifacts: list[str]
-    synthesis_automation_ux: list[str]
+  source_authority: list[str]
+  derived_or_operational_artifacts: list[str]
+  synthesis_automation_ux: list[str]
 
 
 class ReviewCheckpoints(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    visible_before_trusting: VisibleBeforeTrusting
-    visible_before_closing_work: list[str]
+  visible_before_trusting: VisibleBeforeTrusting
+  visible_before_closing_work: list[str]
 
 
 class RuntimePathRequired(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    command: str
-    args: list[str]
+  command: str
+  args: list[str]
 
 
 class SavedArtifact(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    id: str
-    path_pattern: str
-    required: bool
+  id: str
+  path_pattern: str
+  required: bool
 
 
 class EvidenceRequired(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    saved_artifacts: list[SavedArtifact]
+  saved_artifacts: list[SavedArtifact]
 
 
 class AcceptanceProbe(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    id: str
-    question: str
-    runtime_path_required: RuntimePathRequired
-    evidence_required: EvidenceRequired
+  id: str
+  question: str
+  runtime_path_required: RuntimePathRequired
+  evidence_required: EvidenceRequired
 
 
 class GovernancePrimitives(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    governance_posture: GovernancePosture
-    approval_boundaries: ApprovalBoundaries
-    invariants_and_integrity_constraints: InvariantsAndIntegrityConstraints
-    admissible_transformations: AdmissibleTransformations
-    review_checkpoints: ReviewCheckpoints
-    acceptance_probes: list[AcceptanceProbe]
-    not_proof: list[str]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  governance_posture: GovernancePosture
+  approval_boundaries: ApprovalBoundaries
+  invariants_and_integrity_constraints: InvariantsAndIntegrityConstraints
+  admissible_transformations: AdmissibleTransformations
+  review_checkpoints: ReviewCheckpoints
+  acceptance_probes: list[AcceptanceProbe]
+  not_proof: list[str]
