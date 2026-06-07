@@ -8,29 +8,29 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["implementation_plan.json"]
-    title: Literal["Implementation <#> Plan"]
-    purpose: Literal["This file outlines an implementation plan."]
-    source_format: Literal["json"]
-    document_authority: Literal["generated_artifact"]
+  document_id: Literal["implementation_plan.json"]
+  title: Literal["Implementation <#> Plan"]
+  purpose: Literal["This file outlines an implementation plan."]
+  source_format: Literal["json"]
+  document_authority: Literal["generated_artifact"]
 
 
 class ImplementationPlan(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    implementation_intent: list[Any]
-    project_manager_report: str
-    planned_work: list[Any]
-    non_goals: list[Any]
-    acceptance_criteria: list[Any]
-    current_repo_runtime_state: list[Any]
-    assumptions_and_unknowns: list[Any]
-    affected_surfaces: list[Any]
-    non_affected_surfaces: list[Any]
-    completion_rules: list[Any]
-    approval_gates: list[Any]
-    closeout_notes: list[Any]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  implementation_intent: list[Any]
+  project_manager_report: str
+  planned_work: list[Any]
+  non_goals: list[Any]
+  acceptance_criteria: list[Any]
+  current_repo_runtime_state: list[Any]
+  assumptions_and_unknowns: list[Any]
+  affected_surfaces: list[Any]
+  non_affected_surfaces: list[Any]
+  completion_rules: list[Any]
+  approval_gates: list[Any]
+  closeout_notes: list[Any]

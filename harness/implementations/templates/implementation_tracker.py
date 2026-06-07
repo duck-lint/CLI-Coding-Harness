@@ -8,54 +8,54 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    document_id: Literal["implementation_tracker.json"]
-    title: Literal["Implementation <#> Tracker"]
-    purpose: Literal["This file tracks an implementation plan."]
-    source_format: Literal["json"]
-    document_authority: Literal["generated_artifact"]
+  document_id: Literal["implementation_tracker.json"]
+  title: Literal["Implementation <#> Tracker"]
+  purpose: Literal["This file tracks an implementation plan."]
+  source_format: Literal["json"]
+  document_authority: Literal["generated_artifact"]
 
 
 class TrackerItem(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    date: str
-    seam: str
-    agent: str
-    change: str
-    evidence: str
-    status: Literal[
-        "proposed",
-        "active",
-        "blocked",
-        "reviewing",
-        "archived"
-    ]
+  date: str
+  seam: str
+  agent: str
+  change: str
+  evidence: str
+  status: Literal[
+      "proposed",
+      "active",
+      "blocked",
+      "reviewing",
+      "archived"
+  ]
 
 
 class Blocker(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    blocker: str
-    boundary: str
-    owner_agent: str
-    resolution: str
+  blocker: str
+  boundary: str
+  owner_agent: str
+  resolution: str
 
 
 class ImplementationTracker(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    status: str
-    state: Literal[
-        "proposed",
-        "active",
-        "blocked",
-        "reviewing",
-        "archived"
-    ]
-    tracker: list[TrackerItem]
-    blockers: list[Blocker]
-    closeout_notes: list[str]
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  status: str
+  state: Literal[
+      "proposed",
+      "active",
+      "blocked",
+      "reviewing",
+      "archived"
+  ]
+  tracker: list[TrackerItem]
+  blockers: list[Blocker]
+  closeout_notes: list[str]

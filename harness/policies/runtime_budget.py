@@ -8,18 +8,18 @@ from pydantic import BaseModel, ConfigDict, Field
 
 
 class RuntimeBudgetDefaults(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    max_input_tokens: int = Field(gt=0)
-    reserved_output_tokens: int = Field(gt=0)
-    oversize_strategy: Literal ["fail_or_batch"]
-    truncation: Literal ["disabled"]
-    default_model: str
-    agent_model_overrides: dict[str, str] = Field(default_factory=dict)
+  max_input_tokens: int = Field(gt=0)
+  reserved_output_tokens: int = Field(gt=0)
+  oversize_strategy: Literal ["fail_or_batch"]
+  truncation: Literal ["disabled"]
+  default_model: str
+  agent_model_overrides: dict[str, str] = Field(default_factory=dict)
 
 
 class RuntimeBudgetPolicy(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    
-    schema_ref: str | None = Field(default=None, alias="$schema")
-    default: RuntimeBudgetDefaults
+  model_config = ConfigDict(extra="forbid")
+  
+  schema_ref: str | None = Field(default=None, alias="$schema")
+  default: RuntimeBudgetDefaults

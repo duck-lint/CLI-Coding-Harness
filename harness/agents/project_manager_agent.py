@@ -7,93 +7,93 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 class Metadata(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    id: Literal["project_manager.agent.json"]
-    agent_name: Literal["Project Manager"]
-    mode: Literal["read_only_report"]
+  id: Literal["project_manager.agent.json"]
+  agent_name: Literal["Project Manager"]
+  mode: Literal["read_only_report"]
 
 
 class ReportDerivationRules(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    evaluation_basis: str
-    drift_checks: str
-    next_step_recommendations: str
-    repository_state: str
+  evaluation_basis: str
+  drift_checks: str
+  next_step_recommendations: str
+  repository_state: str
 
 
 class ReviewLenses(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    invariant_coverage: str
-    task_coverage: str
-    source_coverage_truthfulness: str
-    conflict_visibility: str
-    admissible_transformation_coverage: str
-    surface_truthfulness: str
-    evidence_quality: str
-    fixture_truthfulness: str
-    posture_concreteness: str
-    thesis_attractor_discipline: str
-    tension_selection: str
-    frontier_selection: str
-    optionality_preservation: str
+  invariant_coverage: str
+  task_coverage: str
+  source_coverage_truthfulness: str
+  conflict_visibility: str
+  admissible_transformation_coverage: str
+  surface_truthfulness: str
+  evidence_quality: str
+  fixture_truthfulness: str
+  posture_concreteness: str
+  thesis_attractor_discipline: str
+  tension_selection: str
+  frontier_selection: str
+  optionality_preservation: str
 
 
 class Instructions(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    role: str
-    posture: str
-    objective: str
-    validity_conditions: list[str]
-    report_derivation_rules: ReportDerivationRules
-    conduct_rules: list[str]
-    review_lenses: ReviewLenses
+  role: str
+  posture: str
+  objective: str
+  validity_conditions: list[str]
+  report_derivation_rules: ReportDerivationRules
+  conduct_rules: list[str]
+  review_lenses: ReviewLenses
 
 
 class ProjectContextPacket(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    schema_ref: Literal["../project_spec/ProjectContextPacket.schema.json"]
+  required: bool
+  authoritative: bool
+  schema_ref: Literal["../project_spec/ProjectContextPacket.schema.json"]
 
 
 class Task(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    authoritative: bool
-    schema_ref: Literal["../runtime/Task.schema.json"]
+  required: bool
+  authoritative: bool
+  schema_ref: Literal["../runtime/Task.schema.json"]
 
 
 class Input(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    project_context_packet: ProjectContextPacket
-    task: Task
+  project_context_packet: ProjectContextPacket
+  task: Task
 
 
 class ProjectManagerReport(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    required: bool
-    schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
+  required: bool
+  schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
 
 
 class Output(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    project_manager_report: ProjectManagerReport
+  project_manager_report: ProjectManagerReport
 
 
 class ProjectManagerAgent(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+  model_config = ConfigDict(extra="forbid")
 
-    field_schema: str = Field(..., alias='$schema')
-    metadata: Metadata
-    instructions: Instructions
-    input: Input
-    output: Output
+  field_schema: str = Field(..., alias='$schema')
+  metadata: Metadata
+  instructions: Instructions
+  input: Input
+  output: Output
