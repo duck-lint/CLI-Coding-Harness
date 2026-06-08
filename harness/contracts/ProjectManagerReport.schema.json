@@ -17,12 +17,12 @@
               "type": "null"
             }
           ],
-          "default": null,
           "title": "Description"
         }
       },
       "required": [
-        "drift_detected"
+        "drift_detected",
+        "description"
       ],
       "title": "DriftDetection",
       "type": "object"
@@ -71,8 +71,15 @@
           "type": "array"
         },
         "dominant_tension_justification": {
-          "title": "Dominant Tension Justification",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Dominant Tension Justification"
         },
         "blocked": {
           "title": "Blocked",
@@ -87,8 +94,14 @@
               "type": "null"
             }
           ],
-          "default": null,
           "title": "Blocking Reason"
+        },
+        "missing_basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Missing Basis",
+          "type": "array"
         },
         "next_admissible_transformation": {
           "anyOf": [
@@ -99,35 +112,58 @@
               "type": "null"
             }
           ],
-          "default": null,
           "title": "Next Admissible Transformation"
         },
         "affected_surfaces": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Affected Surfaces",
-          "type": "array"
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Affected Surfaces"
         },
         "non_affected_surfaces": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Non Affected Surfaces",
-          "type": "array"
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Non Affected Surfaces"
         },
         "stop_conditions": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Stop Conditions",
-          "type": "array"
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Stop Conditions"
         }
       },
       "required": [
         "constraint_conflicts",
         "dominant_tension_justification",
         "blocked",
+        "blocking_reason",
+        "missing_basis",
+        "next_admissible_transformation",
         "affected_surfaces",
         "non_affected_surfaces",
         "stop_conditions"

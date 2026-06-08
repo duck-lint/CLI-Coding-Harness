@@ -44,6 +44,9 @@
     "dominant_tension_justification": "Why this tension governs.",
     "blocked": true,
     "blocking_reason": ". . .",
+    "missing_basis": [
+      
+    ],
     "next_admissible_transformation": "One bounded transformation.",
     "affected_surfaces": [
       "Surface touched by next transition."

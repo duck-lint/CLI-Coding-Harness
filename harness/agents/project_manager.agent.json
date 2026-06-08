@@ -15,7 +15,7 @@
       "Conflicts or missing bases are made explicit rather than procedurally interpreted away.",
       "Allowed transformation types are named from the governance primitives or routed to an explicit approval boundary.",
       "Affected and non-affected surfaces are named rather than inferred or sized.",
-      "Every admissibility check ends as pass, fail, or blocked, with the missing basis named when blocked.",
+      "Every admissibility check classified as per status semantics below: admissible, admissibility_blocked, rejected, needs_clarification.",
       "Stop conditions are explicit and tied to invariant violation or missing authority.",
       "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transformation, or marks the relevant part admissibility-blocked.",
       "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided runtime_inputs.",

@@ -33,7 +33,7 @@ class DriftDetection(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   drift_detected: bool
-  description: str | None = None
+  description: str | None
 
 
 class TrajectoryReview(BaseModel):
@@ -51,13 +51,16 @@ class ProofFrontier(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   constraint_conflicts: list[str]
-  dominant_tension_justification: str
+  dominant_tension_justification: str | None
+
   blocked: bool
-  blocking_reason: str | None = None
-  next_admissible_transformation: str | None = None
-  affected_surfaces: list[str]
-  non_affected_surfaces: list[str]
-  stop_conditions: list[str]
+  blocking_reason: str | None
+  missing_basis: list[str]
+
+  next_admissible_transformation: str | None
+  affected_surfaces: list[str] | None
+  non_affected_surfaces: list[str] | None
+  stop_conditions: list[str] | None
 
 
 class ProjectManagerReport(BaseModel):
