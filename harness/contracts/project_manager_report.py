@@ -16,12 +16,17 @@ class Metadata(BaseModel):
   document_authority: Literal["generated_artifact"]
 
 
-class ReportSourceCoverageItem(BaseModel):
+class ReportSourceCoverageEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  runtime_input_doc: str
   consumed: bool
   basis: list[str]
+
+class ReportSourceCoverage(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  project_context_packet: ReportSourceCoverageEntry
+  task: ReportSourceCoverageEntry
 
 
 class DriftDetection(BaseModel):
@@ -66,6 +71,6 @@ class ProjectManagerReport(BaseModel):
     "needs_clarification",
   ]
   report_summary: str
-  report_source_coverage: list[ReportSourceCoverageItem] = Field(min_length=1)
+  report_source_coverage: ReportSourceCoverage
   trajectory_review: TrajectoryReview
   proof_frontier: ProofFrontier

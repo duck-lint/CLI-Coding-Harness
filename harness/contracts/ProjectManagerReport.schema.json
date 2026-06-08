@@ -135,13 +135,26 @@
       "title": "ProofFrontier",
       "type": "object"
     },
-    "ReportSourceCoverageItem": {
+    "ReportSourceCoverage": {
       "additionalProperties": false,
       "properties": {
-        "runtime_input_doc": {
-          "title": "Runtime Input Doc",
-          "type": "string"
+        "project_context_packet": {
+          "$ref": "#/$defs/ReportSourceCoverageEntry"
         },
+        "task": {
+          "$ref": "#/$defs/ReportSourceCoverageEntry"
+        }
+      },
+      "required": [
+        "project_context_packet",
+        "task"
+      ],
+      "title": "ReportSourceCoverage",
+      "type": "object"
+    },
+    "ReportSourceCoverageEntry": {
+      "additionalProperties": false,
+      "properties": {
         "consumed": {
           "title": "Consumed",
           "type": "boolean"
@@ -155,11 +168,10 @@
         }
       },
       "required": [
-        "runtime_input_doc",
         "consumed",
         "basis"
       ],
-      "title": "ReportSourceCoverageItem",
+      "title": "ReportSourceCoverageEntry",
       "type": "object"
     },
     "TrajectoryReview": {
@@ -227,12 +239,7 @@
       "type": "string"
     },
     "report_source_coverage": {
-      "items": {
-        "$ref": "#/$defs/ReportSourceCoverageItem"
-      },
-      "minItems": 1,
-      "title": "Report Source Coverage",
-      "type": "array"
+      "$ref": "#/$defs/ReportSourceCoverage"
     },
     "trajectory_review": {
       "$ref": "#/$defs/TrajectoryReview"
