@@ -20,7 +20,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "invariant_authority_object",
+          "const": "operational_state",
           "title": "Document Authority",
           "type": "string"
         }

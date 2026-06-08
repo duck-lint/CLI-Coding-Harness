@@ -25,7 +25,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "operational_state",
           "title": "Document Authority",
           "type": "string"
         }

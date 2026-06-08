@@ -18,7 +18,7 @@ class ProjectSpec(BaseModel):
   model_config = ConfigDict(extra="forbid")
   
   required: bool
-  authoritative: bool
+  document_authority: Literal["invariant_authority"]
   document: Literal["./project_spec.json"]
   schema_ref: Literal["./ProjectSpec.schema.json"]
 
@@ -27,7 +27,7 @@ class GovernancePrimitives(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: bool
-  authoritative: bool
+  document_authority: Literal["invariant_authority"]
   document: Literal["./governance_primitives.json"]
   schema_ref: Literal["./GovernancePrimitives.schema.json"]
 
@@ -36,7 +36,7 @@ class KnownFailures(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: bool
-  authoritative: bool
+  document_authority: Literal["failure_evidence"]
   document: Literal["./known_failures.json"]
   schema_ref: Literal["./KnownFailures.schema.json"]
 
@@ -45,7 +45,7 @@ class OpenDecisions(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: bool
-  authoritative: bool
+  document_authority: Literal["operational_state"]
   document: Literal["./open_decisions.json"]
   schema_ref: Literal["./OpenDecisions.schema.json"]
 
@@ -53,7 +53,7 @@ class CurrentImplementation(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: bool
-  authoritative: bool
+  document_authority: Literal["operational_state"]
   document: list[Literal[
       "../implementations/active/implementation_plan_**.json",
       "../implementations/active/implementation_tracker_**.json"

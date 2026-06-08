@@ -6,31 +6,31 @@
   },
   "project_spec": {
     "required": true,
-    "authoritative": true,
+    "document_authority": "invariant_authority",
     "document": "./project_spec.json",
     "schema_ref": "./ProjectSpec.schema.json"
   },
   "governance_primitives": {
     "required": true,
-    "authoritative": true,
+    "document_authority": "invariant_authority",
     "document": "./governance_primitives.json",
     "schema_ref": "./GovernancePrimitives.schema.json"
   },
   "known_failures": {
     "required": true,
-    "authoritative": true,
+    "document_authority": "failure_evidence",
     "document": "./known_failures.json",
     "schema_ref": "./KnownFailures.schema.json"
   },
   "open_decisions": {
     "required": true,
-    "authoritative": true,
+    "document_authority": "operational_state",
     "document": "./open_decisions.json",
     "schema_ref": "./OpenDecisions.schema.json"
   },
   "current_implementation": {
     "required": true,
-    "authoritative": true,
+    "document_authority": "operational_state",
     "document": [
       "../implementations/active/implementation_plan_**.json", 
       "../implementations/active/implementation_tracker_**.json"

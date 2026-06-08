@@ -331,7 +331,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "invariant_authority_object",
+          "const": "invariant_authority",
           "title": "Document Authority",
           "type": "string"
         }

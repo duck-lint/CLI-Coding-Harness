@@ -8,9 +8,10 @@
           "title": "Required",
           "type": "boolean"
         },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
+        "document_authority": {
+          "const": "operational_state",
+          "title": "Document Authority",
+          "type": "string"
         },
         "document": {
           "items": {
@@ -37,7 +38,7 @@
       },
       "required": [
         "required",
-        "authoritative",
+        "document_authority",
         "document",
         "schema_ref"
       ],
@@ -51,9 +52,10 @@
           "title": "Required",
           "type": "boolean"
         },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
+        "document_authority": {
+          "const": "invariant_authority",
+          "title": "Document Authority",
+          "type": "string"
         },
         "document": {
           "const": "./governance_primitives.json",
@@ -68,7 +70,7 @@
       },
       "required": [
         "required",
-        "authoritative",
+        "document_authority",
         "document",
         "schema_ref"
       ],
@@ -82,9 +84,10 @@
           "title": "Required",
           "type": "boolean"
         },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
+        "document_authority": {
+          "const": "failure_evidence",
+          "title": "Document Authority",
+          "type": "string"
         },
         "document": {
           "const": "./known_failures.json",
@@ -99,7 +102,7 @@
       },
       "required": [
         "required",
-        "authoritative",
+        "document_authority",
         "document",
         "schema_ref"
       ],
@@ -132,9 +135,10 @@
           "title": "Required",
           "type": "boolean"
         },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
+        "document_authority": {
+          "const": "operational_state",
+          "title": "Document Authority",
+          "type": "string"
         },
         "document": {
           "const": "./open_decisions.json",
@@ -149,7 +153,7 @@
       },
       "required": [
         "required",
-        "authoritative",
+        "document_authority",
         "document",
         "schema_ref"
       ],
@@ -163,9 +167,10 @@
           "title": "Required",
           "type": "boolean"
         },
-        "authoritative": {
-          "title": "Authoritative",
-          "type": "boolean"
+        "document_authority": {
+          "const": "invariant_authority",
+          "title": "Document Authority",
+          "type": "string"
         },
         "document": {
           "const": "./project_spec.json",
@@ -180,7 +185,7 @@
       },
       "required": [
         "required",
-        "authoritative",
+        "document_authority",
         "document",
         "schema_ref"
       ],

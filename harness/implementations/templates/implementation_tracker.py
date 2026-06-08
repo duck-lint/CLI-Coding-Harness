@@ -14,7 +14,7 @@ class Metadata(BaseModel):
   title: Literal["Implementation <#> Tracker"]
   purpose: Literal["This file tracks an implementation plan."]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["operational_state"]
 
 
 class TrackerItem(BaseModel):

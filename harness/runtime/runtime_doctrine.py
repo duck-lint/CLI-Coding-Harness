@@ -14,7 +14,7 @@ class Metadata(BaseModel):
   title: Literal["Runtime Doctrine"]
   purpose: Literal["This file governs runtime orchestration."]
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority_object"]
+  document_authority: Literal["invariant_authority"]
 
 
 class ProjectManagerReport(BaseModel):

@@ -4,7 +4,7 @@
     "document_id": "known_failures.json",
     "title": "Known Failures",
     "source_format": "json",
-    "document_authority": "invariant_authority_object"
+    "document_authority": "failure_evidence"
   },
   "purpose": "Track recurring failure patterns later sessions should detect earlier.",
   "usage_rules": [

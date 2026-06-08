@@ -15,7 +15,7 @@ class Metadata(BaseModel):
   context: Literal["Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding."]
   purpose: str
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority_object"]
+  document_authority: Literal["invariant_authority"]
 
 
 class ObservabilityScaffolding(BaseModel):

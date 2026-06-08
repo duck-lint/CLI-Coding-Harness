@@ -14,7 +14,7 @@ class Metadata(BaseModel):
   title: Literal["Task"]
   purpose: Literal["This file assigns the task to the agent."]
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority_object"]
+  document_authority: Literal["task_authority"]
 
 
 class TaskItem(BaseModel):

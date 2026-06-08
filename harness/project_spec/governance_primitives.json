@@ -6,7 +6,7 @@
     "context": "Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
     "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts.",
     "source_format": "json",
-    "document_authority": "invariant_authority_object"
+    "document_authority": "invariant_authority"
   },
   "governance_posture": {
     "invariant_constraints": [

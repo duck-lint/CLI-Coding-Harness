@@ -14,7 +14,7 @@ class Metadata(BaseModel):
   title: Literal["Project Spec"]
   purpose: str
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority_object"]
+  document_authority: Literal["invariant_authority"]
 
 
 class ProjectIsNot(BaseModel):

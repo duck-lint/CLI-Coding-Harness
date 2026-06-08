@@ -13,7 +13,7 @@ class Metadata(BaseModel):
   document_id: Literal["open_decisions.json"]
   title: Literal["Open Decisions"]
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority_object"]
+  document_authority: Literal["operational_state"]
 
 
 class OpenDecisions(BaseModel):

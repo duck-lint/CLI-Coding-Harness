@@ -14,7 +14,7 @@ class Metadata(BaseModel):
   title: Literal["Implementation <#> Plan"]
   purpose: Literal["This file outlines an implementation plan."]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["operational_state"]
 
 
 class ImplementationPlan(BaseModel):
