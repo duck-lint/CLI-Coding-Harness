@@ -55,8 +55,8 @@ class CurrentImplementation(BaseModel):
   required: bool
   authoritative: bool
   document: list[Literal[
-      "../implementations/active/implementation_plan_**.md",
-      "../implementations/active/implementation_tracker_**.md"
+      "../implementations/active/implementation_plan_**.json",
+      "../implementations/active/implementation_tracker_**.json"
       ]]
   schema_ref: list[Literal[
       "../implementations/active/ImplementationPlan.schema.json",

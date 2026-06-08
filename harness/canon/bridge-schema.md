@@ -1,6 +1,6 @@
 # Bridge Schema
 
-Use this full schema for high-risk or epistemically sensitive moves. For local code edits, use the compressed form in `../harness-runtime.md`.
+Use this full schema for high-risk or epistemically sensitive moves. For local code edits, use the compressed form in `../harness-runtimeruntime_doctrine.json`.
 
 ## Full Bridge
 

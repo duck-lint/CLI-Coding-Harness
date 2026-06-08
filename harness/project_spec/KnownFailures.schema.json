@@ -1,6 +1,60 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "Entry": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "pattern": {
+          "title": "Pattern",
+          "type": "string"
+        },
+        "trigger": {
+          "title": "Trigger",
+          "type": "string"
+        },
+        "symptom": {
+          "title": "Symptom",
+          "type": "string"
+        },
+        "likely_cause": {
+          "title": "Likely Cause",
+          "type": "string"
+        },
+        "prevention_rule": {
+          "title": "Prevention Rule",
+          "type": "string"
+        },
+        "easiest_check": {
+          "title": "Easiest Check",
+          "type": "string"
+        },
+        "last_seen": {
+          "title": "Last Seen",
+          "type": "string"
+        },
+        "status": {
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "pattern",
+        "trigger",
+        "symptom",
+        "likely_cause",
+        "prevention_rule",
+        "easiest_check",
+        "last_seen",
+        "status"
+      ],
+      "title": "Entry",
+      "type": "object"
+    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
@@ -61,7 +115,9 @@
       "type": "string"
     },
     "entries": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/Entry"
+      },
       "title": "Entries",
       "type": "array"
     }

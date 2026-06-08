@@ -35,7 +35,7 @@
           "type": "string"
         },
         "next_admissible_transformation": {
-          "title": "next admissible transformation",
+          "title": "Next Admissible Transformation",
           "type": "string"
         },
         "affected_surfaces": {
@@ -145,18 +145,6 @@
   },
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "$Schema"
-    },
     "report": {
       "const": "Project Manager Report",
       "title": "Report",

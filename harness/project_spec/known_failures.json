@@ -15,6 +15,17 @@
     "Do not record blame, moods, or one-off noise.",
     "Promote repeatable prevention into tooling or runtime rules when possible."
   ],
-  "entries_schema_ref": "./KnownFailureEntry.schema.json",
-  "entries": []
+  "entries": [
+    {
+      "id": "",
+      "pattern": "",
+      "trigger": "",
+      "symptom": "",
+      "likely_cause": "",
+      "prevention_rule": "",
+      "easiest_check": "",
+      "last_seen": "",
+      "status": ""
+    }
+  ]
 }

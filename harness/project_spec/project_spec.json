@@ -10,7 +10,7 @@
   "project_thesis": {
     "project_is": [
       "A local Python/JSON coding-agent CLI harness.",
-      "A system that orchestrates clean-context coding agents by treating role contracts, project context packet, governance policies, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
+      "A system that orchestrates clean-context coding agents by treating role contracts, project context packet, governance runtime, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
       "A harness exists to make agent-assisted software work inspectable, bounded, reproducible, and governed."
     ],
     "project_is_not": {
@@ -77,7 +77,7 @@
         "Call the OpenAI Response API.",
         "Receive a structured admissibility report.",
         "Validate that report against the schema.",
-        "Save the task brief, project context packet, and report under harness/runs/<timestamp>/",
+        "Save the task brief, project context packet, and report under ../runs/<timestamp>/",
         "Print a short terminal summary.",
         "Identify the next admissible transformation."
       ],
@@ -136,7 +136,7 @@
       "Archived history versus active implementation state."
     ],
     "required_inspectable_surfaces": {
-      "default_location": "harness/runs/<timestamp>/",
+      "default_location": "../runs/<timestamp>/",
       "min_required_artifacts": [
         "task.json",
         "project_context_packet.json",
@@ -153,7 +153,7 @@
       "required": [
           "Python runtime.",
           "OPENAI_API_KEY or equivalent configured outside committed files",
-          "Local filesystem artifacts under harness/runs/**",
+          "Local filesystem artifacts under ../runs/**",
           "Local git availability where possible."
       ],
       "excluded": [
@@ -181,7 +181,7 @@
       "Implementer route.",
       "Archivist route.",
       "Codex CLI worker adapter execution.",
-      "File mutation outside harness/runs/**",
+      "File mutation outside ../runs/**",
       "Multi-agent routing.",
       "Apply workflow.",
       "Cost/budget enforcement beyond a first budget policy.",
@@ -220,11 +220,11 @@
       "authoritative_sources": [
         "User requests.",
         "./governance_primitives.json",
-        "./runtime/runtime_doctrine.md",
-        "./policies/runtime_budget.policy.json"
+        "./runtime/runtime_doctrine.json",
+        "./runtime/runtime_budget.policy.json"
     ],
       "authoritative_memory": [
-        "../implementation-projects/**",
+        "../implementations/**",
         "./known_failures",
         "./open_decisions"
       ],
@@ -232,11 +232,11 @@
         "The current filesystem state of the repo.",
         "The current git state where available.",
         "The structured files under ../project_spec/**",
-        "The structured policies under ../policies/**",
+        "The structured runtime budget under ../runtime/**",
         "The structured role contracts under ../agents/**",
         "The output contracts under ../contracts/**",
-        "Active implementation state under ../implementation-projects/active/**",
-        "Archived implementation evidence under ../implementation-projects/archive/**",
+        "Active implementation state under ../implementations/active/**",
+        "Archived implementation evidence under ../implementations/archive/**",
         "Saved runtime artifacts under ../runs/**",
         "Explicit user approval for approval-boundary crossings."
       ]
@@ -305,7 +305,7 @@
         "saved_artifacts": [
           {
             "id": "task",
-            "path_pattern": "harness/runs/<timestamp>/task.json",
+            "path_pattern": "../runs/<timestamp>/task.json",
             "required": true
           },
           {
@@ -315,7 +315,7 @@
           },
           {
             "id": "project_manager_report",
-            "path_pattern": "harness/runs/<timestamp>/project_manager_report.json",
+            "path_pattern": "../runs/<timestamp>/project_manager_report.json",
             "required": true
           }
         ]

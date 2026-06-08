@@ -20,18 +20,18 @@
   ],
   "canonical_memory_rules": [
     "Treat harness/ as the only canonical repo-local memory for project continuity.",
-    "Canonical continuity lives in harness/implementation-projects/archive/, harness/open_decisions.json, and harness/known_failures.json.",
+    "Canonical continuity lives in ../implementations/archive/, ../open_decisions.json, and ../known_failures.json.",
     "Do not create, update, or rely on repo-root memories/, memories/repo/, or similar host-runtime memory files for implementation history, decision authority, risk state, or verification evidence.",
-    "If a host tool provides repo-memory features, ignore them for authoritative project state and inspect the canonical harness surfaces instead."
+    "If a host tool provides repo-memory features, ignore them for authoritative project state and inspect the canonical .. surfaces instead."
   ],
   "authority_lenses": [
-    "Invariant authority lives in harness/project_spec/** and defines what the project is allowed to become.",
+    "Invariant authority lives in ../project_spec/** and defines what the project is allowed to become.",
     "Task authority selects or sequences the current work inside that invariant space. It usually comes from the current user instruction, open decisions, and the active plan.",
     "Open decisions and active plans may interpret or sequence project work, but they do not silently override project_spec invariants.",
     "If task authority conflicts with invariant authority, stop and surface the conflict instead of improvising around it."
   ],
   "project_manager_report": {
-    "description": "The project manager report carries relevant project constraints from harness/project_spec/** through planning, implementation, review, and archive. It is not a new project ontology or authority layer. It is a report format for naming what is admissible under the current project spec and request.",
+    "description": "The project manager report carries relevant project constraints from ../project_spec/** through planning, implementation, review, and archive. It is not a new project ontology or authority layer. It is a report format for naming what is admissible under the current project spec and request.",
     "invariant_properties": [
       "Thesis Attractor.",
       "Drift detection.",

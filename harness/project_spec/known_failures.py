@@ -15,6 +15,19 @@ class Metadata(BaseModel):
   source_format: Literal["json"]
   document_authority: Literal["invariant_authority_object"]
 
+class Entry(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  pattern: str
+  trigger: str
+  symptom: str
+  likely_cause: str
+  prevention_rule: str
+  easiest_check: str
+  last_seen: str
+  status: str
+
 
 class KnownFailures(BaseModel):
   model_config = ConfigDict(extra="forbid")
@@ -24,4 +37,4 @@ class KnownFailures(BaseModel):
   purpose: str
   usage_rules: list[str]
   entries_schema_ref: Literal["./KnownFailureEntry.schema.json"]
-  entries: list[Any]
+  entries: list[Entry]

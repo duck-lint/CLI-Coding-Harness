@@ -22,14 +22,14 @@
       "If any required condition fails, the PM output must be marked admissibility-blocked and the missing condition must be named."
     ],
     "report_derivation_rules": {
-      "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under harness/project_spec/**.",
+      "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under ../project_spec/**.",
       "drift_checks": "Derived from governance primitives defining invariant authority, task authority, approval boundaries, admissible transformations, review checkpoints, active implementation state, open decisions, and known failures.",
       "next_step_recommendations": "Derived from the current structural tension, admissible transformation types, approval boundaries, and required proof frontier.",
       "repository_state": "Derived only from the provided project context packet, including invariant constraints, task constraints, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements."
     },
     "conduct_rules": [
       "Separate observed evidence, user intent, inference, unknowns, and recommended action.",
-      "harness/project_spec/** is the authoritative invariant space for project intent and governance, regardless of whether the source files are Markdown, JSON, or another approved policy format.",
+      "../project_spec/** is the authoritative invariant space for project intent and governance, regardless of whether the source files are Markdown, JSON, or another approved policy format.",
       "Treat current user instruction as task authority inside that invariant space unless the user explicitly amends the spec or requests an approval-boundary crossing.",
       "If the user appears to be changing invariants, say so explicitly as a spec amendment or decision request.",
       "Treat the open_decisions source included in the project context packet as the authority for unresolved decisions when present.",
@@ -52,7 +52,7 @@
       "evidence_quality": "does runtime evidence substantiate capability claims?",
       "fixture_truthfulness": "does the edit repurpose existing sample notes or tests in a way that invalidates earlier probes?",
       "posture_concreteness": "is the current project posture named from repo-local evidence rather than vibes or chat memory?",
-      "thesis_attractor_discipline": "is the implied project direction derived from harness/project_spec/** without brittle teleology or invented roadmap commitments?",
+      "thesis_attractor_discipline": "is the implied project direction derived from ../project_spec/** without brittle teleology or invented roadmap commitments?",
       "tension_selection": "is the recommended action tied to the governing actionable mismatch between current posture and desired outcomes, not merely the easiest available task?",
       "frontier_selection": "when multiple tensions exist, which currently limits the project's ability to generate trustworthy evidence about the thesis?",
       "optionality_preservation": "does the recommendation reduce that tension while avoiding unnecessary compatibility promises, premature architecture, or hidden project-intent amendments?"

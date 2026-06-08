@@ -11,11 +11,10 @@
   "governance_posture": {
     "invariant_constraints": [
       "The harness as a local CLI governance runtime.",
-      "Repo-local authority under harness/",
       "Explicit separation between project invariants and current task authority.",
       "Explicit separation between role contract, project context packet, output schema, returned report, and runtime probe.",
       "PM-only, read-only behavior for the first vertical slice.",
-      "Structured JSON as the authoritative runtime artifact format for role contracts, project context packet, reports, policies, and saved evidence where the source is object-shaped.",
+      "Structured JSON as the authoritative runtime artifact format for role contracts, project context packet, reports, runtime, and saved evidence where the source is object-shaped.",
       "Deterministic orchestration for the first slice.",
       "No agent file inspection outside the provided input.",
       "No agent file mutation.",
@@ -83,7 +82,7 @@
         "Source-of-truth rules."
       ],
       "schema": [
-        "harness/contracts/*.schema.json",
+        "../contracts/*.schema.json",
         "Pydantic models used as output contracts.",
         "Required report fields.",
         "Status enum semantics.",
@@ -91,7 +90,7 @@
         "Artifact shape expected by downstream runtime code."
       ],
       "agent_contract": [
-        "harness/agents/*.agent.json",
+        "../agents/*.agent.json",
         "Role identity.",
         "Role mode.",
         "Instruction contract.",
@@ -174,7 +173,7 @@
         {
           "rank": 2,
           "id": "project_spec_and_governance",
-          "description": "This file and the other docs under harness/project_spec/**"
+          "description": "This file and the other docs under ../project_spec/**"
         },
         {
           "rank": 3,
@@ -214,7 +213,7 @@
       "authoritative_artifacts": [
         "Project spec.",
         "Governance primitives.",
-        "Approved policies.",
+        "Approved runtime.",
         "Approved role contracts.",
         "Approved output schemas.",
         "Active implementation plans and trackers inside their authorized scope.",
@@ -436,7 +435,7 @@
         "saved_artifacts": [
           {
             "id": "task",
-            "path_pattern": "harness/runs/<timestamp>/task.json",
+            "path_pattern": "../runs/<timestamp>/task.json",
             "required": true
           },
           {
@@ -446,7 +445,7 @@
           },
           {
             "id": "project_manager_report",
-            "path_pattern": "harness/runs/<timestamp>/project_manager_report.json",
+            "path_pattern": "../runs/<timestamp>/project_manager_report.json",
             "required": true
           }
         ]

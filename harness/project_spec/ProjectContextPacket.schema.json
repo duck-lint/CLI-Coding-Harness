@@ -15,8 +15,8 @@
         "document": {
           "items": {
             "enum": [
-              "../implementations/active/implementation_plan_**.md",
-              "../implementations/active/implementation_tracker_**.md"
+              "../implementations/active/implementation_plan_**.json",
+              "../implementations/active/implementation_tracker_**.json"
             ],
             "type": "string"
           },
