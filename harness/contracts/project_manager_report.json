@@ -10,7 +10,7 @@
   "report_summary": "Short report summary.",
   "report_source_coverage": [
     {
-      "runtime_inputs_name": "project_context",
+      "runtime_input_doc": "project_context",
       "consumed": true,
       "basis": [
         "Claims this runtime_inputs supported."
@@ -22,7 +22,7 @@
     "thesis_attractor": "Direction implied by project spec without invented roadmap.",
     "drift_detection": {
       "drift_detected": true, 
-      "description_if_present": "Description of drift if detected."
+      "description": "Description of drift if detected."
     },
     "invariant_constraints": [
       "Constraint from project context."
@@ -37,6 +37,8 @@
       "Conflict between invariant and task."
     ],
     "dominant_tension_justification": "Why this tension governs.",
+    "blocked": true,
+    "blocking_reason": ". . .",
     "next_admissible_transformation": "One bounded transformation.",
     "affected_surfaces": [
       "Surface touched by next transition."

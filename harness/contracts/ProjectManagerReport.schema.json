@@ -8,14 +8,21 @@
           "title": "Drift Detected",
           "type": "boolean"
         },
-        "description_if_present": {
-          "title": "Description If Present",
-          "type": "string"
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
         }
       },
       "required": [
-        "drift_detected",
-        "description_if_present"
+        "drift_detected"
       ],
       "title": "DriftDetection",
       "type": "object"
@@ -67,9 +74,33 @@
           "title": "Dominant Tension Justification",
           "type": "string"
         },
+        "blocked": {
+          "title": "Blocked",
+          "type": "boolean"
+        },
+        "blocking_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Blocking Reason"
+        },
         "next_admissible_transformation": {
-          "title": "Next Admissible Transformation",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Next Admissible Transformation"
         },
         "affected_surfaces": {
           "items": {
@@ -96,7 +127,7 @@
       "required": [
         "constraint_conflicts",
         "dominant_tension_justification",
-        "next_admissible_transformation",
+        "blocked",
         "affected_surfaces",
         "non_affected_surfaces",
         "stop_conditions"
@@ -107,8 +138,8 @@
     "ReportSourceCoverageItem": {
       "additionalProperties": false,
       "properties": {
-        "runtime_inputs_name": {
-          "title": "runtime_inputs Name",
+        "runtime_input_doc": {
+          "title": "Runtime Input Doc",
           "type": "string"
         },
         "consumed": {
@@ -124,7 +155,7 @@
         }
       },
       "required": [
-        "runtime_inputs_name",
+        "runtime_input_doc",
         "consumed",
         "basis"
       ],

@@ -23,8 +23,8 @@
           "title": "Validity Conditions",
           "type": "array"
         },
-        "report_derivation_rules": {
-          "$ref": "#/$defs/ReportDerivationRules"
+        "project_manager_report_derivation_rules": {
+          "$ref": "#/$defs/ProjectManagerReportDerivationRules"
         },
         "conduct_rules": {
           "items": {
@@ -42,7 +42,7 @@
         "posture",
         "objective",
         "validity_conditions",
-        "report_derivation_rules",
+        "project_manager_report_derivation_rules",
         "conduct_rules",
         "review_lenses"
       ],
@@ -53,12 +53,10 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "const": "project_manager.agent.json",
           "title": "Id",
           "type": "string"
         },
         "agent_name": {
-          "const": "Project Manager",
           "title": "Agent Name",
           "type": "string"
         }
@@ -110,7 +108,7 @@
       "title": "ProjectManagerReport",
       "type": "object"
     },
-    "ReportDerivationRules": {
+    "ProjectManagerReportDerivationRules": {
       "additionalProperties": false,
       "properties": {
         "evaluation_basis": {
@@ -128,15 +126,19 @@
         "repository_state": {
           "title": "Repository State",
           "type": "string"
+        },
+        "status_semantics": {
+          "$ref": "#/$defs/StatusSemantics"
         }
       },
       "required": [
         "evaluation_basis",
         "drift_checks",
         "next_step_recommendations",
-        "repository_state"
+        "repository_state",
+        "status_semantics"
       ],
-      "title": "ReportDerivationRules",
+      "title": "ProjectManagerReportDerivationRules",
       "type": "object"
     },
     "ReviewLenses": {
@@ -241,6 +243,39 @@
         "project_manager_report"
       ],
       "title": "RuntimeOutputs",
+      "type": "object"
+    },
+    "StatusSemantics": {
+      "additionalProperties": false,
+      "properties": {
+        "admissible": {
+          "const": "The task can proceed under current project and task authority.",
+          "title": "Admissible",
+          "type": "string"
+        },
+        "admissibility_blocked": {
+          "const": "The PM cannot judge or proceed because required basis, context, or authority is missing.",
+          "title": "Admissibility Blocked",
+          "type": "string"
+        },
+        "rejected": {
+          "const": "The task conflicts with invariant project or harness authority.",
+          "title": "Rejected",
+          "type": "string"
+        },
+        "needs_clarification": {
+          "const": "The task is ambiguous enough that user clarification is required, but no invariant conflict is established.",
+          "title": "Needs Clarification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "admissible",
+        "admissibility_blocked",
+        "rejected",
+        "needs_clarification"
+      ],
+      "title": "StatusSemantics",
       "type": "object"
     },
     "Task": {

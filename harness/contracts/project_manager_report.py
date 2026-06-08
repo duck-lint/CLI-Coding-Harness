@@ -19,7 +19,7 @@ class Metadata(BaseModel):
 class ReportSourceCoverageItem(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  runtime_inputs_name: str
+  runtime_input_doc: str
   consumed: bool
   basis: list[str]
 
@@ -28,7 +28,7 @@ class DriftDetection(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   drift_detected: bool
-  description_if_present: str
+  description: str | None = None
 
 
 class TrajectoryReview(BaseModel):
@@ -47,7 +47,9 @@ class ProofFrontier(BaseModel):
 
   constraint_conflicts: list[str]
   dominant_tension_justification: str
-  next_admissible_transformation: str
+  blocked: bool
+  blocking_reason: str | None = None
+  next_admissible_transformation: str | None = None
   affected_surfaces: list[str]
   non_affected_surfaces: list[str]
   stop_conditions: list[str]
@@ -58,11 +60,11 @@ class ProjectManagerReport(BaseModel):
 
   metadata: Metadata
   report_status: Literal[
-      "admissible", 
-      "admissibility_blocked", 
-      "rejected", 
-      "needs_clarification"
-      ]
+    "admissible",
+    "admissibility_blocked",
+    "rejected",
+    "needs_clarification",
+  ]
   report_summary: str
   report_source_coverage: list[ReportSourceCoverageItem] = Field(min_length=1)
   trajectory_review: TrajectoryReview
