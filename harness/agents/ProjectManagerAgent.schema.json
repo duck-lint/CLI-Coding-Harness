@@ -1,24 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "Input": {
-      "additionalProperties": false,
-      "properties": {
-        "project_context_packet": {
-          "$ref": "#/$defs/ProjectContextPacket"
-        },
-        "task": {
-          "$ref": "#/$defs/Task"
-        }
-      },
-      "required": [
-        "project_context_packet",
-        "task"
-      ],
-      "title": "Input",
-      "type": "object"
-    },
-    "Instructions": {
+    "InstructionContract": {
       "additionalProperties": false,
       "properties": {
         "role": {
@@ -63,7 +46,7 @@
         "conduct_rules",
         "review_lenses"
       ],
-      "title": "Instructions",
+      "title": "InstructionContract",
       "type": "object"
     },
     "Metadata": {
@@ -78,32 +61,13 @@
           "const": "Project Manager",
           "title": "Agent Name",
           "type": "string"
-        },
-        "mode": {
-          "const": "read_only_report",
-          "title": "Mode",
-          "type": "string"
         }
       },
       "required": [
         "id",
-        "agent_name",
-        "mode"
+        "agent_name"
       ],
       "title": "Metadata",
-      "type": "object"
-    },
-    "Output": {
-      "additionalProperties": false,
-      "properties": {
-        "project_manager_report": {
-          "$ref": "#/$defs/ProjectManagerReport"
-        }
-      },
-      "required": [
-        "project_manager_report"
-      ],
-      "title": "Output",
       "type": "object"
     },
     "ProjectContextPacket": {
@@ -111,10 +75,6 @@
       "properties": {
         "required": {
           "title": "Required",
-          "type": "boolean"
-        },
-        "authoritative": {
-          "title": "Authoritative",
           "type": "boolean"
         },
         "schema_ref": {
@@ -125,7 +85,6 @@
       },
       "required": [
         "required",
-        "authoritative",
         "schema_ref"
       ],
       "title": "ProjectContextPacket",
@@ -254,15 +213,41 @@
       "title": "ReviewLenses",
       "type": "object"
     },
+    "RuntimeInputs": {
+      "additionalProperties": false,
+      "properties": {
+        "project_context_packet": {
+          "$ref": "#/$defs/ProjectContextPacket"
+        },
+        "task": {
+          "$ref": "#/$defs/Task"
+        }
+      },
+      "required": [
+        "project_context_packet",
+        "task"
+      ],
+      "title": "RuntimeInputs",
+      "type": "object"
+    },
+    "RuntimeOutputs": {
+      "additionalProperties": false,
+      "properties": {
+        "project_manager_report": {
+          "$ref": "#/$defs/ProjectManagerReport"
+        }
+      },
+      "required": [
+        "project_manager_report"
+      ],
+      "title": "RuntimeOutputs",
+      "type": "object"
+    },
     "Task": {
       "additionalProperties": false,
       "properties": {
         "required": {
           "title": "Required",
-          "type": "boolean"
-        },
-        "authoritative": {
-          "title": "Authoritative",
           "type": "boolean"
         },
         "schema_ref": {
@@ -273,7 +258,6 @@
       },
       "required": [
         "required",
-        "authoritative",
         "schema_ref"
       ],
       "title": "Task",
@@ -289,22 +273,33 @@
     "metadata": {
       "$ref": "#/$defs/Metadata"
     },
-    "instructions": {
-      "$ref": "#/$defs/Instructions"
+    "model": {
+      "title": "Model",
+      "type": "string"
     },
-    "input": {
-      "$ref": "#/$defs/Input"
+    "instruction_contract": {
+      "$ref": "#/$defs/InstructionContract"
     },
-    "output": {
-      "$ref": "#/$defs/Output"
+    "runtime_inputs": {
+      "$ref": "#/$defs/RuntimeInputs"
+    },
+    "runtime_outputs": {
+      "$ref": "#/$defs/RuntimeOutputs"
+    },
+    "tool_permissions": {
+      "items": {},
+      "title": "Tool Permissions",
+      "type": "array"
     }
   },
   "required": [
     "$schema",
     "metadata",
-    "instructions",
-    "input",
-    "output"
+    "model",
+    "instruction_contract",
+    "runtime_inputs",
+    "runtime_outputs",
+    "tool_permissions"
   ],
   "title": "ProjectManagerAgent",
   "type": "object"

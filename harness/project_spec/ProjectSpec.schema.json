@@ -510,8 +510,8 @@
           "title": "Authoritative Context Artifact",
           "type": "string"
         },
-        "authoritative_pm_output_artifact": {
-          "title": "Authoritative Pm Output Artifact",
+        "authoritative_pm_runtime_output_artifacts": {
+          "title": "Authoritative Pm runtime_outputs Artifact",
           "type": "string"
         }
       },
@@ -520,7 +520,7 @@
         "min_required_artifacts",
         "optional_debug_artifacts",
         "authoritative_context_artifact",
-        "authoritative_pm_output_artifact"
+        "authoritative_pm_runtime_output_artifacts"
       ],
       "title": "RequiredInspectableSurfaces",
       "type": "object"

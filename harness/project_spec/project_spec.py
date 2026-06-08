@@ -68,7 +68,7 @@ class RequiredInspectableSurfaces(BaseModel):
   min_required_artifacts: list[str]
   optional_debug_artifacts: list[str]
   authoritative_context_artifact: str
-  authoritative_pm_output_artifact: str
+  authoritative_pm_runtime_output_artifacts: str
 
 
 class Dependencies(BaseModel):

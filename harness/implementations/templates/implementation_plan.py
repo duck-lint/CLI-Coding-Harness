@@ -20,7 +20,6 @@ class Metadata(BaseModel):
 class ImplementationPlan(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
   metadata: Metadata
   implementation_intent: list[Any]
   project_manager_report: str

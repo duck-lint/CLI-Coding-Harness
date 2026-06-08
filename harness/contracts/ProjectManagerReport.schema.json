@@ -20,6 +20,39 @@
       "title": "DriftDetection",
       "type": "object"
     },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "project_manager_report.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Project Manager Report",
+          "title": "Title",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
     "ProofFrontier": {
       "additionalProperties": false,
       "properties": {
@@ -71,11 +104,11 @@
       "title": "ProofFrontier",
       "type": "object"
     },
-    "SourceCoverageItem": {
+    "ReportSourceCoverageItem": {
       "additionalProperties": false,
       "properties": {
-        "input_name": {
-          "title": "Input Name",
+        "runtime_inputs_name": {
+          "title": "runtime_inputs Name",
           "type": "string"
         },
         "consumed": {
@@ -91,11 +124,11 @@
         }
       },
       "required": [
-        "input_name",
+        "runtime_inputs_name",
         "consumed",
         "basis"
       ],
-      "title": "SourceCoverageItem",
+      "title": "ReportSourceCoverageItem",
       "type": "object"
     },
     "TrajectoryReview": {
@@ -145,31 +178,29 @@
   },
   "additionalProperties": false,
   "properties": {
-    "report": {
-      "const": "Project Manager Report",
-      "title": "Report",
-      "type": "string"
+    "metadata": {
+      "$ref": "#/$defs/Metadata"
     },
-    "status": {
+    "report_status": {
       "enum": [
         "admissible",
         "admissibility_blocked",
         "rejected",
         "needs_clarification"
       ],
-      "title": "Status",
+      "title": "Report Status",
       "type": "string"
     },
-    "summary": {
-      "title": "Summary",
+    "report_summary": {
+      "title": "Report Summary",
       "type": "string"
     },
-    "source_coverage": {
+    "report_source_coverage": {
       "items": {
-        "$ref": "#/$defs/SourceCoverageItem"
+        "$ref": "#/$defs/ReportSourceCoverageItem"
       },
       "minItems": 1,
-      "title": "Source Coverage",
+      "title": "Report Source Coverage",
       "type": "array"
     },
     "trajectory_review": {
@@ -180,10 +211,10 @@
     }
   },
   "required": [
-    "report",
-    "status",
-    "summary",
-    "source_coverage",
+    "metadata",
+    "report_status",
+    "report_summary",
+    "report_source_coverage",
     "trajectory_review",
     "proof_frontier"
   ],

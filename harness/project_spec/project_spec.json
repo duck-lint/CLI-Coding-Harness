@@ -10,7 +10,7 @@
   "project_thesis": {
     "project_is": [
       "A local Python/JSON coding-agent CLI harness.",
-      "A system that orchestrates clean-context coding agents by treating role contracts, project context packet, governance runtime, output schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
+      "A system that orchestrates clean-context coding agents by treating role contracts, project context packet, governance runtime, runtime_outputs schemas, runtime reports, and acceptance evidence as explicit structured artifacts.",
       "A harness exists to make agent-assisted software work inspectable, bounded, reproducible, and governed."
     ],
     "project_is_not": {
@@ -20,7 +20,7 @@
         "A generic RAG assistant.",
         "An autonomous repo mutator.",
         "A replacement for repo-specific project specs.",
-        "A framework for giving an LLM broad ambient access to files, shell commands, or tools."
+        "A framework for giving an LLM broad ambient access to files, shell commands, or tool_permissions."
       ],
       "excluded_agent_patterns": [
         "An agent \"team\" simulation where agents freely call each other.",
@@ -54,15 +54,15 @@
     "core_runtime_shape": [
       "A CLI entrypoint receives a user task.",
       "The orchestrator selects a bounded workflow.",
-      "Project Context Packet compiles a structured input for agents.",
+      "Project Context Packet compiles a structured runtime_inputs for agents.",
       "Role contracts define what each agent is allowed to do and how it should interpret the packet.",
       "The OpenAI Response API is used for bounded semantic transformation calls.",
-      "Report schemas define machine-checkable output shapes.",
+      "Report schemas define machine-checkable runtime_outputs shapes.",
       "Runtime probes and saved artifacts distinguish scaffold claims from live-wired behavior.",
       "Worker adapters are isolated from governance roles and require explicit authorization before file mutation.",
       "The system is a governance runtime first, not an autonomy demo."
     ],
-    "primary_operator": "Primary operator is the project authority using agent assistance to build software wanting stronger control over context, authority, permissions, and evidence than a normal chat interface or IDE extension provides.",
+    "primary_operator": "Primary operator is the project authority using agent assistance to build software wanting stronger control over context, authority, tool_permissions, and evidence than a normal chat interface or IDE extension provides.",
     "highest_value_workflow": {
       "command": "python",
       "args": [
@@ -125,8 +125,8 @@
       "Archive surface."
     ],
     "required_evidence_boundaries": [
-      "Role contract versus output schema.",
-      "Output schema versus returned report.",
+      "Role contract versus runtime_outputs schema.",
+      "runtime_outputs schema versus returned report.",
       "Project spec versus current user task.",
       "Invariant authority versus task authority.",
       "Scaffold evidence versus runtime evidence.",
@@ -143,11 +143,11 @@
         "project_manager_report.json"
       ],
       "optional_debug_artifacts": [
-        "Rendered prompt/debug input.",
+        "Rendered prompt/debug runtime_inputs.",
         "Validation summary."
       ],
       "authoritative_context_artifact": "project_context_packet.json",
-      "authoritative_pm_output_artifact": "project_manager_report.json"
+      "authoritative_pm_runtime_output_artifacts": "project_manager_report.json"
     },
     "dependencies": {
       "required": [
@@ -158,9 +158,9 @@
       ],
       "excluded": [
           "No external database.",
-          "No network tools other than the model API call.",
+          "No network tool_permissions other than the model API call.",
           "No web search by default.",
-          "No shell tools for agents."
+          "No shell tool_permissions for agents."
       ]
     },
     "runtime_constraints": [
@@ -186,7 +186,7 @@
       "Apply workflow.",
       "Cost/budget enforcement beyond a first budget policy.",
       "Provider abstraction beyond the first OpenAI route.",
-      "UI beyond terminal output.",
+      "UI beyond terminal runtime_outputs.",
       "Invoking non-PM agents.",
       "Editing repo files through an agent.",
       "Allowing an agent to inspect files directly."
@@ -234,7 +234,7 @@
         "The structured files under ../project_spec/**",
         "The structured runtime budget under ../runtime/**",
         "The structured role contracts under ../agents/**",
-        "The output contracts under ../contracts/**",
+        "The runtime_outputs contracts under ../contracts/**",
         "Active implementation state under ../implementations/active/**",
         "Archived implementation evidence under ../implementations/archive/**",
         "Saved runtime artifacts under ../runs/**",
@@ -259,7 +259,7 @@
       "Context source manifest.",
       "Missing source manifest.",
       "Model route.",
-      "Output schema.",
+      "runtime_outputs schema.",
       "Returned report.",
       "Validation result.",
       "Probe result.",
@@ -291,7 +291,7 @@
   "acceptance_probes": [
     {
       "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured input, structured report validation, saved artifacts, and deterministic probe evidence?",
+      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured runtime_inputs, structured report validation, saved artifacts, and deterministic probe evidence?",
       "runtime_path_required": {
         "command": "python",
         "args": [

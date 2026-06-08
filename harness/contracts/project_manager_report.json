@@ -1,14 +1,19 @@
 {
   "$schema": "./ProjectManagerReport.schema.json",
-  "report": "Project Manager Report",
-  "status": "admissible",
-  "summary": "Short report summary.",
-  "source_coverage": [
+  "metadata": {
+    "document_id": "project_manager_report.json",
+    "title": "Project Manager Report",
+    "source_format": "json",
+    "document_authority": "generated_artifact"
+  },
+  "report_status": "admissible",
+  "report_summary": "Short report summary.",
+  "report_source_coverage": [
     {
-      "input_name": "project_context",
+      "runtime_inputs_name": "project_context",
       "consumed": true,
       "basis": [
-        "Claims this input supported."
+        "Claims this runtime_inputs supported."
       ]
     }
   ],

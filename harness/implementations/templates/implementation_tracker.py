@@ -46,7 +46,6 @@ class Blocker(BaseModel):
 class ImplementationTracker(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
   metadata: Metadata
   status: str
   state: Literal[

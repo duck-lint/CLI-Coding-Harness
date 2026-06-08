@@ -43,10 +43,6 @@
   },
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "title": "$Schema",
-      "type": "string"
-    },
     "metadata": {
       "$ref": "#/$defs/Metadata"
     },
