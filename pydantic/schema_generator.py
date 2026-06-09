@@ -46,8 +46,8 @@ def main() -> int:
 
   if len(sys.argv) != 4:
       print(
-          "Usage: python generate_schema.py "
-          "<model_file.py> <PydanticModelClass> <output_schema.json>"
+          "Usage: python schema_generator.py "
+          "<schema_generator.py> <SchemaGenerator> <SchemaGenerator.schema.json>"
       )
       return 2
 

@@ -1,7 +1,7 @@
 {
   "$schema": "./KnownFailures.schema.json",
   "metadata": {
-    "document_id": "known_failures.json",
+    "document_id": "known_failures.template.json",
     "title": "Known Failures",
     "source_format": "json",
     "document_authority": "failure_evidence"

@@ -7,7 +7,7 @@ from pathlib import Path
 
 def main() -> int:
   if len(sys.argv) != 3:
-      print("Usage: python generate_model.py <input_json> <output_py>")
+      print("Usage: python code_gen.py <input.json> <output.py>")
       return 2
 
   input_json_path = Path(sys.argv[1])

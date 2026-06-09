@@ -1,7 +1,7 @@
 {
   "$schema": "./Task.schema.json",
   "metadata": {
-    "document_id": "task.json",
+    "document_id": "task.example.json",
     "title": "Task",
     "purpose": "This file assigns the task to the agent.",
     "source_format": "json",

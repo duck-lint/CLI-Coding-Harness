@@ -1,7 +1,7 @@
 {
   "$schema": "./ProjectContextPacket.schema.json",
   "metadata": {
-    "id": "project_context_packet.json",
+    "id": "project_context_packet.manifest.json",
     "name": "Project Context Packet"
   },
   "project_spec": {

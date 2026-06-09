@@ -17,7 +17,7 @@ def main() -> int:
   """Validate one JSON data file against one JSON schema file."""
 
   if len(sys.argv) != 3:
-      print("Usage: python validate_data.py <data_json_path> <schema_json_path>")
+      print("Usage: python data_validator.py <data_json_path> <schema_json_path>")
       return 2
 
   data_path = Path(sys.argv[1])
