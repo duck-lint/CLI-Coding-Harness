@@ -3,263 +3,242 @@
   "metadata": {
     "document_id": "governance_primitives.json",
     "title": "Governance Primitives",
-    "context": "Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
-    "purpose": "Foundational Pillar of the project spec's invariant space. Used to describe what implementation must preserve or explicitly amend, not to restate agent workflow prompts.",
+    "context": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target repository, including the harness repository itself.",
+    "purpose": "Define harness-level invariants that every target repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
     "source_format": "json",
     "document_authority": "invariant_authority"
   },
   "governance_posture": {
     "invariant_constraints": [
-      "The harness as a local CLI governance runtime.",
-      "Explicit separation between project invariants and current task authority.",
-      "Explicit separation between role contract, project context packet, runtime_outputs schema, returned report, and runtime probe.",
-      "PM-only, read-only behavior for the first vertical slice.",
-      "Structured JSON as the authoritative runtime artifact format for role contracts, project context packet, reports, runtime, and saved evidence where the source is object-shaped.",
-      "Deterministic orchestration for the first slice.",
-      "No agent file inspection outside the provided runtime_inputs.",
-      "No agent file mutation.",
-      "No agent shell execution.",
-      "No worker adapter invocation from the plan workflow.",
-      "No runtime capability claim without acceptance probe evidence.",
-      "No silent compatibility shims or legacy behavior preservation unless explicitly approved."
+      "The harness is a local CLI governance runtime that can be invoked against any target repository, including its own repository.",
+      "Global governance defines execution boundaries for harness-mediated agent work, not target-project product intent.",
+      "Each target repository supplies its own project_spec as the repo-local authority for project purpose, scope, acceptance probes, non-goals, and implementation criteria.",
+      "Explicit separation must be preserved between project_spec authority, current task authority, role contracts, runtime_inputs, runtime_outputs schemas, returned runtime_outputs, and saved runtime artifacts.",
+      "Agents cannot inspect files outside the provided runtime_inputs.",
+      "Runtime_inputs are compiled by deterministic harness code before an agent call; the compiler is not an agent.",
+      "Agents do not receive ambient repository access by default.",
+      "The Project Manager role is always read-only and must not receive file mutation, shell execution, worker-adapter, or broad tool permissions.",
+      "Non-PM roles may only receive tool permissions through explicit route and agent-contract definitions.",
+      "Implementation authority is represented by documented state transitions, not by conversational momentum or implicit model preference.",
+      "Structured JSON is the authoritative artifact format where the source is object-shaped.",
+      "runtime_outputs refers to agent-specific turns that produce structured artifacts under an explicit return contract.",
+      "No runtime capability claim is trustworthy without saved evidence appropriate to the claim.",
+      "No silent compatibility shims, fallback formats, or legacy behavior preservation are assumed unless explicitly authorized."
     ],
-    "observability_scaffolding": {
-      "artifact_paths": [
-        "../runtime/task.json",
-        "./project_context_packet.json",
-        "./project_manager_report.json"
+    "role_surface": {
+      "known_role_categories": [
+        "project_manager",
+        "planner",
+        "reviewer",
+        "adversary",
+        "implementer",
+        "archivist",
+        "worker_adapter"
       ],
-      "runtime_identity": [
-        "Role contract path and identity.",
-        "Schema path and validation result.",
-        "Run directory path."
+      "role_contract_rule": "Role-specific behavior, prompts, return contracts, context policy, model/provider settings, and tool permissions live in agent contracts rather than in global governance prose.",
+      "project_manager_rule": "Project Manager is a governance/recommendation role only. It may classify, summarize, identify tensions, and recommend admissible next transformations, but it cannot authorize, inspect ambient files, mutate files, run shell commands, or invoke workers.",
+      "implementation_rule": "Implementation work may be delegated only after task authority has been created from repo-local operational state, such as a selected implementation-plan seam, and only through an explicit implementer or worker-adapter route.",
+      "worker_adapter_rule": "Worker adapters are execution surfaces, not governance authorities. They may act only inside the task, route, tool, and target-repository constraints they are given."
+    },
+    "artifact_semantics": {
+      "authoring_artifacts": [
+        "Schemas.",
+        "Templates.",
+        "Examples.",
+        "Fixtures.",
+        "Sample runtime_outputs."
       ],
-      "runtime_results": [
-        "Deterministic probe result.",
-        "Terminal summary."
+      "runtime_artifacts": [
+        "Compiled runtime_inputs.",
+        "Agent runtime_outputs.",
+        "Saved run artifacts.",
+        "Validation summaries.",
+        "Probe results when the target project defines probes."
       ],
-      "authority_manifests": [
-        "Included source manifest.",
-        "Missing source manifest."
-      ],
-      "repo_state": [
-        "Git status when available."
-      ],
-      "status_values": [
-        "pass",
-        "fail",
-        "blocked",
-        "scaffold_only",
-        "runtime_evidenced"
-      ]
+      "authoring_metadata_rule": "Examples and templates are authoring artifacts, not runtime artifacts. They may contain authoring metadata such as $schema when useful for IDE or human validation.",
+      "runtime_metadata_rule": "Runtime-emitted model outputs must satisfy their runtime_outputs contract and must not be confused with examples, templates, or fixtures.",
+      "fixture_rule": "Fixtures and samples must be labeled as fixtures or samples and must not be presented as live runtime evidence."
     },
     "explicit_distinctions": [
-      "Invariant authority versus task authority.",
+      "Global harness governance versus target repository project_spec.",
+      "Harness execution boundary versus target-project product intent.",
+      "Project invariants versus current task authority.",
       "Policy versus prompt.",
-      "Prompt/role contract versus the runtime_outputs schema.",
-      "runtime_inputs/project context packet versus raw repo files.",
-      "Generated report versus deterministic probe.",
+      "Role contract versus runtime_outputs schema.",
+      "runtime_inputs versus raw repository files.",
+      "Compiled context versus ambient file access.",
+      "Agent runtime_outputs versus saved runtime artifacts.",
+      "Recommendation versus authorization.",
+      "Planning artifact versus task authority.",
+      "Governance role versus execution/worker surface.",
+      "Authoring artifact versus runtime artifact.",
       "Scaffold-only evidence versus runtime-evidenced behavior.",
-      "Planning versus implementation.",
-      "Governance role versus worker adapter.",
-      "Task versus project_spec amendment.",
-      "Active implementation state versus archived history.",
-      "Missing source versus included source.",
-      "Model runtime_outputs versus project authority."
+      "Repo-local open decisions versus global harness governance.",
+      "Model/provider configuration versus provider-specific behavior."
     ]
   },
   "approval_boundaries": {
     "explicit_approval_required_to_modify": {
-      "governance_project_spec": [
-        "Project thesis.",
-        "Non-goals.",
-        "First honest vertical slice.",
-        "Authority order.",
-        "Approval boundaries.",
-        "Admissible transformation types.",
-        "Stop conditions.",
-        "Acceptance probe definitions.",
-        "Source-of-truth rules."
+      "global_governance": [
+        "Harness-level authority semantics.",
+        "Agent execution boundaries.",
+        "Role category meanings.",
+        "Authorization/state-transition rules.",
+        "Artifact class semantics.",
+        "Compatibility commitments.",
+        "Global source-of-truth rules."
       ],
-      "schema": [
-        "../contracts/*.schema.json",
-        "Pydantic models used as contracts for runtime_outputs.",
-        "Required report fields.",
+      "role_contract": [
+        "Role identity.",
+        "Role mode.",
+        "Return contract path.",
+        "Context policy.",
+        "Default model/provider route.",
+        "Allowed tool behavior.",
+        "Whether a role may invoke a worker adapter."
+      ],
+      "runtime_outputs_contract": [
+        "runtime_outputs schemas.",
+        "Pydantic models used as runtime contracts.",
+        "Required fields.",
         "Status enum semantics.",
+        "Cross-field validation rules.",
         "Validation strictness.",
         "Artifact shape expected by downstream runtime code."
       ],
-      "agent_contract": [
-        "../agents/*.agent.json",
-        "Role identity.",
-        "Role mode.",
-        "Task.",
-        "Context policy.",
-        "Default model.",
-        "Return contract path.",
-        "Allowed tool behavior."
+      "compiler_and_context_policy": [
+        "Which target-repository sources may enter runtime_inputs.",
+        "Required versus optional context sources.",
+        "Missing-source behavior.",
+        "Context-packet structure.",
+        "Any policy that expands context collection beyond repo-local files already authorized by the target project."
       ],
-      "api_and_model_behavior": [
-        "Responses API client.",
-        "Structured runtime_outputs json schema.",
-        "Model selection.",
-        "Retry behavior.",
-        "Structured runtime_outputs mode.",
-        "Streaming behavior.",
-        "Tool permission behavior.",
-        "External network behavior.",
-        "API-cost-affecting call graph."
+      "runtime_orchestration": [
+        "Route selection behavior.",
+        "State-transition behavior.",
+        "Run artifact writing behavior.",
+        "Validation order.",
+        "Error handling that changes whether work proceeds or stops.",
+        "Any change that allows agents to select arbitrary next agents."
       ],
-      "auth": [
-        "Environment variable contract.",
-        "API key loading behavior.",
-        "Secrets handling.",
-        "Credential storage.",
-        "Logging of credential-adjacent state.",
-        "Secrets must never be committed."
+      "tool_and_worker_surface": [
+        "Giving a role file mutation capability.",
+        "Giving a role shell execution capability.",
+        "Giving a role web or network capability.",
+        "Giving a role worker-adapter invocation capability.",
+        "Allowing implementer routes to spawn parallel worker agents.",
+        "Changing boundaries around what a worker adapter may mutate."
       ],
-      "storage": [
-        "../runs/**",
-        "Required artifact names.",
-        "Artifact formats.",
-        "Archive layout.",
-        "Active implementation layout.",
-        "Source-of-truth paths.",
-        "Compatibility promises for prior artifacts."
-      ],
-      "deployment": [
-        "Deployment is out of scope until explicitly approved in project spec.",
-        "Any packaging, install command, CI release, service, daemon, hosted endpoint, or background runner requires explicit approval."
-      ],
-      "destructive_operation": [
-        "Deleting files.",
-        "Moving active implementation bundles.",
-        "Overwriting run artifacts.",
-        "Pruning archives.",
-        "Modifying git history.",
-        "Cleaning generated runtime_outputs beyond explicitly safe temporary files."
-      ],
-      "broad_architecture": [
-        "Introducing a database.",
-        "Introducing vector search.",
-        "Introducing a UI.",
-        "Introducing non-OpenAI provider abstraction.",
-        "Replacing the deterministic orchestrator with an LLM manager.",
-        "Allowing agents to choose arbitrary next agents.",
-        "Adding persistent background processes."
+      "provider_or_api_behavior": [
+        "Switching the first runtime path away from the OpenAI Responses API.",
+        "Adding provider abstraction.",
+        "Hardcoding provider-specific model identity into global schemas.",
+        "Changing structured-output behavior.",
+        "Changing retry behavior.",
+        "Changing streaming behavior.",
+        "Changing API-cost-affecting call graphs."
       ],
       "compatibility_and_fallback_commitment": [
-        "Preserving old TOML/Markdown prompt paths.",
+        "Preserving old prompt paths.",
         "Maintaining duplicate policy formats.",
         "Adding migration shims.",
         "Promising legacy artifact compatibility.",
         "Supporting multiple scaffold layouts.",
-        "Clean replacement is preferred unless compatibility is explicitly required."
-      ],
-      "project_intent_dependent_behavior": [
-        "Requires explicit approval when behavior depends on a claim about what the project should become rather than what the current spec already authorizes."
+        "Treating fallback behavior as normal runtime behavior."
       ]
-    }
+    },
+    "repo_local_boundaries": "Target-project product scope, non-goals, acceptance probes, implementation criteria, project-specific open decisions, and project-specific known failures belong in the target repository's project_spec and operational state files, not in global governance primitives."
   },
   "invariants_and_integrity_constraints": {
-    "task_authority": {
-      "order": [
-        {
-          "rank": 1,
-          "id": "approved_spec_or_governance_amendments",
-          "description": "Explicit amendments to the project spec or governance primitives approved by project authority."
-        },
-        {
-          "rank": 2,
-          "id": "project_spec_and_governance",
-          "description": "This file and the other docs under ../project_spec/**"
-        },
-        {
-          "rank": 3,
-          "id": "open_decisions",
-          "description": "Open decisions that interpret the project spec without silently overriding it."
-        },
-        {
-          "rank": 4,
-          "id": "active_implementation",
-          "description": "Active plans and trackers implementing an already-authorized objective."
-        },
-        {
-          "rank": 5,
-          "id": "task",
-          "description": "current task selecting, sequencing, implementing, or pausing already-authorized work."
-        },
-        {
-          "rank": 6,
-          "id": "archive",
-          "description": "Archived implementation history and prior chat context."
-        }
+    "authority_scope": {
+      "global_harness_authority": [
+        "Agent operation boundaries.",
+        "Role and route separation.",
+        "runtime_inputs and runtime_outputs contract discipline.",
+        "Tool and worker-adapter boundary discipline.",
+        "Artifact semantics.",
+        "Validation and evidence discipline.",
+        "Compatibility and fallback discipline."
       ],
-      "description": "Current task and active implementation plans have authority to select, sequence, and pause work towards already-authorized objectives, but they do not have authority to silently override project invariants or prior authority.",
-      "conflict_handling": "If task authority conflicts with invariant authority, stop and surface the conflict instead of improvising around it.",
-      "task_authorization": "The user and project manager will work together utilizing the project manager report to authorize tasks.",
-      "agent_authority_boundary": [
-        "Agent will not redefine project intent.",
-        "Agent will not invent governance rules.",
-        "Agent will not invent acceptance criteria.",
-        "Agent will not authorize approval-boundary crossings by implication.",
-        "Agent will not treat missing context as present.",
-        "Agent will not expand a PM-only slice into a multi-agent or implementation workflow.",
-        "Agent will not turn an agent recommendation into permission to mutate files."
-      ]
+      "repo_local_authority": [
+        "Target-project thesis and non-goals.",
+        "Target-project acceptance probes.",
+        "Target-project implementation plans and trackers.",
+        "Target-project open decisions.",
+        "Target-project known failures.",
+        "Target-project archive and history."
+      ],
+      "conflict_handling": "If a target-repository request or artifact conflicts with global harness execution boundaries, the harness must stop or surface the conflict rather than silently weakening the global boundary.",
+      "self_governance_rule": "When the harness repository is the target repository, it is governed through the same target-repository contract as any other repository. It is not a special case."
+    },
+    "state_transition_authority": {
+      "principle": "Approval is represented by documented state transitions in repo-local operational state, not by chat-style back-and-forth inside an agent run.",
+      "planner_artifact_rule": "Implementation plans are derived planner artifacts until a seam or task is selected for action.",
+      "task_authority_rule": "A selected seam or task becomes task authority only within the scope allowed by the target repository's project_spec, current operational state, and the route/role contract executing it.",
+      "recommendation_rule": "PM reports and other agent runtime_outputs may recommend or classify, but do not authorize boundary crossings by themselves.",
+      "implicit_approval_boundary": "Implicit approval through state transition is valid only when the selected transition is represented in repo-local artifacts that future calls will compile into runtime_inputs."
+    },
+    "agent_boundary": {
+      "ambient_access_rule": "Agents cannot inspect files outside runtime_inputs.",
+      "compiler_rule": "The deterministic context compiler may inspect target-repository sources according to context policy because it is harness code, not an agent.",
+      "pm_boundary": "Project Manager is always read-only and cannot receive tool permissions that mutate files, run shell commands, invoke worker adapters, or inspect ambient repo state.",
+      "tool_permission_rule": "Tool permissions are role-specific and route-specific. They must be explicit in the role contract or runtime route, not implied by project intent.",
+      "network_rule": "Web, search, or network access is not a default context source. If ever introduced, it must be an explicit role/route permission or compiler policy decision."
     },
     "sources": {
       "authoritative_artifacts": [
-        "Project spec.",
-        "Governance primitives.",
-        "Approved runtime.",
-        "Approved role contracts.",
-        "Approved runtime_outputs schema.",
-        "Active implementation plans and trackers inside their authorized scope.",
-        "Saved runtime artifacts as evidence of what happened."
+        "Global governance primitives.",
+        "Role contracts.",
+        "runtime_outputs schemas and Pydantic contract models.",
+        "Runtime route definitions.",
+        "Context compiler policy.",
+        "Target repository project_spec.",
+        "Target repository operational state inside its authorized scope."
       ],
       "derived_artifacts": [
         "PM reports.",
+        "Planner reports.",
+        "Reviewer reports.",
+        "Adversary reports.",
+        "Archivist reports.",
+        "Generated implementation plans before selection into task authority.",
         "Summaries.",
-        "Recommendations.",
-        "Rendered debug Markdown.",
-        "Generated implementation plans.",
-        "Probe summaries."
+        "Recommendations."
       ],
       "operational_artifacts": [
-        "Runtime code.",
-        "Context compiler code.",
-        "Orchestrator code.",
-        "Agent caller code.",
-        "Worker adapter code.",
-        "Validation code."
+        "Selected implementation tasks.",
+        "Active implementation trackers.",
+        "Saved run artifacts.",
+        "Validation summaries.",
+        "Worker execution logs if a worker route is used."
       ],
       "presentation_artifacts": [
         "Terminal summaries.",
         "Optional Markdown debug renderings.",
         "Human-readable archive summaries."
       ],
-      "order": "Derived or presentation artifacts does not override authority."
+      "order": "Derived or presentation artifacts do not override global governance, role contracts, runtime_outputs contracts, or target repository project_spec authority."
     },
     "fixtures_samples_test_roles": [
+      "Examples and templates are authoring artifacts and may include $schema for IDE or human validation.",
       "Fixtures and samples must not be presented as live runtime evidence.",
-      "A fixture report must be labeled as fixture or sample.",
-      "A manually pasted API in runtime_outputs must not be treated as proof unless linked to saved runtime artifacts.",
-      "Tests must not silently repurpose sample files in a way that invalidates prior acceptance probes."
+      "A fixture runtime_output must be labeled as fixture or sample.",
+      "A manually pasted runtime_output must not be treated as proof unless linked to saved runtime artifacts.",
+      "Tests must not silently repurpose sample files as live runtime artifacts."
     ],
     "compatibility_commitments": [
       "There are no compatibility promises by default.",
-      "No legacy file path, prompt format, scaffold layout, or artifact format is preserved unless explicitly approved."
+      "No legacy file path, prompt format, scaffold layout, or artifact format is preserved unless explicitly approved.",
+      "Clean replacement is preferred over compatibility shims unless compatibility is itself an authorized requirement."
     ],
     "verification_duties": {
       "must_not_skip": [
-        "Schema validation.",
-        "Artifact existence checks.",
-        "PM-only route check for the first slice.",
-        "Stop-before-implementation check.",
+        "runtime_outputs schema or contract validation where a role returns structured artifacts.",
+        "Artifact existence checks for artifacts claimed as saved evidence.",
         "Missing source reporting.",
-        "Permission enforcement.",
-        "Deterministic probe summary."
+        "Permission enforcement before tool or worker invocation.",
+        "Route-boundary checks before moving from recommendation/planning to implementation.",
+        "Visibility of scaffold-only versus runtime-evidenced behavior."
       ]
     },
     "ambiguity_uncertainty": {
@@ -269,109 +248,67 @@
         "Scaffold-only behavior.",
         "Failed API calls.",
         "Failed validation.",
-        "Unclear approval boundaries.",
+        "Unclear route boundaries.",
         "Unimplemented routes.",
         "Deferred worker behavior.",
-        "Cost/budget enforcement gaps.",
+        "Cost or budget enforcement gaps.",
         "Provider-specific behavior.",
         "Unknowns must be named rather than hidden in polished runtime_outputs."
-      ]
-    },
-    "named_admissibility_inputs": {
-      "invariant_constraints": [
-        "Project thesis.",
-        "First-slice boundary.",
-        "Read-only boundary.",
-        "Context-packet boundary.",
-        "Schema/report boundary.",
-        "Runtime evidence boundary.",
-        "Worker adapter boundary."
-      ],
-      "task_constraints": "Name the current user task and the authorized scope of action. Do not treat the task as authority to amend project invariants unless the user explicitly frames it as an amendment.",
-      "constraint_conflicts": [
-        "Task request and invariant authority.",
-        "Desired behavior and current approved slice.",
-        "Missing sources and required authority.",
-        "Runtime claim and absent evidence.",
-        "Schema expectations and returned report.",
-        "Artifact layout and storage policy."
-      ],
-      "admissibility_checks": "Must end with either pass, fail, or blocked. If blocked, name the missing basis.",
-      "stop_conditions": [
-        "Required authority is missing.",
-        "Schema validation fails.",
-        "Runtime probe fails.",
-        "Requested work crosses an approval boundary.",
-        "Requested work expands beyond the current slice.",
-        "Requested work requires unauthorized file mutation.",
-        "Requested work requires an agent to inspect files directly.",
-        "Requested work invokes a worker or non-PM agent before authorization."
       ]
     }
   },
   "admissible_transformations": {
-    "preserve_project_spec": [
-      "Loading project_manager.agent.json",
-      "Validating required agent contract fields.",
-      "Compiling structured project_context_packet.json",
-      "Passing JSON context to the PM route.",
-      "Validating project_manager_report.json",
+    "preserve_global_governance": [
+      "Loading role contracts.",
+      "Validating required role contract fields.",
+      "Compiling structured runtime_inputs from target-repository context policy.",
+      "Passing compiled runtime_inputs to an agent route.",
+      "Validating structured runtime_outputs.",
       "Saving run artifacts.",
-      "Printing a short terminal summary.",
-      "Implementing deterministic artifact probes.",
-      "Improving error messages for missing required context.",
-      "Treating optional sources as missing rather than fatal when allowed by context policy.",
-      "Removing obsolete TOML/Markdown PM loading if replaced by the approved JSON-agent path.",
-      "Keeping the first route PM-only and read-only."
+      "Improving missing-context error messages.",
+      "Treating optional sources as missing rather than fatal when the relevant context policy allows it.",
+      "Improving distinction between authoring artifacts and runtime artifacts.",
+      "Removing obsolete compatibility paths when no compatibility commitment exists."
     ],
-    "require_open_decision": [
-      "Choosing JSON Schema versus Pydantic versus both for validation.",
-      "Introducing runtime budget enforcement.",
-      "Adding planner/adversary/reviewer/archivist routes.",
-      "Adding apply workflow.",
-      "Choosing how run IDs are named beyond timestamp paths.",
-      "When to convert codebase that would benefit from Rust, and what to leave as Python."
+    "require_repo_local_project_spec_or_state": [
+      "Defining target-project product scope.",
+      "Defining target-project non-goals.",
+      "Defining target-project acceptance probes.",
+      "Defining target-project implementation seams.",
+      "Recording target-project open decisions.",
+      "Recording target-project known failures.",
+      "Selecting a planner-derived seam as task authority."
     ],
-    "amend_project_spec_or_governance": [
-      "Changing the project from CLI-first to UI-first.",
-      "Changing the first honest slice.",
-      "Allowing agents to inspect files directly.",
-      "Allowing agents to write files.",
-      "Allowing agents to run shell commands.",
+    "require_global_governance_or_role_contract_change": [
+      "Allowing agents to inspect files outside runtime_inputs.",
+      "Changing PM from read-only to tool-using.",
+      "Allowing a role to write files.",
+      "Allowing a role to run shell commands.",
+      "Allowing a role to use web, search, or network access.",
+      "Allowing a role to invoke a worker adapter.",
       "Allowing agent-selected recursive routing.",
-      "Making Codex worker execution part of the plan workflow.",
-      "Replacing repo-local artifacts with external storage.",
       "Treating chat memory as authority.",
-      "Making archived bundles current by default.",
-      "Introducing autonomous repo mutation."
-    ],
-    "preserve_provenance_or_inspectability": [
-      "Context compilation.",
-      "Report generation.",
-      "Schema validation.",
-      "Run artifact writing.",
-      "Probe execution.",
-      "Active-to-archive transitions.",
-      "Worker adapter execution when later introduced.",
-      "Policy or role contract changes."
+      "Replacing runtime artifacts with external storage as the default evidence surface.",
+      "Introducing provider abstraction as a supported runtime layer.",
+      "Introducing autonomous repo mutation outside explicit task and worker boundaries."
     ],
     "forbidden_shortcuts": [
-      "Hardcoding PM report content in Python.",
-      "Duplicating PM semantics in runtime code.",
-      "Flattening structured context into Markdown as the authoritative packet.",
+      "Hardcoding agent runtime_outputs in runtime code.",
+      "Duplicating role semantics in runtime code rather than enforcing contracts.",
+      "Flattening structured runtime_inputs into Markdown as the authoritative packet.",
       "Treating agent runtime_outputs as validation.",
-      "Skipping schema validation.",
-      "Hiding failed probes behind successful summaries.",
+      "Skipping runtime_outputs validation.",
+      "Hiding failed validation behind successful summaries.",
       "Silently continuing after missing required context.",
-      "Invoking non-PM agents in the first slice.",
-      "Giving the PM any tool permissions.",
-      "Writing implementation changes during plan.",
+      "Giving PM tool permissions.",
+      "Treating generated plans as task authority before a seam or task is selected.",
       "Preserving obsolete compatibility paths without approval."
     ],
     "evidence_minimum": [
       "What changed.",
-      "Why it was admissible.",
-      "Which authority allowed it.",
+      "Why it was admissible under global harness governance.",
+      "Which repo-local authority allowed target-specific work.",
+      "Which route and role executed it.",
       "What evidence proves it happened.",
       "What remains uncertain."
     ]
@@ -379,88 +316,41 @@
   "review_checkpoints": {
     "visible_before_trusting": {
       "source_authority": [
-        "Included authority sources.",
-        "Missing authority sources.",
-        "Source paths.",
-        "Source content types.",
+        "Global governance source.",
+        "Target repository project_spec source.",
+        "Included runtime_inputs sources.",
+        "Missing runtime_inputs sources.",
         "Whether each source was required or optional.",
-        "Whether the source was included, missing, or invalid."
+        "Whether each source was included, missing, or invalid."
       ],
       "derived_or_operational_artifacts": [
         "Command invoked.",
+        "Target repository identifier or path.",
         "Route selected.",
         "Role contract path.",
-        "Model route.",
-        "Project Context Packet path.",
+        "Model/provider route.",
+        "runtime_inputs path or saved artifact.",
         "runtime_outputs schema path.",
-        "Report path.",
+        "runtime_outputs artifact path.",
         "Validation result.",
-        "Probe result."
+        "Saved run artifact path."
       ],
-      "synthesis_automation_ux": [
-        "A real runtime path.",
-        "Saved artifacts.",
-        "Deterministic probe result.",
-        "Clear status.",
-        "No unauthorized route expansion.",
+      "execution_boundary": [
+        "No ambient agent file access.",
+        "No unauthorized tool use.",
+        "No unauthorized worker invocation.",
         "No unauthorized mutation.",
-        "No hidden tool use."
+        "No hidden route expansion.",
+        "Clear status."
       ]
     },
     "visible_before_closing_work": [
-      "Updated implementation plan/tracker if active work exists.",
-      "Saved run artifacts.",
-      "Validation/probe evidence.",
-      "Known failures updated or ruled out.",
-      "Open decisions updated or cleared.",
-      "Archive summary if a bundle closes.",
-      "Explicit remaining risks."
+      "Repo-local implementation plan/tracker updated if active work exists.",
+      "Saved runtime artifacts exist for claimed runtime behavior.",
+      "Validation evidence is visible for structured runtime_outputs.",
+      "Repo-local known failures updated or explicitly ruled out when relevant.",
+      "Repo-local open decisions updated or cleared when relevant.",
+      "Explicit remaining risks or unknowns are named."
     ]
-  },
-  "acceptance_probes": [
-    {
-      "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract and structured runtime_inputs while saving valid runtime evidence and stopping before implementation?",
-      "runtime_path_required": {
-        "command": "python",
-        "args": [
-          "-m",
-          "harness.runtime.orchestrator",
-          "plan",
-          "TASK TEXT"
-        ]
-      },
-      "evidence_required": {
-        "saved_artifacts": [
-          {
-            "id": "task",
-            "path_pattern": "../runs/<timestamp>/task.json",
-            "required": true
-          },
-          {
-            "id": "project_context_packet",
-            "path_pattern": "./project_spec/project_context_packet.json",
-            "required": true
-          },
-          {
-            "id": "project_manager_report",
-            "path_pattern": "../runs/<timestamp>/project_manager_report.json",
-            "required": true
-          }
-        ]
-      }
-    }
-  ],
-  "not_proof": [
-    "Manually pasted PM report.",
-    "Mock report.",
-    "Schema file alone.",
-    "Role JSON file alone.",
-    "Context compiler code alone.",
-    "Successful terminal summary without artifacts.",
-    "Artifacts without validation.",
-    "Validation without real model route where the claim concerns model call behavior.",
-    "PM statement that the probe passed without deterministic probe evidence.",
-    "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
-  ]
+  }
 }

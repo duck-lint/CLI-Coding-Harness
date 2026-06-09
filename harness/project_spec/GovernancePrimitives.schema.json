@@ -1,62 +1,28 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "AcceptanceProbe": {
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "question": {
-          "title": "Question",
-          "type": "string"
-        },
-        "runtime_path_required": {
-          "$ref": "#/$defs/RuntimePathRequired"
-        },
-        "evidence_required": {
-          "$ref": "#/$defs/EvidenceRequired"
-        }
-      },
-      "required": [
-        "id",
-        "question",
-        "runtime_path_required",
-        "evidence_required"
-      ],
-      "title": "AcceptanceProbe",
-      "type": "object"
-    },
     "AdmissibleTransformations": {
       "additionalProperties": false,
       "properties": {
-        "preserve_project_spec": {
+        "preserve_global_governance": {
           "items": {
             "type": "string"
           },
-          "title": "Preserve Project Spec",
+          "title": "Preserve Global Governance",
           "type": "array"
         },
-        "require_open_decision": {
+        "require_repo_local_project_spec_or_state": {
           "items": {
             "type": "string"
           },
-          "title": "Require Open Decision",
+          "title": "Require Repo Local Project Spec Or State",
           "type": "array"
         },
-        "amend_project_spec_or_governance": {
+        "require_global_governance_or_role_contract_change": {
           "items": {
             "type": "string"
           },
-          "title": "Amend Project Spec Or Governance",
-          "type": "array"
-        },
-        "preserve_provenance_or_inspectability": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Preserve Provenance Or Inspectability",
+          "title": "Require Global Governance Or Role Contract Change",
           "type": "array"
         },
         "forbidden_shortcuts": {
@@ -75,14 +41,47 @@
         }
       },
       "required": [
-        "preserve_project_spec",
-        "require_open_decision",
-        "amend_project_spec_or_governance",
-        "preserve_provenance_or_inspectability",
+        "preserve_global_governance",
+        "require_repo_local_project_spec_or_state",
+        "require_global_governance_or_role_contract_change",
         "forbidden_shortcuts",
         "evidence_minimum"
       ],
       "title": "AdmissibleTransformations",
+      "type": "object"
+    },
+    "AgentBoundary": {
+      "additionalProperties": false,
+      "properties": {
+        "ambient_access_rule": {
+          "title": "Ambient Access Rule",
+          "type": "string"
+        },
+        "compiler_rule": {
+          "title": "Compiler Rule",
+          "type": "string"
+        },
+        "pm_boundary": {
+          "title": "Pm Boundary",
+          "type": "string"
+        },
+        "tool_permission_rule": {
+          "title": "Tool Permission Rule",
+          "type": "string"
+        },
+        "network_rule": {
+          "title": "Network Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ambient_access_rule",
+        "compiler_rule",
+        "pm_boundary",
+        "tool_permission_rule",
+        "network_rule"
+      ],
+      "title": "AgentBoundary",
       "type": "object"
     },
     "AmbiguityUncertainty": {
@@ -107,95 +106,144 @@
       "properties": {
         "explicit_approval_required_to_modify": {
           "$ref": "#/$defs/ExplicitApprovalRequiredToModify"
+        },
+        "repo_local_boundaries": {
+          "title": "Repo Local Boundaries",
+          "type": "string"
         }
       },
       "required": [
-        "explicit_approval_required_to_modify"
+        "explicit_approval_required_to_modify",
+        "repo_local_boundaries"
       ],
       "title": "ApprovalBoundaries",
       "type": "object"
     },
-    "EvidenceRequired": {
+    "ArtifactSemantics": {
       "additionalProperties": false,
       "properties": {
-        "saved_artifacts": {
+        "authoring_artifacts": {
           "items": {
-            "$ref": "#/$defs/SavedArtifact"
+            "type": "string"
           },
-          "title": "Saved Artifacts",
+          "title": "Authoring Artifacts",
           "type": "array"
+        },
+        "runtime_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Runtime Artifacts",
+          "type": "array"
+        },
+        "authoring_metadata_rule": {
+          "title": "Authoring Metadata Rule",
+          "type": "string"
+        },
+        "runtime_metadata_rule": {
+          "title": "Runtime Metadata Rule",
+          "type": "string"
+        },
+        "fixture_rule": {
+          "title": "Fixture Rule",
+          "type": "string"
         }
       },
       "required": [
-        "saved_artifacts"
+        "authoring_artifacts",
+        "runtime_artifacts",
+        "authoring_metadata_rule",
+        "runtime_metadata_rule",
+        "fixture_rule"
       ],
-      "title": "EvidenceRequired",
+      "title": "ArtifactSemantics",
+      "type": "object"
+    },
+    "AuthorityScope": {
+      "additionalProperties": false,
+      "properties": {
+        "global_harness_authority": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Global Harness Authority",
+          "type": "array"
+        },
+        "repo_local_authority": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Repo Local Authority",
+          "type": "array"
+        },
+        "conflict_handling": {
+          "title": "Conflict Handling",
+          "type": "string"
+        },
+        "self_governance_rule": {
+          "title": "Self Governance Rule",
+          "type": "string"
+        }
+      },
+      "required": [
+        "global_harness_authority",
+        "repo_local_authority",
+        "conflict_handling",
+        "self_governance_rule"
+      ],
+      "title": "AuthorityScope",
       "type": "object"
     },
     "ExplicitApprovalRequiredToModify": {
       "additionalProperties": false,
       "properties": {
-        "governance_project_spec": {
+        "global_governance": {
           "items": {
             "type": "string"
           },
-          "title": "Governance Project Spec",
+          "title": "Global Governance",
           "type": "array"
         },
-        "schema": {
+        "role_contract": {
           "items": {
             "type": "string"
           },
-          "title": "Schema",
+          "title": "Role Contract",
           "type": "array"
         },
-        "agent_contract": {
+        "runtime_outputs_contract": {
           "items": {
             "type": "string"
           },
-          "title": "Agent Contract",
+          "title": "Runtime Outputs Contract",
           "type": "array"
         },
-        "api_and_model_behavior": {
+        "compiler_and_context_policy": {
           "items": {
             "type": "string"
           },
-          "title": "Api And Model Behavior",
+          "title": "Compiler And Context Policy",
           "type": "array"
         },
-        "auth": {
+        "runtime_orchestration": {
           "items": {
             "type": "string"
           },
-          "title": "Auth",
+          "title": "Runtime Orchestration",
           "type": "array"
         },
-        "storage": {
+        "tool_and_worker_surface": {
           "items": {
             "type": "string"
           },
-          "title": "Storage",
+          "title": "Tool And Worker Surface",
           "type": "array"
         },
-        "deployment": {
+        "provider_or_api_behavior": {
           "items": {
             "type": "string"
           },
-          "title": "Deployment",
-          "type": "array"
-        },
-        "destructive_operation": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Destructive Operation",
-          "type": "array"
-        },
-        "broad_architecture": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Broad Architecture",
+          "title": "Provider Or Api Behavior",
           "type": "array"
         },
         "compatibility_and_fallback_commitment": {
@@ -204,27 +252,17 @@
           },
           "title": "Compatibility And Fallback Commitment",
           "type": "array"
-        },
-        "project_intent_dependent_behavior": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Project Intent Dependent Behavior",
-          "type": "array"
         }
       },
       "required": [
-        "governance_project_spec",
-        "schema",
-        "agent_contract",
-        "api_and_model_behavior",
-        "auth",
-        "storage",
-        "deployment",
-        "destructive_operation",
-        "broad_architecture",
-        "compatibility_and_fallback_commitment",
-        "project_intent_dependent_behavior"
+        "global_governance",
+        "role_contract",
+        "runtime_outputs_contract",
+        "compiler_and_context_policy",
+        "runtime_orchestration",
+        "tool_and_worker_surface",
+        "provider_or_api_behavior",
+        "compatibility_and_fallback_commitment"
       ],
       "title": "ExplicitApprovalRequiredToModify",
       "type": "object"
@@ -239,8 +277,11 @@
           "title": "Invariant Constraints",
           "type": "array"
         },
-        "observability_scaffolding": {
-          "$ref": "#/$defs/ObservabilityScaffolding"
+        "role_surface": {
+          "$ref": "#/$defs/RoleSurface"
+        },
+        "artifact_semantics": {
+          "$ref": "#/$defs/ArtifactSemantics"
         },
         "explicit_distinctions": {
           "items": {
@@ -252,7 +293,8 @@
       },
       "required": [
         "invariant_constraints",
-        "observability_scaffolding",
+        "role_surface",
+        "artifact_semantics",
         "explicit_distinctions"
       ],
       "title": "GovernancePosture",
@@ -261,8 +303,14 @@
     "InvariantsAndIntegrityConstraints": {
       "additionalProperties": false,
       "properties": {
-        "task_authority": {
-          "$ref": "#/$defs/TaskAuthority"
+        "authority_scope": {
+          "$ref": "#/$defs/AuthorityScope"
+        },
+        "state_transition_authority": {
+          "$ref": "#/$defs/StateTransitionAuthority"
+        },
+        "agent_boundary": {
+          "$ref": "#/$defs/AgentBoundary"
         },
         "sources": {
           "$ref": "#/$defs/Sources"
@@ -286,19 +334,17 @@
         },
         "ambiguity_uncertainty": {
           "$ref": "#/$defs/AmbiguityUncertainty"
-        },
-        "named_admissibility_inputs": {
-          "$ref": "#/$defs/NamedAdmissibilityInputs"
         }
       },
       "required": [
-        "task_authority",
+        "authority_scope",
+        "state_transition_authority",
+        "agent_boundary",
         "sources",
         "fixtures_samples_test_roles",
         "compatibility_commitments",
         "verification_duties",
-        "ambiguity_uncertainty",
-        "named_admissibility_inputs"
+        "ambiguity_uncertainty"
       ],
       "title": "InvariantsAndIntegrityConstraints",
       "type": "object"
@@ -317,11 +363,12 @@
           "type": "string"
         },
         "context": {
-          "const": "Governance for ./project_spec.json defining project-local authority semantics, approval boundaries, admissible transformations, and review scaffolding.",
+          "const": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target repository, including the harness repository itself.",
           "title": "Context",
           "type": "string"
         },
         "purpose": {
+          "const": "Define harness-level invariants that every target repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
           "title": "Purpose",
           "type": "string"
         },
@@ -347,130 +394,6 @@
       "title": "Metadata",
       "type": "object"
     },
-    "NamedAdmissibilityInputs": {
-      "additionalProperties": false,
-      "properties": {
-        "invariant_constraints": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Invariant Constraints",
-          "type": "array"
-        },
-        "task_constraints": {
-          "title": "Task Constraints",
-          "type": "string"
-        },
-        "constraint_conflicts": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Constraint Conflicts",
-          "type": "array"
-        },
-        "admissibility_checks": {
-          "title": "Admissibility Checks",
-          "type": "string"
-        },
-        "stop_conditions": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Stop Conditions",
-          "type": "array"
-        }
-      },
-      "required": [
-        "invariant_constraints",
-        "task_constraints",
-        "constraint_conflicts",
-        "admissibility_checks",
-        "stop_conditions"
-      ],
-      "title": "NamedAdmissibilityInputs",
-      "type": "object"
-    },
-    "ObservabilityScaffolding": {
-      "additionalProperties": false,
-      "properties": {
-        "artifact_paths": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Artifact Paths",
-          "type": "array"
-        },
-        "runtime_identity": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Runtime Identity",
-          "type": "array"
-        },
-        "runtime_results": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Runtime Results",
-          "type": "array"
-        },
-        "authority_manifests": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Authority Manifests",
-          "type": "array"
-        },
-        "repo_state": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Repo State",
-          "type": "array"
-        },
-        "status_values": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Status Values",
-          "type": "array"
-        }
-      },
-      "required": [
-        "artifact_paths",
-        "runtime_identity",
-        "runtime_results",
-        "authority_manifests",
-        "repo_state",
-        "status_values"
-      ],
-      "title": "ObservabilityScaffolding",
-      "type": "object"
-    },
-    "OrderItem": {
-      "additionalProperties": false,
-      "properties": {
-        "rank": {
-          "title": "Rank",
-          "type": "integer"
-        },
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "description": {
-          "title": "Description",
-          "type": "string"
-        }
-      },
-      "required": [
-        "rank",
-        "id",
-        "description"
-      ],
-      "title": "OrderItem",
-      "type": "object"
-    },
     "ReviewCheckpoints": {
       "additionalProperties": false,
       "properties": {
@@ -492,50 +415,41 @@
       "title": "ReviewCheckpoints",
       "type": "object"
     },
-    "RuntimePathRequired": {
+    "RoleSurface": {
       "additionalProperties": false,
       "properties": {
-        "command": {
-          "title": "Command",
-          "type": "string"
-        },
-        "args": {
+        "known_role_categories": {
           "items": {
             "type": "string"
           },
-          "title": "Args",
+          "title": "Known Role Categories",
           "type": "array"
+        },
+        "role_contract_rule": {
+          "title": "Role Contract Rule",
+          "type": "string"
+        },
+        "project_manager_rule": {
+          "title": "Project Manager Rule",
+          "type": "string"
+        },
+        "implementation_rule": {
+          "title": "Implementation Rule",
+          "type": "string"
+        },
+        "worker_adapter_rule": {
+          "title": "Worker Adapter Rule",
+          "type": "string"
         }
       },
       "required": [
-        "command",
-        "args"
+        "known_role_categories",
+        "role_contract_rule",
+        "project_manager_rule",
+        "implementation_rule",
+        "worker_adapter_rule"
       ],
-      "title": "RuntimePathRequired",
-      "type": "object"
-    },
-    "SavedArtifact": {
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string"
-        },
-        "path_pattern": {
-          "title": "Path Pattern",
-          "type": "string"
-        },
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "id",
-        "path_pattern",
-        "required"
-      ],
-      "title": "SavedArtifact",
+      "title": "RoleSurface",
       "type": "object"
     },
     "Sources": {
@@ -584,44 +498,38 @@
       "title": "Sources",
       "type": "object"
     },
-    "TaskAuthority": {
+    "StateTransitionAuthority": {
       "additionalProperties": false,
       "properties": {
-        "order": {
-          "items": {
-            "$ref": "#/$defs/OrderItem"
-          },
-          "title": "Order",
-          "type": "array"
-        },
-        "description": {
-          "title": "Description",
+        "principle": {
+          "title": "Principle",
           "type": "string"
         },
-        "conflict_handling": {
-          "title": "Conflict Handling",
+        "planner_artifact_rule": {
+          "title": "Planner Artifact Rule",
           "type": "string"
         },
-        "task_authorization": {
-          "title": "Task Authorization",
+        "task_authority_rule": {
+          "title": "Task Authority Rule",
           "type": "string"
         },
-        "agent_authority_boundary": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Agent Authority Boundary",
-          "type": "array"
+        "recommendation_rule": {
+          "title": "Recommendation Rule",
+          "type": "string"
+        },
+        "implicit_approval_boundary": {
+          "title": "Implicit Approval Boundary",
+          "type": "string"
         }
       },
       "required": [
-        "order",
-        "description",
-        "conflict_handling",
-        "task_authorization",
-        "agent_authority_boundary"
+        "principle",
+        "planner_artifact_rule",
+        "task_authority_rule",
+        "recommendation_rule",
+        "implicit_approval_boundary"
       ],
-      "title": "TaskAuthority",
+      "title": "StateTransitionAuthority",
       "type": "object"
     },
     "VerificationDuties": {
@@ -658,18 +566,18 @@
           "title": "Derived Or Operational Artifacts",
           "type": "array"
         },
-        "synthesis_automation_ux": {
+        "execution_boundary": {
           "items": {
             "type": "string"
           },
-          "title": "Synthesis Automation Ux",
+          "title": "Execution Boundary",
           "type": "array"
         }
       },
       "required": [
         "source_authority",
         "derived_or_operational_artifacts",
-        "synthesis_automation_ux"
+        "execution_boundary"
       ],
       "title": "VisibleBeforeTrusting",
       "type": "object"
@@ -698,20 +606,6 @@
     },
     "review_checkpoints": {
       "$ref": "#/$defs/ReviewCheckpoints"
-    },
-    "acceptance_probes": {
-      "items": {
-        "$ref": "#/$defs/AcceptanceProbe"
-      },
-      "title": "Acceptance Probes",
-      "type": "array"
-    },
-    "not_proof": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Not Proof",
-      "type": "array"
     }
   },
   "required": [
@@ -721,9 +615,7 @@
     "approval_boundaries",
     "invariants_and_integrity_constraints",
     "admissible_transformations",
-    "review_checkpoints",
-    "acceptance_probes",
-    "not_proof"
+    "review_checkpoints"
   ],
   "title": "GovernancePrimitives",
   "type": "object"
