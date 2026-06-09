@@ -1,11 +1,11 @@
 {
   "$schema": "./ImplementationPlan.schema.json",
   "metadata": {
-    "document_id": "implementation_plan.template.json",
+    "document_id": "implementation_plan.json",
     "title": "Implementation <#> Plan",
     "purpose": "This file outlines an implementation plan.",
     "source_format": "json",
-    "document_authority": "operational_state"
+    "document_authority": "operational_state.template"
   },
   "implementation_intent": [],
   "project_manager_report": "",
@@ -22,5 +22,5 @@
   "approval_gates": [],
   "closeout_notes": [
     "When this bundle completes, move it from ./active/ to ./archive/."
-]
+  ]
 }

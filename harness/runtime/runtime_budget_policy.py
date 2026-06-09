@@ -14,8 +14,6 @@ class RuntimeBudgetDefaults(BaseModel):
   reserved_output_tokens: int = Field(gt=0)
   oversize_strategy: Literal ["fail_or_batch"]
   truncation: Literal ["disabled"]
-  default_model: str
-  agent_model_overrides: dict[str, str] = Field(default_factory=dict)
 
 
 class RuntimeBudgetPolicy(BaseModel):

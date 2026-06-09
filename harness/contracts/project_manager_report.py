@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field,  model_validator
 
 
 class Metadata(BaseModel):
@@ -62,6 +62,20 @@ class ProofFrontier(BaseModel):
   non_affected_surfaces: list[str] | None
   stop_conditions: list[str] | None
 
+  @model_validator(mode="after")
+  def enforce_blocking_reason_when_blocked(self):
+    if self.blocked and not self.blocking_reason:
+      raise ValueError(
+        "blocking_reason is required when proof_frontier.blocked is true."
+      )
+
+    if not self.blocked and self.blocking_reason is not None:
+      raise ValueError(
+        "blocking_reason must be null when proof_frontier.blocked is false."
+      )
+
+    return self
+
 
 class ProjectManagerReport(BaseModel):
   model_config = ConfigDict(extra="forbid")
@@ -77,3 +91,31 @@ class ProjectManagerReport(BaseModel):
   report_source_coverage: ReportSourceCoverage
   trajectory_review: TrajectoryReview
   proof_frontier: ProofFrontier
+
+  @model_validator(mode="after")
+  def enforce_status_matches_blocked_state(self):
+    if self.report_status == "admissible" and self.proof_frontier.blocked:
+      raise ValueError(
+        "report_status cannot be 'admissible' when proof_frontier.blocked is true."
+      )
+
+    if self.report_status == "admissibility_blocked" and not self.proof_frontier.blocked:
+      raise ValueError(
+        "report_status cannot be 'admissibility_blocked' when proof_frontier.blocked is false."
+      )
+
+    return self
+
+  @model_validator(mode="after")
+  def enforce_status_and_blocked_coherence(self):
+    if self.report_status == "admissible" and self.proof_frontier.blocked:
+      raise ValueError(
+          "Invalid PM report: report_status is 'admissible' but proof_frontier.blocked is true."
+      )
+
+    if self.report_status == "admissibility_blocked" and not self.proof_frontier.blocked:
+      raise ValueError(
+          "Invalid PM report: report_status is 'admissibility_blocked' but proof_frontier.blocked is false."
+      )
+
+    return self

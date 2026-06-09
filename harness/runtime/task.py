@@ -31,4 +31,4 @@ class Task(BaseModel):
 
   schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
-  task: TaskItem
+  task: list[TaskItem]

@@ -64,7 +64,7 @@ class CurrentImplementation(BaseModel):
       ]]
 
 
-class ProjectContextPacket(BaseModel):
+class ProjectContextPacketManifest(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   schema_ref: str | None = Field(default=None, alias="$schema")

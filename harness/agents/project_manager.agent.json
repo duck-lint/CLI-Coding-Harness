@@ -19,7 +19,7 @@
       "Stop conditions are explicit and tied to invariant violation or missing authority.",
       "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transformation, or marks the relevant part admissibility-blocked.",
       "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided runtime_inputs.",
-      "If any required condition fails, the PM runtime_outputs must be marked admissibility-blocked and the missing condition must be named."
+      "If any required condition fails, the PM runtime_outputs must be marked admissibility_blocked, rejected, or needs_clarification and the missing condition must be named."
     ],
     "project_manager_report_derivation_rules": {
       "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under ../project_spec/**.",
@@ -79,6 +79,5 @@
       "required": true,
       "schema_ref": "../contracts/ProjectManagerReport.schema.json"
     }
-  },
-  "tool_permissions": []
+  }
 }

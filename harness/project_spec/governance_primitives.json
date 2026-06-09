@@ -56,13 +56,13 @@
     "explicit_distinctions": [
       "Invariant authority versus task authority.",
       "Policy versus prompt.",
-      "Prompt/role contract versus runtime_outputs schema.",
+      "Prompt/role contract versus the runtime_outputs schema.",
       "runtime_inputs/project context packet versus raw repo files.",
       "Generated report versus deterministic probe.",
       "Scaffold-only evidence versus runtime-evidenced behavior.",
       "Planning versus implementation.",
       "Governance role versus worker adapter.",
-      "User instruction versus project_spec amendment.",
+      "Task versus project_spec amendment.",
       "Active implementation state versus archived history.",
       "Missing source versus included source.",
       "Model runtime_outputs versus project authority."
@@ -83,7 +83,7 @@
       ],
       "schema": [
         "../contracts/*.schema.json",
-        "Pydantic models used as runtime_outputs contracts.",
+        "Pydantic models used as contracts for runtime_outputs.",
         "Required report fields.",
         "Status enum semantics.",
         "Validation strictness.",
@@ -93,21 +93,20 @@
         "../agents/*.agent.json",
         "Role identity.",
         "Role mode.",
-        "Instruction contract.",
+        "Task.",
         "Context policy.",
-        "tool_permissions.",
         "Default model.",
         "Return contract path.",
         "Allowed tool behavior."
       ],
       "api_and_model_behavior": [
         "Responses API client.",
-        "Structured runtime_outputss using json schemas.",
+        "Structured runtime_outputs json schema.",
         "Model selection.",
         "Retry behavior.",
         "Structured runtime_outputs mode.",
         "Streaming behavior.",
-        "Tool-call behavior.",
+        "Tool permission behavior.",
         "External network behavior.",
         "API-cost-affecting call graph."
       ],
@@ -138,7 +137,7 @@
         "Overwriting run artifacts.",
         "Pruning archives.",
         "Modifying git history.",
-        "Cleaning generated runtime_outputss beyond explicitly safe temporary files."
+        "Cleaning generated runtime_outputs beyond explicitly safe temporary files."
       ],
       "broad_architecture": [
         "Introducing a database.",
@@ -187,8 +186,8 @@
         },
         {
           "rank": 5,
-          "id": "current_instruction_contract",
-          "description": "Current user instruction_contract selecting, sequencing, or pausing already-authorized work."
+          "id": "task",
+          "description": "current task selecting, sequencing, implementing, or pausing already-authorized work."
         },
         {
           "rank": 6,
@@ -196,7 +195,7 @@
           "description": "Archived implementation history and prior chat context."
         }
       ],
-      "description": "Current instruction_contract and active plans have authority to select, sequence, and pause work towards already-authorized objectives, but they do not have authority to silently override project invariants or prior authority.",
+      "description": "Current task and active implementation plans have authority to select, sequence, and pause work towards already-authorized objectives, but they do not have authority to silently override project invariants or prior authority.",
       "conflict_handling": "If task authority conflicts with invariant authority, stop and surface the conflict instead of improvising around it.",
       "task_authorization": "The user and project manager will work together utilizing the project manager report to authorize tasks.",
       "agent_authority_boundary": [
@@ -215,7 +214,7 @@
         "Governance primitives.",
         "Approved runtime.",
         "Approved role contracts.",
-        "Approved runtime_outputs schemas.",
+        "Approved runtime_outputs schema.",
         "Active implementation plans and trackers inside their authorized scope.",
         "Saved runtime artifacts as evidence of what happened."
       ],
@@ -245,7 +244,7 @@
     "fixtures_samples_test_roles": [
       "Fixtures and samples must not be presented as live runtime evidence.",
       "A fixture report must be labeled as fixture or sample.",
-      "A manually pasted API runtime_outputs must not be treated as proof unless linked to saved runtime artifacts.",
+      "A manually pasted API in runtime_outputs must not be treated as proof unless linked to saved runtime artifacts.",
       "Tests must not silently repurpose sample files in a way that invalidates prior acceptance probes."
     ],
     "compatibility_commitments": [
@@ -365,7 +364,7 @@
       "Hiding failed probes behind successful summaries.",
       "Silently continuing after missing required context.",
       "Invoking non-PM agents in the first slice.",
-      "Giving the PM file or shell tool_permissions.",
+      "Giving the PM any tool permissions.",
       "Writing implementation changes during plan.",
       "Preserving obsolete compatibility paths without approval."
     ],

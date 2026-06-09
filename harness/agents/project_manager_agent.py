@@ -10,8 +10,8 @@ from pydantic import BaseModel, ConfigDict, Field
 class Metadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  id: str
-  agent_name: str
+  id: Literal["project_manager.agent.json"]
+  agent_name: Literal["Project Manager"]
 
 
 class StatusSemantics(BaseModel):
@@ -66,14 +66,14 @@ class InstructionContract(BaseModel):
 class ProjectContextPacket(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  required: bool
+  required: Literal[True] = True
   schema_ref: Literal["../project_spec/ProjectContextPacket.schema.json"]
 
 
 class Task(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  required: bool
+  required: Literal[True] = True
   schema_ref: Literal["../runtime/Task.schema.json"]
 
 
@@ -87,7 +87,7 @@ class RuntimeInputs(BaseModel):
 class ProjectManagerReport(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  required: bool
+  required: Literal[True] = True
   schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
 
 
@@ -102,8 +102,7 @@ class ProjectManagerAgent(BaseModel):
 
   schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
-  model: str
+  model: str = Field(min_length=1)
   instruction_contract: InstructionContract
   runtime_inputs: RuntimeInputs
   runtime_outputs: RuntimeOutputs
-  tool_permissions: list[Any]

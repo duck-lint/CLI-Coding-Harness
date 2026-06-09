@@ -1,10 +1,10 @@
 {
   "$schema": "./KnownFailures.schema.json",
   "metadata": {
-    "document_id": "known_failures.template.json",
+    "document_id": "known_failures.json",
     "title": "Known Failures",
     "source_format": "json",
-    "document_authority": "failure_evidence"
+    "document_authority": "failure_evidence.template"
   },
   "purpose": "Track recurring failure patterns later sessions should detect earlier.",
   "usage_rules": [

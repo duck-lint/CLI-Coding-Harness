@@ -8,8 +8,9 @@ version = "0.1.0"
 description = "Local CLI agent harness for coding orchestration."
 requires-python = ">=3.10"
 dependencies = [
-  "pydantic>=2,<3",
-  "openai>=1.0,<2",
+  "pydantic>=2",
+  "openai>=2",
+  "jsonschema>=4.0,<5",
 ]
 
 [tool.setuptools.packages.find]

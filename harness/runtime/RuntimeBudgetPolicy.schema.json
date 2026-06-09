@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "RuntimeBudgetDefaults": {
       "additionalProperties": false,
@@ -22,25 +23,13 @@
           "const": "disabled",
           "title": "Truncation",
           "type": "string"
-        },
-        "default_model": {
-          "title": "Default Model",
-          "type": "string"
-        },
-        "agent_model_overrides": {
-          "additionalProperties": {
-            "type": "string"
-          },
-          "title": "Agent Model Overrides",
-          "type": "object"
         }
       },
       "required": [
         "max_input_tokens",
         "reserved_output_tokens",
         "oversize_strategy",
-        "truncation",
-        "default_model"
+        "truncation"
       ],
       "title": "RuntimeBudgetDefaults",
       "type": "object"

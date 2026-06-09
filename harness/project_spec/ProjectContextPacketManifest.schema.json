@@ -234,6 +234,6 @@
     "open_decisions",
     "current_implementation"
   ],
-  "title": "ProjectContextPacket",
+  "title": "ProjectContextPacketManifest",
   "type": "object"
 }

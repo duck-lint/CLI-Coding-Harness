@@ -14,12 +14,12 @@ def load_model_class(model_file_path: Path, class_name: str) -> type[BaseModel]:
   module_name = model_file_path.stem
 
   module_spec = importlib.util.spec_from_file_location(
-      module_name,
-      model_file_path,
+    module_name,
+    model_file_path,
   )
 
   if module_spec is None or module_spec.loader is None:
-      raise RuntimeError(f"Could not load Python file: {model_file_path}")
+    raise RuntimeError(f"Could not load Python file: {model_file_path}")
 
   module = importlib.util.module_from_spec(module_spec)
 
@@ -32,7 +32,7 @@ def load_model_class(model_file_path: Path, class_name: str) -> type[BaseModel]:
   model_class = getattr(module, class_name)
 
   if not issubclass(model_class, BaseModel):
-      raise TypeError(f"{class_name} is not a Pydantic BaseModel class.")
+    raise TypeError(f"{class_name} is not a Pydantic BaseModel class.")
 
   # This tells Pydantic:
   # "Now that the whole module is loaded, resolve any delayed type references."
@@ -46,8 +46,7 @@ def main() -> int:
 
   if len(sys.argv) != 4:
       print(
-          "Usage: python schema_generator.py "
-          "<schema_generator.py> <SchemaGenerator> <SchemaGenerator.schema.json>"
+        "Usage: python schema_generator.py <**.py> <ModelClass> <ModelClass.schema.json>"
       )
       return 2
 
@@ -56,26 +55,26 @@ def main() -> int:
   output_schema_path = Path(sys.argv[3])
 
   if not model_file_path.exists():
-      print(f"MODEL FILE NOT FOUND: {model_file_path}")
-      return 2
+    print(f"MODEL FILE NOT FOUND: {model_file_path}")
+    return 2
 
   try:
       model_class = load_model_class(model_file_path, class_name)
 
       schema = {
-          "$schema": "https://json-schema.org/draft/2020-12/schema",
-          **model_class.model_json_schema(),
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        **model_class.model_json_schema(),
       }
 
       output_schema_path.parent.mkdir(parents=True, exist_ok=True)
 
       with output_schema_path.open("w", encoding="utf-8") as file:
-          json.dump(schema, file, indent=2)
+        json.dump(schema, file, indent=2)
 
   except Exception as error:
-      print("FAIL: Could not generate schema.")
-      print(error)
-      return 1
+    print("FAIL: Could not generate schema.")
+    print(error)
+    return 1
 
   print(f"PASS: Schema written to {output_schema_path}")
   return 0

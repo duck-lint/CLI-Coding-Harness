@@ -20,7 +20,7 @@
         "A generic RAG assistant.",
         "An autonomous repo mutator.",
         "A replacement for repo-specific project specs.",
-        "A framework for giving an LLM broad ambient access to files, shell commands, or tool_permissions."
+        "A framework for giving an LLM broad ambient access to files, shell commands, or tool permissions."
       ],
       "excluded_agent_patterns": [
         "An agent \"team\" simulation where agents freely call each other.",
@@ -62,7 +62,7 @@
       "Worker adapters are isolated from governance roles and require explicit authorization before file mutation.",
       "The system is a governance runtime first, not an autonomy demo."
     ],
-    "primary_operator": "Primary operator is the project authority using agent assistance to build software wanting stronger control over context, authority, tool_permissions, and evidence than a normal chat interface or IDE extension provides.",
+    "primary_operator": "Primary operator is the project authority using agent assistance to build software wanting stronger control over context, authority, tool permissions, and evidence than a normal chat interface or IDE extension provides.",
     "highest_value_workflow": {
       "command": "python",
       "args": [
@@ -158,9 +158,9 @@
       ],
       "excluded": [
           "No external database.",
-          "No network tool_permissions other than the model API call.",
+          "No network tool permissions other than the model API call.",
           "No web search by default.",
-          "No shell tool_permissions for agents."
+          "No shell tool permissions for agents."
       ]
     },
     "runtime_constraints": [
@@ -220,13 +220,13 @@
       "authoritative_sources": [
         "User requests.",
         "./governance_primitives.json",
-        "./runtime/runtime_doctrine.json",
-        "./runtime/runtime_budget.policy.json"
+        "../runtime/runtime_doctrine.json",
+        "../runtime/runtime_budget.policy.json"
     ],
       "authoritative_memory": [
         "../implementations/**",
-        "./known_failures",
-        "./open_decisions"
+        "./known_failures.json",
+        "./open_decisions.json"
       ],
       "agents_must_respect": [
         "The current filesystem state of the repo.",
@@ -288,51 +288,7 @@
       "Evidence, provenance, or citations visible."
     ]
   },
-  "acceptance_probes": [
-    {
-      "id": "first-pm-json-agent-plan-slice",
-      "question": "Can the harness run the first PM planning slice from the CLI using the JSON agent contract, structured runtime_inputs, structured report validation, saved artifacts, and deterministic probe evidence?",
-      "runtime_path_required": {
-        "command": "python",
-        "args": [
-          "-m",
-          "harness.runtime.orchestrator",
-          "plan",
-          "TASK TEXT"
-        ]
-      },
-      "evidence_required": {
-        "saved_artifacts": [
-          {
-            "id": "task",
-            "path_pattern": "../runs/<timestamp>/task.json",
-            "required": true
-          },
-          {
-            "id": "project_context_packet",
-            "path_pattern": "./project_context_packet.json",
-            "required": true
-          },
-          {
-            "id": "project_manager_report",
-            "path_pattern": "../runs/<timestamp>/project_manager_report.json",
-            "required": true
-          }
-        ]
-      },
-      "not_proof": [
-        "A manually written PM report.",
-        "A mocked report without runtime route evidence.",
-        "A folder scaffold alone.",
-        "A schema file alone.",
-        "A role JSON file alone.",
-        "A successful API call that does not save artifacts.",
-        "Saved artifacts that do not validate.",
-        "A PM report that claims the slice works without deterministic probe evidence.",
-        "A run that invokes planner, adversary, reviewer, implementer, archivist, or worker execution."
-      ]
-    }
-  ],
+  "acceptance_probes": [],
   "clarifying_questions": {
     "material_decisions": [
       "Whether role contracts should remain strict JSON or allow JSONC.",

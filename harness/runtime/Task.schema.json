@@ -80,7 +80,11 @@
       "$ref": "#/$defs/Metadata"
     },
     "task": {
-      "$ref": "#/$defs/TaskItem"
+      "items": {
+        "$ref": "#/$defs/TaskItem"
+      },
+      "title": "Task",
+      "type": "array"
     }
   },
   "required": [

@@ -107,7 +107,6 @@
     }
   },
   "required": [
-    "$schema",
     "metadata",
     "implementation_intent",
     "project_manager_report",

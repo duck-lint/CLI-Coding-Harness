@@ -1,10 +1,10 @@
 {
   "$schema": "./OpenDecisions.schema.json",
   "metadata": {
-    "document_id": "open_decisions.template.json",
+    "document_id": "open_decisions.json",
     "title": "Open Decisions",
     "source_format": "json",
-    "document_authority": "operational_state"
+    "document_authority": "operational_state.template"
   },
   "purpose": "Current decision authority for decisions that still matter outside an archived implementation bundle.",
   "usage_rules": [

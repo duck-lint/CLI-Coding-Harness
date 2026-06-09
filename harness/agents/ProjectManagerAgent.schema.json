@@ -53,10 +53,12 @@
       "additionalProperties": false,
       "properties": {
         "id": {
+          "const": "project_manager.agent.json",
           "title": "Id",
           "type": "string"
         },
         "agent_name": {
+          "const": "Project Manager",
           "title": "Agent Name",
           "type": "string"
         }
@@ -72,6 +74,8 @@
       "additionalProperties": false,
       "properties": {
         "required": {
+          "const": true,
+          "default": true,
           "title": "Required",
           "type": "boolean"
         },
@@ -82,7 +86,6 @@
         }
       },
       "required": [
-        "required",
         "schema_ref"
       ],
       "title": "ProjectContextPacket",
@@ -92,6 +95,8 @@
       "additionalProperties": false,
       "properties": {
         "required": {
+          "const": true,
+          "default": true,
           "title": "Required",
           "type": "boolean"
         },
@@ -102,7 +107,6 @@
         }
       },
       "required": [
-        "required",
         "schema_ref"
       ],
       "title": "ProjectManagerReport",
@@ -282,6 +286,8 @@
       "additionalProperties": false,
       "properties": {
         "required": {
+          "const": true,
+          "default": true,
           "title": "Required",
           "type": "boolean"
         },
@@ -292,7 +298,6 @@
         }
       },
       "required": [
-        "required",
         "schema_ref"
       ],
       "title": "Task",
@@ -309,6 +314,7 @@
       "$ref": "#/$defs/Metadata"
     },
     "model": {
+      "minLength": 1,
       "title": "Model",
       "type": "string"
     },
@@ -320,11 +326,6 @@
     },
     "runtime_outputs": {
       "$ref": "#/$defs/RuntimeOutputs"
-    },
-    "tool_permissions": {
-      "items": {},
-      "title": "Tool Permissions",
-      "type": "array"
     }
   },
   "required": [
@@ -333,8 +334,7 @@
     "model",
     "instruction_contract",
     "runtime_inputs",
-    "runtime_outputs",
-    "tool_permissions"
+    "runtime_outputs"
   ],
   "title": "ProjectManagerAgent",
   "type": "object"

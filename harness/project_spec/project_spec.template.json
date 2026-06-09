@@ -1,0 +1,92 @@
+{
+  "$schema": "ProjectSpec.schema.json",
+  "metadata": {
+    "document_id": "project_spec.json",
+    "title": "Project Spec",
+    "purpose": "This file, together with the other docs under ./project_spec/, is the authoritative invariant space for harnessed work in this repo",
+    "source_format": "json",
+    "document_authority": "invariant_authority.template"
+  },
+  "project_thesis": {
+    "project_is": [],
+    "project_is_not": {
+      "excluded_product_forms": [],
+      "excluded_agent_patterns": [],
+      "design_guardrail": []
+    },
+    "project_exists_to": {
+      "delineate_boundaries": [],
+      "instantiate_governance": []
+    },
+    "core_runtime_shape": [],
+    "primary_operator": "",
+    "highest_value_workflow": {
+      "command": "",
+      "args": [],
+      "expectations": [],
+      "stop_condition": ""
+    }
+  },
+  "non_goals": {
+    "do_not_build": [],
+    "do_not_fake": [],
+    "do_not_smooth_over": [],
+    "do_not_preserve_without_approval": []
+  },
+  "architectural_shape": {
+    "required_runtime_surfaces": [],
+    "required_evidence_boundaries": [],
+    "required_inspectable_surfaces": {
+      "default_location": "",
+      "min_required_artifacts": [],
+      "optional_debug_artifacts": [],
+      "authoritative_context_artifact": "",
+      "authoritative_pm_runtime_output_artifacts": ""
+    },
+    "dependencies": {
+      "required": [],
+      "excluded": []
+    },
+    "runtime_constraints": [],
+    "governance_primitives_constraints": [],
+    "forbidden_surfaces": [],
+    "deferred_surfaces": []
+  },
+  "runtime_discipline": {
+    "must_exist": [],
+    "meaningful_progress_metrics": [],
+    "authoritative_boundaries": {
+      "authoritative_sources": [],
+      "authoritative_memory": [],
+      "agents_must_respect": []
+    }
+  },
+  "project_quality_bar": {
+    "ux_properties": [],
+    "evidence_expectations": [],
+    "runtime_expectations": [],
+    "non_trivial_quality_markers": [],
+    "operator_expectations": [],
+    "inspectability_properties": []
+  },
+  "acceptance_probes": [
+    {
+      "id": "",
+      "question": "",
+      "runtime_path_required": {
+        "command": "",
+        "args": []
+      },
+      "evidence_required": {
+        "saved_artifacts": []
+      },
+      "not_proof": []
+    }
+  ],
+  "clarifying_questions": {
+    "material_decisions": [],
+    "probe_sources": "",
+    "external_call_privacy_constraints": [],
+    "acceptable_deferrals": []
+  }
+}

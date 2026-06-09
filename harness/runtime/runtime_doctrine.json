@@ -20,7 +20,7 @@
   ],
   "canonical_memory_rules": [
     "Treat harness/ as the only canonical repo-local memory for project continuity.",
-    "Canonical continuity lives in ../implementations/archive/, ../open_decisions.json, and ../known_failures.json.",
+    "Canonical continuity lives in ../implementations/archive/, ../project_spec/open_decisions.json, and ../project_spec/known_failures.json.",
     "Do not create, update, or rely on repo-root memories/, memories/repo/, or similar host-runtime memory files for implementation history, decision authority, risk state, or verification evidence.",
     "If a host tool provides repo-memory features, ignore them for authoritative project state and inspect the canonical .. surfaces instead."
   ],

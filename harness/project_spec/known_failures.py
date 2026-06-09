@@ -35,5 +35,4 @@ class KnownFailures(BaseModel):
   metadata: Metadata
   purpose: str
   usage_rules: list[str]
-  entries_schema_ref: Literal["./KnownFailureEntry.schema.json"]
   entries: list[Entry]
