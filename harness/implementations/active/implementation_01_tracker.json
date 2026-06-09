@@ -1,0 +1,65 @@
+{
+  "metadata": {
+    "document_id": "implementation_tracker.json",
+    "title": "Implementation 01 Tracker",
+    "purpose": "This file tracks an implementation plan.",
+    "source_format": "json",
+    "document_authority": "operational_state"
+  },
+  "status": "active: preparing compiler and first PM-call runtime proof",
+  "state": "active",
+  "tracker": [
+    {
+      "date": "2026-06-09",
+      "seam": "01-runtime-documents",
+      "agent": "operator + assistant",
+      "change": "Create live operational-state support documents for PM context packet testing.",
+      "evidence": "known_failures.json, open_decisions.json, project_spec.json, implementation_plan.json, and implementation_tracker.json prepared as live docs rather than templates.",
+      "status": "active"
+    },
+    {
+      "date": "2026-06-09",
+      "seam": "02-pydantic-invariants",
+      "agent": "operator",
+      "change": "Clean Pydantic models so fixed invariants are enforced locally before the loader trusts role/config/report data.",
+      "evidence": "Target checks include fixed PM identity, required task input, absent PM tools surface, and report_status/proof_frontier.blocked coherence.",
+      "status": "active"
+    },
+    {
+      "date": "2026-06-09",
+      "seam": "03-authoring-vs-runtime-boundary",
+      "agent": "operator",
+      "change": "Keep templates/examples as authoring artifacts and prevent them from being treated as live runtime inputs.",
+      "evidence": "Compiler/manifest should consume live .json documents only unless a template/example is explicitly declared as authoring material.",
+      "status": "proposed"
+    },
+    {
+      "date": "2026-06-09",
+      "seam": "04-context-compiler",
+      "agent": "operator",
+      "change": "Compile task text and repo-local support docs into project_context_packet.json for the first PM route.",
+      "evidence": "Pending: generated packet saved under ../runs/<timestamp>/project_context_packet.json with included and missing sources recorded.",
+      "status": "proposed"
+    },
+    {
+      "date": "2026-06-09",
+      "seam": "05-pm-runtime-proof",
+      "agent": "operator",
+      "change": "Run first PM call through the intended runtime path and validate returned report.",
+      "evidence": "Pending: saved task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result.",
+      "status": "proposed"
+    }
+  ],
+  "blockers": [
+    {
+      "blocker": "ImplementationTracker.schema.json appears internally inconsistent: $schema is required but not declared as an allowed property while additionalProperties is false.",
+      "boundary": "schema/report validator",
+      "owner_agent": "operator",
+      "resolution": "Regenerate or correct the schema before treating JSON Schema validation of implementation_tracker.json as authoritative; until then, use the Pydantic model shape as the runtime target."
+    }
+  ],
+  "closeout_notes": [
+    "When this bundle completes, move it from ./active/ to ./archive/.",
+    "Closeout must record whether PM route evidence was runtime-proven, blocked, or deferred."
+  ]
+}

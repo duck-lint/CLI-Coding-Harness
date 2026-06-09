@@ -1,0 +1,238 @@
+{
+  "metadata": {
+    "document_id": "implementation_plan.json",
+    "title": "Implementation 01 Plan",
+    "purpose": "This file outlines an implementation plan.",
+    "source_format": "json",
+    "document_authority": "operational_state"
+  },
+  "implementation_intent": [
+    {
+      "id": "intent-001",
+      "summary": "Clean and harden the Pydantic model layer so the context compiler and first Project Manager route can be tested against real runtime contracts rather than a first-slice scaffold only.",
+      "why_it_matters": "The PM call is only meaningful if role contracts, context packet inputs, runtime support docs, and returned reports are validated at the same trust boundary the CLI will use during execution."
+    },
+    {
+      "id": "intent-002",
+      "summary": "Produce a minimal but full-harness project context surface for the CLI harness project.",
+      "why_it_matters": "The first PM call should test the intended harness thesis and end-to-end route, not merely the narrow field shape of the first implementation slice."
+    },
+    {
+      "id": "intent-003",
+      "summary": "Keep examples/templates as authoring artifacts and keep live runtime documents as operational-state artifacts.",
+      "why_it_matters": "This avoids treating authoring metadata, placeholder values, or template authority strings as runtime truth."
+    }
+  ],
+  "project_manager_report": "pending_first_runtime_pm_report",
+  "planned_work": [
+    {
+      "id": "work-001",
+      "title": "Normalize live support documents",
+      "description": "Create live known_failures.json, open_decisions.json, project_spec.json, implementation_plan.json, and implementation_tracker.json documents with operational authority values.",
+      "status": "active",
+      "evidence_target": "Each live document exists in the active implementation context and either validates against its runtime schema or records a schema defect that blocks validation."
+    },
+    {
+      "id": "work-002",
+      "title": "Clean Pydantic model invariants",
+      "description": "Encode true fixed invariants in Pydantic models, including fixed role/document identities, required PM task inputs, forbidden unexpected fields, and post-call coherence checks where state can otherwise contradict itself.",
+      "status": "active",
+      "evidence_target": "Unit or validation checks reject false PM identity, optional task requirements, unexpected tool surfaces, and report_status/proof_frontier.blocked disagreement."
+    },
+    {
+      "id": "work-003",
+      "title": "Separate authoring artifacts from runtime artifacts",
+      "description": "Do not treat .template.json and .example.json files as live runtime inputs. Allow authoring metadata such as $schema where useful for IDE/schema validation, but keep runtime loaders pointed at live .json artifacts.",
+      "status": "active",
+      "evidence_target": "Compiler or manifest logic distinguishes template/example files from live required inputs."
+    },
+    {
+      "id": "work-004",
+      "title": "Prepare context compiler input assembly",
+      "description": "Compile the task text, project spec, governance primitives, known failures, open decisions, active implementation plan, active implementation tracker, and relevant runtime policy surfaces into project_context_packet.json.",
+      "status": "proposed",
+      "evidence_target": "A generated project_context_packet.json is saved under a run directory and records present and missing sources explicitly."
+    },
+    {
+      "id": "work-005",
+      "title": "Run the first PM route as a runtime proof",
+      "description": "Call the PM route with the compiled packet, validate the returned report, save required run artifacts, and stop before implementation.",
+      "status": "proposed",
+      "evidence_target": "A timestamped run directory contains task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result."
+    }
+  ],
+  "non_goals": [
+    "Do not build planner, reviewer, adversary, implementer, or archivist routes in this implementation bundle.",
+    "Do not add agent tool permissions to the Project Manager role.",
+    "Do not add file-mutating worker behavior.",
+    "Do not solve provider abstraction beyond the current OpenAI SDK path.",
+    "Do not create fake known failures, fake open decisions, or placeholder blockers just to satisfy a manifest.",
+    "Do not treat schema/template/example hygiene as runtime evidence unless the runtime path consumes those files."
+  ],
+  "acceptance_criteria": [
+    {
+      "id": "ac-001",
+      "criterion": "Live operational docs exist for the PM context packet.",
+      "required_evidence": [
+        "known_failures.json",
+        "open_decisions.json",
+        "project_spec.json",
+        "implementation_plan.json",
+        "implementation_tracker.json"
+      ]
+    },
+    {
+      "id": "ac-002",
+      "criterion": "Pydantic models reject known invariant violations.",
+      "required_evidence": [
+        "false PM identity rejected",
+        "runtime_inputs.task.required false rejected",
+        "unexpected PM tools surface rejected or absent",
+        "report_status admissible with proof_frontier.blocked true rejected"
+      ]
+    },
+    {
+      "id": "ac-003",
+      "criterion": "Context compiler can assemble a project context packet without treating templates/examples as live runtime requirements.",
+      "required_evidence": [
+        "project_context_packet.json records live included sources",
+        "project_context_packet.json records missing optional/conditional sources without claiming they were consumed"
+      ]
+    },
+    {
+      "id": "ac-004",
+      "criterion": "First PM route validates returned report and saves inspectable run artifacts.",
+      "required_evidence": [
+        "../runs/<timestamp>/task.json",
+        "../runs/<timestamp>/project_context_packet.json",
+        "../runs/<timestamp>/project_manager_report.json",
+        "../runs/<timestamp>/validation_summary.json or equivalent"
+      ]
+    },
+    {
+      "id": "ac-005",
+      "criterion": "The workflow stops before implementation.",
+      "required_evidence": [
+        "terminal summary reports next admissible transformation",
+        "no repo source mutation is performed by the PM route"
+      ]
+    }
+  ],
+  "current_repo_runtime_state": [
+    {
+      "surface": "Pydantic document models",
+      "state": "active_cleanup",
+      "notes": "Known failures, open decisions, project spec, implementation plan, and implementation tracker models/schemas/templates exist, but some generated contracts still need cleanup."
+    },
+    {
+      "surface": "Known failures",
+      "state": "empty_by_design",
+      "notes": "No recurring known failure has been intentionally recorded yet; cleanup of schema/template mismatch is being handled separately."
+    },
+    {
+      "surface": "Open decisions",
+      "state": "minimal_live_context",
+      "notes": "Current decisions should capture only choices that affect the compiler/PM-call readiness path."
+    },
+    {
+      "surface": "Implementation plan/tracker",
+      "state": "active_bundle_bootstrap",
+      "notes": "These files provide the active implementation state needed for the first PM context packet test."
+    },
+    {
+      "surface": "PM route",
+      "state": "not_yet_runtime_proven",
+      "notes": "The target proof remains compile packet -> call PM -> validate report -> save run artifacts -> probe -> stop before implementation."
+    }
+  ],
+  "assumptions_and_unknowns": [
+    {
+      "id": "assumption-001",
+      "type": "assumption",
+      "statement": "The current implementation bundle should focus on compiler and PM-route readiness, not all future agent roles.",
+      "risk_if_wrong": "The project spec may over- or under-scope the packet and acceptance criteria."
+    },
+    {
+      "id": "assumption-002",
+      "type": "assumption",
+      "statement": "The repo targets the current OpenAI Python SDK path rather than an older declared <2 dependency range.",
+      "risk_if_wrong": "SDK verification evidence may not match the declared runtime environment."
+    },
+    {
+      "id": "unknown-001",
+      "type": "unknown",
+      "statement": "Whether schema validation will be enforced directly from JSON Schema, Pydantic, or both in the first runtime slice.",
+      "resolution_path": "Pick the smallest implementation that verifies the returned PM report and the compiled packet without duplicating trust boundaries."
+    },
+    {
+      "id": "unknown-002",
+      "type": "unknown",
+      "statement": "Whether the project_context_packet manifest should encode conditional requirements or whether the compiler should determine required inputs procedurally.",
+      "resolution_path": "Avoid pre-call false failures by making template/example and optional/conditional sources explicit."
+    },
+    {
+      "id": "unknown-003",
+      "type": "unknown",
+      "statement": "The generated ImplementationTracker JSON Schema appears to require $schema while not declaring $schema as an allowed property.",
+      "resolution_path": "Regenerate or correct the tracker schema before relying on JSON Schema validation for this document."
+    }
+  ],
+  "affected_surfaces": [
+    "harness/contracts and generated schemas",
+    "harness/project_spec live operational documents",
+    "harness/implementations/active support documents",
+    "Pydantic document models",
+    "context compiler source selection",
+    "project_context_packet manifest/reference checking",
+    "PM role contract loading",
+    "PM report validation",
+    "run artifact writer",
+    "acceptance probe definitions"
+  ],
+  "non_affected_surfaces": [
+    "planner route",
+    "reviewer route",
+    "adversary route",
+    "implementer route",
+    "archivist route",
+    "worker adapters",
+    "file mutation workflow",
+    "provider abstraction beyond the first OpenAI path",
+    "UI beyond terminal output",
+    "archive automation"
+  ],
+  "completion_rules": [
+    "Do not mark behavior complete on fixture, mock, dry-run, serialization, type, field, file, path, route, crate, config, or nominal-caller evidence alone.",
+    "A schema or Pydantic model existing is not proof that the compiler uses it.",
+    "A PM report schema existing is not proof that a returned PM report validates.",
+    "A context packet template existing is not proof that the compiler can build a live packet.",
+    "A run directory existing is not proof unless it contains the required artifacts and validation/probe evidence.",
+    "Authoring examples/templates are not runtime truth unless explicitly loaded by the runtime path."
+  ],
+  "approval_gates": [
+    {
+      "id": "gate-001",
+      "boundary": "PM route to implementation route",
+      "requires": "Explicit operator approval after PM report validation."
+    },
+    {
+      "id": "gate-002",
+      "boundary": "governance role to file mutation",
+      "requires": "Separate worker/implementer route; PM remains read-only/no-tools."
+    },
+    {
+      "id": "gate-003",
+      "boundary": "template/example file to live runtime requirement",
+      "requires": "Explicit manifest/compiler rule that declares the artifact as runtime-consumed."
+    },
+    {
+      "id": "gate-004",
+      "boundary": "schema defect to runtime acceptance",
+      "requires": "Defect fixed, regenerated, or explicitly marked as non-blocking with a grounded validation alternative."
+    }
+  ],
+  "closeout_notes": [
+    "When this bundle completes, move it from ./active/ to ./archive/.",
+    "Archive should include the final PM report, validation/probe summary, and any schema/model corrections made during compiler readiness work."
+  ]
+}

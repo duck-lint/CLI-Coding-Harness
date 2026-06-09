@@ -1,0 +1,78 @@
+{
+  "metadata": {
+    "document_id": "open_decisions.json",
+    "title": "Open Decisions",
+    "source_format": "json",
+    "document_authority": "operational_state"
+  },
+  "purpose": "Record decisions that currently shape the CLI harness implementation and decisions that must be resolved before crossing a new runtime boundary.",
+  "usage_rules": [
+    "Do not use this file as a roadmap or implementation tracker.",
+    "Record only decisions that still affect current or paused implementation work.",
+    "Separate settled current decisions from pending decisions.",
+    "Move completed implementation detail into the implementation archive rather than leaving stale state here.",
+    "Do not record placeholder decisions just to satisfy the context compiler."
+  ],
+  "current_decisions": [
+    {
+      "id": "od-001",
+      "decision": "Project Manager config should not expose tool permissions while the PM role has no tool surface.",
+      "rationale": "For the current PM route, absence is cleaner than an empty permissions object. Tool declarations should appear when a role actually needs a governed tool boundary.",
+      "affected_surfaces": [
+        "project_manager.agent.json",
+        "role contract loader",
+        "context compiler",
+        "PM pre-call validation"
+      ],
+      "status": "current"
+    },
+    {
+      "id": "od-002",
+      "decision": "Role/config schemas may lock fixed role identity and required runtime inputs, but should not lock the model name to a single provider-specific literal.",
+      "rationale": "The harness is intended to remain provider-aware but not semantically shaped around one OpenAI model string. Provider/model compatibility belongs in runtime/provider policy, not role identity.",
+      "affected_surfaces": [
+        "agent config Pydantic models",
+        "provider route configuration",
+        "dependency declaration"
+      ],
+      "status": "current"
+    },
+    {
+      "id": "od-003",
+      "decision": "Examples and templates are authoring artifacts; live runtime JSON documents are runtime artifacts.",
+      "rationale": "$schema may be present in examples/templates for IDE and developer validation. Runtime outputs should be validated by the runtime contract and should not be treated as invalid merely because authoring fixtures carry authoring metadata.",
+      "affected_surfaces": [
+        "*.example.json",
+        "*.template.json",
+        "runtime validators",
+        "pre-call reference checks"
+      ],
+      "status": "current"
+    },
+    {
+      "id": "od-004",
+      "decision": "The current implementation slice is Pydantic/model cleanup plus context compiler readiness for a real PM call, but the project spec should describe the intended CLI harness as a whole.",
+      "rationale": "The PM call needs enough invariant context to evaluate whether the first slice preserves the full harness thesis rather than merely satisfying a narrow scaffold test.",
+      "affected_surfaces": [
+        "project_spec.json",
+        "project_context_packet.json",
+        "PM report expectations",
+        "acceptance probes"
+      ],
+      "status": "current"
+    }
+  ],
+  "pending_decisions": [],
+  "notes": [
+    {
+      "id": "note-001",
+      "note": "No known failures are currently recorded. Do not create fake known-failure entries to satisfy context plumbing.",
+      "status": "informational"
+    },
+    {
+      "id": "note-002",
+      "note": "Implementation plan/tracker contracts were not included in this fill pass, so those files should be generated only after their schemas/templates are available or their live shape is explicitly chosen.",
+      "status": "informational"
+    }
+  ]
+}

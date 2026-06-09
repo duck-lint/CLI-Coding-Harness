@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "document_id": "known_failures.json",
+    "title": "Known Failures",
+    "source_format": "json",
+    "document_authority": "failure_evidence"
+  },
+  "purpose": "Track recurring, evidence-backed failure patterns that later harness sessions should detect earlier. This file stays empty until a failure is repeatable, spreads across surfaces, or exposes a harness weakness.",
+  "usage_rules": [
+    "Do not use this file as a bug dump, roadmap, decision log, or mood log.",
+    "Add an entry only when the pattern has concrete evidence and could recur in future harness work.",
+    "Keep entries short, searchable, and linked to implementation evidence when available.",
+    "Prefer prevention rules and deterministic checks over prose warnings.",
+    "Do not add placeholder failures just to satisfy a manifest or test scaffold.",
+    "Promote repeated prevention rules into tooling, schema constraints, or runtime probes when possible."
+  ],
+  "entries": []
+}

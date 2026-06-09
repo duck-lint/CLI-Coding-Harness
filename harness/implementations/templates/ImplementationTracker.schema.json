@@ -159,7 +159,6 @@
     }
   },
   "required": [
-    "$schema",
     "metadata",
     "status",
     "state",
