@@ -32,7 +32,6 @@ class Entry(BaseModel):
 class KnownFailures(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
   metadata: Metadata
   purpose: str
   usage_rules: list[str]

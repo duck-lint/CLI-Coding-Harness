@@ -91,10 +91,6 @@
   },
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "title": "$Schema",
-      "type": "string"
-    },
     "metadata": {
       "$ref": "#/$defs/Metadata"
     },
@@ -123,7 +119,6 @@
     }
   },
   "required": [
-    "$schema",
     "metadata",
     "purpose",
     "usage_rules",

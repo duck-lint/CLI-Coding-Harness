@@ -1,7 +1,7 @@
 {
   "$schema": "./ImplementationPlan.schema.json",
   "metadata": {
-    "document_id": "implementation_plan.json",
+    "document_id": "implementation_plan.template.json",
     "title": "Implementation <#> Plan",
     "purpose": "This file outlines an implementation plan.",
     "source_format": "json",

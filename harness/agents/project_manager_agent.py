@@ -100,7 +100,7 @@ class RuntimeOutputs(BaseModel):
 class ProjectManagerAgent(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
+  schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
   model: str
   instruction_contract: InstructionContract

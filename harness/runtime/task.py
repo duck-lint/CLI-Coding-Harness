@@ -29,6 +29,6 @@ class TaskItem(BaseModel):
 class Task(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
+  schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
   task: list[TaskItem]

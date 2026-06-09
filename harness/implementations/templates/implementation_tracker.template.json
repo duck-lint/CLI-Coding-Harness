@@ -1,14 +1,14 @@
 {
   "$schema": "./ImplementationTracker.schema.json",
   "metadata": {
-    "document_id": "implementation_tracker.json",
+    "document_id": "implementation_tracker.template.json",
     "title": "Implementation <#> Tracker",
     "purpose": "This file tracks an implementation plan.",
     "source_format": "json",
     "document_authority": "operational_state"
   },
   "status": "",
-  "state": "proposed | active | blocked | reviewing | archived",
+  "state": "proposed",
   "tracker": [
     {
       "date": "date",
@@ -16,7 +16,7 @@
       "agent": "agent role",
       "change": "work being done",
       "evidence": "evidence of completion",
-      "status": "proposed | active | blocked | reviewing | complete"
+      "status": "proposed"
     }
   ],
   "blockers": [

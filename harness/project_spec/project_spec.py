@@ -161,7 +161,7 @@ class ClarifyingQuestions(BaseModel):
 class ProjectSpec(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
+  schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
   project_thesis: ProjectThesis
   non_goals: NonGoals

@@ -28,7 +28,7 @@ class ProjectManagerReport(BaseModel):
 class RuntimeDoctrine(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
+  schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
   runtime_job: list[str]
   canonical_memory_rules: list[str]

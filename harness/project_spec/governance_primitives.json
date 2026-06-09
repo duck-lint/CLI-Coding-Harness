@@ -101,7 +101,7 @@
         "Allowed tool behavior."
       ],
       "api_and_model_behavior": [
-        "OpenAI Response API client.",
+        "Responses API client.",
         "Structured runtime_outputss using json schemas.",
         "Model selection.",
         "Retry behavior.",

@@ -180,7 +180,7 @@ class AcceptanceProbe(BaseModel):
 class GovernancePrimitives(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  field_schema: str = Field(..., alias='$schema')
+  schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
   governance_posture: GovernancePosture
   approval_boundaries: ApprovalBoundaries
