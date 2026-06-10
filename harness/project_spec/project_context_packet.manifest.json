@@ -47,7 +47,7 @@
       "required": false,
       "required_when": "active_implementation_exists",
       "document_authority": "operational_state",
-      "document_glob": "project_spec/implementations/active/implementation_plan_*.json",
+      "document_glob": "implementations/active/implementation_plan_*.json",
       "schema_id": "implementation_plan",
       "cardinality": "zero_or_one"
     },
@@ -57,7 +57,7 @@
       "required": false,
       "required_when": "active_implementation_exists",
       "document_authority": "operational_state",
-      "document_glob": "project_spec/implementations/active/implementation_tracker_*.json",
+      "document_glob": "implementations/active/implementation_tracker_*.json",
       "schema_id": "implementation_tracker",
       "cardinality": "zero_or_one"
     }

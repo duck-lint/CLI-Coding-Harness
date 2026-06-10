@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field,  model_validator
+from pydantic import BaseModel, ConfigDict,  model_validator
 
 
 class Metadata(BaseModel):
@@ -93,29 +93,72 @@ class ProjectManagerReport(BaseModel):
   proof_frontier: ProofFrontier
 
   @model_validator(mode="after")
-  def enforce_status_matches_blocked_state(self):
-    if self.report_status == "admissible" and self.proof_frontier.blocked:
-      raise ValueError(
-        "report_status cannot be 'admissible' when proof_frontier.blocked is true."
-      )
+  def enforce_report_truth_table(self):
+    frontier = self.proof_frontier
 
-    if self.report_status == "admissibility_blocked" and not self.proof_frontier.blocked:
-      raise ValueError(
-        "report_status cannot be 'admissibility_blocked' when proof_frontier.blocked is false."
-      )
+    if self.report_status == "admissible":
+      if frontier.blocked:
+        raise ValueError(
+          "admissible reports must have proof_frontier.blocked=false."
+        )
 
-    return self
+      if frontier.blocking_reason is not None:
+        raise ValueError(
+          "admissible reports must not include blocking_reason."
+        )
 
-  @model_validator(mode="after")
-  def enforce_status_and_blocked_coherence(self):
-    if self.report_status == "admissible" and self.proof_frontier.blocked:
-      raise ValueError(
-          "Invalid PM report: report_status is 'admissible' but proof_frontier.blocked is true."
-      )
+      if frontier.missing_basis:
+        raise ValueError(
+          "admissible reports must not include missing_basis."
+        )
 
-    if self.report_status == "admissibility_blocked" and not self.proof_frontier.blocked:
-      raise ValueError(
-          "Invalid PM report: report_status is 'admissibility_blocked' but proof_frontier.blocked is false."
-      )
+      if frontier.constraint_conflicts:
+        raise ValueError(
+          "admissible reports must not include constraint_conflicts."
+        )
+
+      if frontier.next_admissible_transformation is None:
+        raise ValueError(
+          "admissible reports require next_admissible_transformation."
+        )
+
+    else:
+      if not frontier.blocked:
+        raise ValueError(
+          f"{self.report_status} reports must have proof_frontier.blocked=true."
+        )
+
+      if not frontier.blocking_reason:
+        raise ValueError(
+          f"{self.report_status} reports require blocking_reason."
+        )
+
+      if frontier.next_admissible_transformation is not None:
+        raise ValueError(
+          f"{self.report_status} reports must not include next_admissible_transformation."
+        )
+
+    if self.report_status == "admissibility_blocked":
+      if not frontier.missing_basis and not frontier.constraint_conflicts:
+        raise ValueError(
+          "admissibility_blocked reports require missing_basis or constraint_conflicts."
+        )
+
+    if self.report_status == "needs_clarification":
+      if not frontier.missing_basis:
+        raise ValueError(
+          "needs_clarification reports require missing_basis naming what must be clarified."
+        )
+
+    if self.report_status == "rejected":
+      if frontier.missing_basis:
+        raise ValueError(
+          "rejected reports should not use missing_basis; rejection means the basis is sufficient to deny admissibility."
+        )
+
+      if not frontier.constraint_conflicts:
+        raise ValueError(
+          "rejected reports require constraint_conflicts naming the violated boundary."
+        )
 
     return self

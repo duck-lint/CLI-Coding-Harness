@@ -68,15 +68,34 @@
           "type": "string"
         },
         "risk_if_wrong": {
-          "title": "Risk If Wrong",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Risk If Wrong"
+        },
+        "resolution_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Resolution Path"
         }
       },
       "required": [
         "id",
         "type",
         "statement",
-        "risk_if_wrong"
+        "risk_if_wrong",
+        "resolution_path"
       ],
       "title": "AssumptionOrUnknown",
       "type": "object"

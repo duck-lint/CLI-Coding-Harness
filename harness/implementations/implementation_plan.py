@@ -68,7 +68,8 @@ class AssumptionOrUnknown(BaseModel):
   id: str
   type: str
   statement: str
-  risk_if_wrong: str
+  risk_if_wrong: str | None
+  resolution_path: str | None
 
 
 class ApprovalGate(BaseModel):

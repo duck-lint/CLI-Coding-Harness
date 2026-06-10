@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "document_id": "implementation_plan.json",
+    "document_id": "implementation_plan_01.json",
     "title": "Implementation 01 Plan",
     "purpose": "This file outlines an implementation plan.",
     "source_format": "json",
@@ -30,35 +30,45 @@
       "title": "Normalize live support documents",
       "description": "Create live known_failures.json, open_decisions.json, project_spec.json, implementation_plan.json, and implementation_tracker.json documents with operational authority values.",
       "status": "active",
-      "evidence_target": "Each live document exists in the active implementation context and either validates against its runtime schema or records a schema defect that blocks validation."
+      "evidence_target": [
+        "Each live document exists in the active implementation context and either validates against its runtime schema or records a schema defect that blocks validation."
+      ]
     },
     {
       "id": "seam-002",
       "title": "Clean Pydantic model invariants",
       "description": "Encode true fixed invariants in Pydantic models, including fixed role/document identities, required PM task inputs, forbidden unexpected fields, and post-call coherence checks where state can otherwise contradict itself.",
       "status": "active",
-      "evidence_target": "Unit or validation checks reject false PM identity, optional task requirements, unexpected tool surfaces, and report_status/proof_frontier.blocked disagreement."
+      "evidence_target": [
+        "Unit or validation checks reject false PM identity, optional task requirements, unexpected tool surfaces, and report_status/proof_frontier.blocked disagreement."
+      ]
     },
     {
       "id": "seam-003",
       "title": "Separate authoring artifacts from runtime artifacts",
       "description": "Do not treat .template.json and .example.json files as live runtime inputs. Allow authoring metadata such as $schema where useful for IDE/schema validation, but keep runtime loaders pointed at live .json artifacts.",
       "status": "active",
-      "evidence_target": "Compiler or manifest logic distinguishes template/example files from live required inputs."
+      "evidence_target": [
+        "Compiler or manifest logic distinguishes template/example files from live required inputs."
+      ]
     },
     {
       "id": "seam-004",
       "title": "Prepare context compiler input assembly",
       "description": "Compile the task text, project spec, governance primitives, known failures, open decisions, active implementation plan, active implementation tracker, and relevant runtime policy surfaces into project_context_packet.json.",
       "status": "proposed",
-      "evidence_target": "A generated project_context_packet.json is saved under a run directory and records present and missing sources explicitly."
+      "evidence_target": [
+        "A generated project_context_packet.json is saved under a run directory and records present and missing sources explicitly."
+      ]
     },
     {
       "id": "seam-005",
       "title": "Run the first PM route as a runtime proof",
       "description": "Call the PM route with the compiled packet, validate the returned report, save required run artifacts, and stop before implementation.",
       "status": "proposed",
-      "evidence_target": "A timestamped run directory contains task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result."
+      "evidence_target": [
+        "A timestamped run directory contains task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result."
+      ]
     }
   ],
   "non_goals": [
@@ -150,30 +160,35 @@
       "id": "assumption-001",
       "type": "assumption",
       "statement": "The current implementation bundle should focus on compiler and PM-route readiness, not all future agent roles.",
-      "risk_if_wrong": "The project spec may over- or under-scope the packet and acceptance criteria."
+      "risk_if_wrong": "The project spec may over- or under-scope the packet and acceptance criteria.",
+      "resolution_path": ""
     },
     {
       "id": "assumption-002",
       "type": "assumption",
       "statement": "The repo targets the current OpenAI Python SDK path rather than an older declared <2 dependency range.",
-      "risk_if_wrong": "SDK verification evidence may not match the declared runtime environment."
+      "risk_if_wrong": "SDK verification evidence may not match the declared runtime environment.",
+      "resolution_path": ""
     },
     {
       "id": "unknown-001",
       "type": "unknown",
       "statement": "Whether schema validation will be enforced directly from JSON Schema, Pydantic, or both in the first runtime slice.",
+      "risk_if_wrong": "",
       "resolution_path": "Pick the smallest implementation that verifies the returned PM report and the compiled packet without duplicating trust boundaries."
     },
     {
       "id": "unknown-002",
       "type": "unknown",
       "statement": "Whether the project_context_packet manifest should encode conditional requirements or whether the compiler should determine required inputs procedurally.",
+      "risk_if_wrong": "",
       "resolution_path": "Avoid pre-call false failures by making template/example and optional/conditional sources explicit."
     },
     {
       "id": "unknown-003",
       "type": "unknown",
       "statement": "The generated ImplementationTracker JSON Schema appears to require $schema while not declaring $schema as an allowed property.",
+      "risk_if_wrong": "",
       "resolution_path": "Regenerate or correct the tracker schema before relying on JSON Schema validation for this document."
     }
   ],
