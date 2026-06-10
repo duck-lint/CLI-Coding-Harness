@@ -3,7 +3,7 @@
 #   timestamp: 2026-06-08T20:26:58+00:00
 
 from __future__ import annotations
-from typing import Literal, Any
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 

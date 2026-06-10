@@ -3,13 +3,13 @@
 #   timestamp: 2026-06-07T03:05:32+00:00
 
 from __future__ import annotations
-from typing import Literal, Any, Annotated
+from typing import Literal, Annotated
 from pydantic import BaseModel, ConfigDict, Field
 
 
 ImplementationPlanTitle = Annotated[
-    str,
-    Field(pattern=r"^Implementation \d+ Plan$")
+  str,
+  Field(pattern=r"^Implementation \d+ Plan$")
 ]
 
 
@@ -23,19 +23,75 @@ class Metadata(BaseModel):
   document_authority: Literal["operational_state"]
 
 
+class ImplementationIntent(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  summary: str
+  why_it_matters: str
+
+
+class Seam(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  title: str
+  description: str
+  status: Literal[
+    "active",
+    "proposed",
+    "complete", 
+    "blocked"
+  ] = "proposed"
+  evidence_target: list[str]
+
+
+class AcceptanceCriterion(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  criterion: str
+  required_evidence: list[str]
+
+
+class CurrentRepoState(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  surface: str
+  state: str
+  notes: str
+
+
+class AssumptionOrUnknown(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  type: str
+  statement: str
+  risk_if_wrong: str
+
+
+class ApprovalGate(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  boundary: str
+  requires: str
+
+
 class ImplementationPlan(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   metadata: Metadata
-  implementation_intent: list[Any]
+  implementation_intent: list[ImplementationIntent]
   project_manager_report: str
-  planned_work: list[Any]
-  non_goals: list[Any]
-  acceptance_criteria: list[Any]
-  current_repo_runtime_state: list[Any]
-  assumptions_and_unknowns: list[Any]
-  affected_surfaces: list[Any]
-  non_affected_surfaces: list[Any]
-  completion_rules: list[Any]
-  approval_gates: list[Any]
-  closeout_notes: list[Any]
+  seams: list[Seam]
+  non_goals: list[str]
+  acceptance_criteria: list[AcceptanceCriterion]
+  current_repo_runtime_state: list[CurrentRepoState]
+  assumptions_and_unknowns: list[AssumptionOrUnknown]
+  affected_surfaces: list[str]
+  non_affected_surfaces: list[str]
+  completion_rules: list[str]
+  approval_gates: list[ApprovalGate]
+  closeout_notes: list[str]

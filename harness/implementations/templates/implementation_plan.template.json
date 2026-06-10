@@ -1,26 +1,61 @@
 {
   "$schema": "./ImplementationPlan.schema.json",
   "metadata": {
-    "document_id": "implementation_plan.json",
+    "document_id": "implementation_plan.template.json",
     "title": "Implementation <#> Plan",
     "purpose": "This file outlines an implementation plan.",
     "source_format": "json",
-    "document_authority": "operational_state.template"
+    "document_authority": "template"
   },
-  "implementation_intent": [],
-  "project_manager_report": "",
-  "planned_work": [],
+  "implementation_intent": [
+    {
+      "id": "",
+      "summary": "",
+      "why_it_matters": ""
+    }
+  ],
+  "project_manager_report": "pending_first_runtime_pm_report",
+  "seams": [
+    {
+      "id": "",
+      "title": "",
+      "description": "",
+      "status": "",
+      "evidence_target": ""
+    }
+  ],
   "non_goals": [],
-  "acceptance_criteria": [],
-  "current_repo_runtime_state": [],
-  "assumptions_and_unknowns": [],
+  "acceptance_criteria": [
+    {
+      "id": "",
+      "criterion": "",
+      "required_evidence": []
+    }
+  ],
+  "current_repo_runtime_state": [
+    {
+      "surface": "",
+      "state": "",
+      "notes": ""
+    }
+  ],
+  "assumptions_and_unknowns": [
+    {
+      "id": "",
+      "type": "",
+      "statement": "",
+      "risk_if_wrong": ""
+    }
+  ],
   "affected_surfaces": [],
   "non_affected_surfaces": [],
-  "completion_rules": [
-    "Do not mark behavior complete on fixture, mock, dry-run, serialization, type, field, file, path, route, crate, config, or nominal-caller evidence alone."
+  "completion_rules": [],
+  "approval_gates": [
+    {
+      "id": "",
+      "boundary": "",
+      "requires": ""
+    }
   ],
-  "approval_gates": [],
-  "closeout_notes": [
-    "When this bundle completes, move it from ./active/ to ./archive/."
-  ]
+  "closeout_notes": []
 }

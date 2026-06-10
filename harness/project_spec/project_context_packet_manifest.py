@@ -23,10 +23,7 @@ class Source(BaseModel):
     "active_implementation_tracker",
   ]
 
-  scope: Literal[
-    "harness_global",
-    "target_repo",
-  ]
+  scope: Literal["harness_global", "target_repo"]
 
   required: bool
   required_when: str | None = None
@@ -54,7 +51,7 @@ class Source(BaseModel):
     "zero_or_one",
     "zero_or_more",
     "one_or_more",
-  ]
+]
 
   @model_validator(mode="after")
   def enforce_document_reference_shape(self):
@@ -64,26 +61,11 @@ class Source(BaseModel):
     if has_document == has_glob:
       raise ValueError(
         "Each manifest source must define exactly one of document or document_glob."
-      )
+        )
 
     if self.document is not None and "*" in self.document:
       raise ValueError(
         "Use document_glob for glob patterns; document must be a single path."
-      )
-
-    return self
-
-  @model_validator(mode="after")
-  def enforce_required_cardinality_coherence(self):
-    if self.required and self.cardinality in {"zero_or_one", "zero_or_more"}:
-      raise ValueError(
-        "A required source should not have a zero-allowed cardinality."
-      )
-
-    if not self.required and self.cardinality == "exactly_one" and self.required_when is None:
-      raise ValueError(
-        "An optional source with exactly_one cardinality needs required_when, "
-        "or should use zero_or_one."
       )
 
     return self
@@ -106,46 +88,86 @@ class Source(BaseModel):
 class ProjectContextPacketManifest(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  schema_ref: str = Field(..., alias="$schema")
+  schema_ref: Literal["./ProjectContextPacketManifest.schema.json"] = Field(
+    ...,
+    alias="$schema",
+  )
   metadata: Metadata
   sources: list[Source]
 
+  @model_validator(mode="after")
+  def enforce_complete_source_set(self):
+    seen = [source.source_id for source in self.sources]
+    expected = set(SOURCE_CONTRACTS)
+
+    duplicates = sorted(
+      source_id for source_id in set(seen) if seen.count(source_id) > 1
+    )
+
+    missing = sorted(expected - set(seen))
+    unexpected = sorted(set(seen) - expected)
+
+    if duplicates:
+      raise ValueError(f"Duplicate manifest sources are not allowed: {duplicates}")
+
+    if missing:
+      raise ValueError(f"Manifest is missing required source entries: {missing}")
+
+    if unexpected:
+      raise ValueError(f"Manifest contains unexpected source entries: {unexpected}")
+
+    return self
+
 
 SOURCE_CONTRACTS = {
-    "governance_primitives": {
-        "scope": "harness_global",
-        "document_authority": "invariant_authority",
-        "schema_id": "governance_primitives",
-        "cardinality": "exactly_one",
-    },
-    "project_spec": {
-        "scope": "target_repo",
-        "document_authority": "invariant_authority",
-        "schema_id": "project_spec",
-        "cardinality": "exactly_one",
-    },
-    "known_failures": {
-        "scope": "target_repo",
-        "document_authority": "failure_evidence",
-        "schema_id": "known_failures",
-        "cardinality": "exactly_one",
-    },
-    "open_decisions": {
-        "scope": "target_repo",
-        "document_authority": "operational_state",
-        "schema_id": "open_decisions",
-        "cardinality": "exactly_one",
-    },
-    "active_implementation_plan": {
-        "scope": "target_repo",
-        "document_authority": "operational_state",
-        "schema_id": "implementation_plan",
-        "cardinality": "zero_or_one",
-    },
-    "active_implementation_tracker": {
-        "scope": "target_repo",
-        "document_authority": "operational_state",
-        "schema_id": "implementation_tracker",
-        "cardinality": "zero_or_one",
-    },
+  "governance_primitives": {
+    "scope": "harness_global",
+    "required": True,
+    "required_when": None,
+    "document_authority": "invariant_authority",
+    "schema_id": "governance_primitives",
+    "cardinality": "exactly_one",
+  },
+  "project_spec": {
+    "scope": "target_repo",
+    "required": True,
+    "required_when": None,
+    "document_authority": "invariant_authority",
+    "schema_id": "project_spec",
+    "cardinality": "exactly_one",
+  },
+  "known_failures": {
+    "scope": "target_repo",
+    "required": True,
+    "required_when": None,
+    "document_authority": "failure_evidence",
+    "schema_id": "known_failures",
+    "cardinality": "exactly_one",
+  },
+  "open_decisions": {
+    "scope": "target_repo",
+    "required": True,
+    "required_when": None,
+    "document_authority": "operational_state",
+    "schema_id": "open_decisions",
+    "cardinality": "exactly_one",
+  },
+  "active_implementation_plan": {
+    "scope": "target_repo",
+    "required": False,
+    "required_when": "active_implementation_exists",
+    "document_authority": "operational_state",
+    "document_glob": "project_spec/implementations/active/implementation_plan_*.json",
+    "schema_id": "implementation_plan",
+    "cardinality": "zero_or_one",
+  },
+  "active_implementation_tracker": {
+    "scope": "target_repo",
+    "required": False,
+    "required_when": "active_implementation_exists",
+    "document_authority": "operational_state",
+    "document_glob": "project_spec/implementations/active/implementation_tracker_*.json",
+    "schema_id": "implementation_tracker",
+    "cardinality": "zero_or_one",
+  },
 }

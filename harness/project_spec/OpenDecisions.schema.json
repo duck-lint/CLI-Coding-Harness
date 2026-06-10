@@ -1,6 +1,47 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "CurrentDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "decision": {
+          "title": "Decision",
+          "type": "string"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "affected_surfaces": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Surfaces",
+          "type": "array"
+        },
+        "status": {
+          "default": "active",
+          "enum": [
+            "active",
+            "superseded"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "decision",
+        "rationale",
+        "affected_surfaces"
+      ],
+      "title": "CurrentDecision",
+      "type": "object"
+    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
@@ -33,6 +74,76 @@
       ],
       "title": "Metadata",
       "type": "object"
+    },
+    "Note": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "status": {
+          "default": "active",
+          "enum": [
+            "active",
+            "archived"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "note"
+      ],
+      "title": "Note",
+      "type": "object"
+    },
+    "PendingDecision": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "why_it_matters": {
+          "title": "Why It Matters",
+          "type": "string"
+        },
+        "options": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Options",
+          "type": "array"
+        },
+        "status": {
+          "default": "active",
+          "enum": [
+            "active",
+            "deferred",
+            "blocked"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "why_it_matters",
+        "options"
+      ],
+      "title": "PendingDecision",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -52,17 +163,23 @@
       "type": "array"
     },
     "current_decisions": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/CurrentDecision"
+      },
       "title": "Current Decisions",
       "type": "array"
     },
     "pending_decisions": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/PendingDecision"
+      },
       "title": "Pending Decisions",
       "type": "array"
     },
     "notes": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/Note"
+      },
       "title": "Notes",
       "type": "array"
     }

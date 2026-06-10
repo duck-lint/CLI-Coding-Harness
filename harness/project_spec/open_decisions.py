@@ -3,7 +3,7 @@
 #   timestamp: 2026-06-06T19:37:04+00:00
 
 from __future__ import annotations
-from typing import Literal, Any
+from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 
@@ -16,12 +16,40 @@ class Metadata(BaseModel):
   document_authority: Literal["operational_state"]
 
 
+class CurrentDecision(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  decision: str
+  rationale: str
+  affected_surfaces: list[str]
+  status: Literal["active", "superseded"] = "active"
+
+
+class PendingDecision(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  question: str
+  why_it_matters: str
+  options: list[str]
+  status: Literal["active", "deferred", "blocked"] = "active"
+
+
+class Note(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  id: str
+  note: str
+  status: Literal["active", "archived"] = "active"
+
+
 class OpenDecisions(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   metadata: Metadata
   purpose: str
   usage_rules: list[str]
-  current_decisions: list[Any]
-  pending_decisions: list[Any]
-  notes: list[Any]
+  current_decisions: list[CurrentDecision]
+  pending_decisions: list[PendingDecision]
+  notes: list[Note]

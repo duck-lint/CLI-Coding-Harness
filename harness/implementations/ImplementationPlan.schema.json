@@ -1,6 +1,134 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "AcceptanceCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "criterion": {
+          "title": "Criterion",
+          "type": "string"
+        },
+        "required_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Evidence",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "criterion",
+        "required_evidence"
+      ],
+      "title": "AcceptanceCriterion",
+      "type": "object"
+    },
+    "ApprovalGate": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "boundary": {
+          "title": "Boundary",
+          "type": "string"
+        },
+        "requires": {
+          "title": "Requires",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "boundary",
+        "requires"
+      ],
+      "title": "ApprovalGate",
+      "type": "object"
+    },
+    "AssumptionOrUnknown": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        },
+        "risk_if_wrong": {
+          "title": "Risk If Wrong",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "statement",
+        "risk_if_wrong"
+      ],
+      "title": "AssumptionOrUnknown",
+      "type": "object"
+    },
+    "CurrentRepoState": {
+      "additionalProperties": false,
+      "properties": {
+        "surface": {
+          "title": "Surface",
+          "type": "string"
+        },
+        "state": {
+          "title": "State",
+          "type": "string"
+        },
+        "notes": {
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "required": [
+        "surface",
+        "state",
+        "notes"
+      ],
+      "title": "CurrentRepoState",
+      "type": "object"
+    },
+    "ImplementationIntent": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "why_it_matters": {
+          "title": "Why It Matters",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "summary",
+        "why_it_matters"
+      ],
+      "title": "ImplementationIntent",
+      "type": "object"
+    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
@@ -39,6 +167,49 @@
       ],
       "title": "Metadata",
       "type": "object"
+    },
+    "Seam": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "status": {
+          "default": "proposed",
+          "enum": [
+            "active",
+            "proposed",
+            "complete",
+            "blocked"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_target": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Target",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "evidence_target"
+      ],
+      "title": "Seam",
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -47,7 +218,9 @@
       "$ref": "#/$defs/Metadata"
     },
     "implementation_intent": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/ImplementationIntent"
+      },
       "title": "Implementation Intent",
       "type": "array"
     },
@@ -55,53 +228,73 @@
       "title": "Project Manager Report",
       "type": "string"
     },
-    "planned_work": {
-      "items": {},
-      "title": "Planned Work",
+    "seams": {
+      "items": {
+        "$ref": "#/$defs/Seam"
+      },
+      "title": "Seams",
       "type": "array"
     },
     "non_goals": {
-      "items": {},
+      "items": {
+        "type": "string"
+      },
       "title": "Non Goals",
       "type": "array"
     },
     "acceptance_criteria": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/AcceptanceCriterion"
+      },
       "title": "Acceptance Criteria",
       "type": "array"
     },
     "current_repo_runtime_state": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/CurrentRepoState"
+      },
       "title": "Current Repo Runtime State",
       "type": "array"
     },
     "assumptions_and_unknowns": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/AssumptionOrUnknown"
+      },
       "title": "Assumptions And Unknowns",
       "type": "array"
     },
     "affected_surfaces": {
-      "items": {},
+      "items": {
+        "type": "string"
+      },
       "title": "Affected Surfaces",
       "type": "array"
     },
     "non_affected_surfaces": {
-      "items": {},
+      "items": {
+        "type": "string"
+      },
       "title": "Non Affected Surfaces",
       "type": "array"
     },
     "completion_rules": {
-      "items": {},
+      "items": {
+        "type": "string"
+      },
       "title": "Completion Rules",
       "type": "array"
     },
     "approval_gates": {
-      "items": {},
+      "items": {
+        "$ref": "#/$defs/ApprovalGate"
+      },
       "title": "Approval Gates",
       "type": "array"
     },
     "closeout_notes": {
-      "items": {},
+      "items": {
+        "type": "string"
+      },
       "title": "Closeout Notes",
       "type": "array"
     }
@@ -110,7 +303,7 @@
     "metadata",
     "implementation_intent",
     "project_manager_report",
-    "planned_work",
+    "seams",
     "non_goals",
     "acceptance_criteria",
     "current_repo_runtime_state",

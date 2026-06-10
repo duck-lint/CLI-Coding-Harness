@@ -132,6 +132,7 @@
   "additionalProperties": false,
   "properties": {
     "$schema": {
+      "const": "./ProjectContextPacketManifest.schema.json",
       "title": "$Schema",
       "type": "string"
     },

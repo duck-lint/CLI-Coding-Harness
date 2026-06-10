@@ -24,7 +24,7 @@
         "context compiler",
         "PM pre-call validation"
       ],
-      "status": "current"
+      "status": "active"
     },
     {
       "id": "od-002",
@@ -35,7 +35,7 @@
         "provider route configuration",
         "dependency declaration"
       ],
-      "status": "current"
+      "status": "active"
     },
     {
       "id": "od-003",
@@ -47,11 +47,11 @@
         "runtime validators",
         "pre-call reference checks"
       ],
-      "status": "current"
+      "status": "active"
     },
     {
       "id": "od-004",
-      "decision": "The current implementation slice is Pydantic/model cleanup plus context compiler readiness for a real PM call, but the project spec should describe the intended CLI harness as a whole.",
+      "decision": "The active implementation slice is Pydantic/model cleanup plus context compiler readiness for a real PM call, but the project spec should describe the intended CLI harness as a whole.",
       "rationale": "The PM call needs enough invariant context to evaluate whether the first slice preserves the full harness thesis rather than merely satisfying a narrow scaffold test.",
       "affected_surfaces": [
         "project_spec.json",
@@ -59,7 +59,7 @@
         "PM report expectations",
         "acceptance probes"
       ],
-      "status": "current"
+      "status": "active"
     }
   ],
   "pending_decisions": [],
@@ -67,7 +67,7 @@
     {
       "id": "note-001",
       "note": "No known failures are currently recorded. Do not create fake known-failure entries to satisfy context plumbing.",
-      "status": "informational"
+      "status": "active"
     },
     {
       "id": "note-002",
