@@ -1,6 +1,60 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
+    "AgentInputPolicyEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "input_id": {
+          "const": "static_context_packet",
+          "title": "Input Id",
+          "type": "string"
+        },
+        "required": {
+          "const": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../project_spec/StaticContextPacketManifest.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input_id",
+        "required",
+        "schema_ref"
+      ],
+      "title": "AgentInputPolicyEntry",
+      "type": "object"
+    },
+    "AgentOutputPolicyEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "input_id": {
+          "const": "project_manager_report",
+          "title": "Input Id",
+          "type": "string"
+        },
+        "required": {
+          "const": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../contracts/ProjectManagerReport.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input_id",
+        "required",
+        "schema_ref"
+      ],
+      "title": "AgentOutputPolicyEntry",
+      "type": "object"
+    },
     "InstructionContract": {
       "additionalProperties": false,
       "properties": {
@@ -68,48 +122,6 @@
         "agent_name"
       ],
       "title": "Metadata",
-      "type": "object"
-    },
-    "StaticContextPacket": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "const": true,
-          "default": true,
-          "title": "Required",
-          "type": "boolean"
-        },
-        "schema_ref": {
-          "const": "../project_spec/StaticContextPacket.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "schema_ref"
-      ],
-      "title": "StaticContextPacket",
-      "type": "object"
-    },
-    "ProjectManagerReport": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "const": true,
-          "default": true,
-          "title": "Required",
-          "type": "boolean"
-        },
-        "schema_ref": {
-          "const": "../contracts/ProjectManagerReport.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "schema_ref"
-      ],
-      "title": "ProjectManagerReport",
       "type": "object"
     },
     "ProjectManagerReportDerivationRules": {
@@ -219,36 +231,6 @@
       "title": "ReviewLenses",
       "type": "object"
     },
-    "RuntimeInputs": {
-      "additionalProperties": false,
-      "properties": {
-        "static_context_packet": {
-          "$ref": "#/$defs/StaticContextPacket"
-        },
-        "task": {
-          "$ref": "#/$defs/Task"
-        }
-      },
-      "required": [
-        "static_context_packet",
-        "task"
-      ],
-      "title": "RuntimeInputs",
-      "type": "object"
-    },
-    "RuntimeOutputs": {
-      "additionalProperties": false,
-      "properties": {
-        "project_manager_report": {
-          "$ref": "#/$defs/ProjectManagerReport"
-        }
-      },
-      "required": [
-        "project_manager_report"
-      ],
-      "title": "RuntimeOutputs",
-      "type": "object"
-    },
     "StatusSemantics": {
       "additionalProperties": false,
       "properties": {
@@ -281,27 +263,6 @@
       ],
       "title": "StatusSemantics",
       "type": "object"
-    },
-    "Task": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "const": true,
-          "default": true,
-          "title": "Required",
-          "type": "boolean"
-        },
-        "schema_ref": {
-          "const": "../runtime/Task.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "schema_ref"
-      ],
-      "title": "Task",
-      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -321,11 +282,19 @@
     "instruction_contract": {
       "$ref": "#/$defs/InstructionContract"
     },
-    "runtime_inputs": {
-      "$ref": "#/$defs/RuntimeInputs"
+    "agent_input_policy": {
+      "items": {
+        "$ref": "#/$defs/AgentInputPolicyEntry"
+      },
+      "title": "Agent Input Policy",
+      "type": "array"
     },
-    "runtime_outputs": {
-      "$ref": "#/$defs/RuntimeOutputs"
+    "agent_output_policy": {
+      "items": {
+        "$ref": "#/$defs/AgentOutputPolicyEntry"
+      },
+      "title": "Agent Output Policy",
+      "type": "array"
     }
   },
   "required": [
@@ -333,8 +302,8 @@
     "metadata",
     "model",
     "instruction_contract",
-    "runtime_inputs",
-    "runtime_outputs"
+    "agent_input_policy",
+    "agent_output_policy"
   ],
   "title": "ProjectManagerAgent",
   "type": "object"

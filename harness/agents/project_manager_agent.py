@@ -63,31 +63,26 @@ class InstructionContract(BaseModel):
   review_lenses: ReviewLenses
 
 
-class StaticContextPacket(BaseModel):
+class AgentInputPolicyEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  required: Literal[True] = True
-  schema_ref: Literal["../project_spec/StaticContextPacket.schema.json"]
-
-
-class Task(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  required: Literal[True] = True
-  schema_ref: Literal["../runtime/Task.schema.json"]
-
-
-class RuntimeInputs(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  static_context_packet: StaticContextPacket
-  task: Task
+  input_id: Literal["static_context_packet"]
+  required: Literal[True]
+  schema_ref: Literal["../project_spec/StaticContextPacketManifest.schema.json"]
 
 
 class ProjectManagerReport(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: Literal[True] = True
+  schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
+
+
+class AgentOutputPolicyEntry(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  input_id: Literal["project_manager_report"]
+  required: Literal[True]
   schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
 
 
@@ -104,5 +99,5 @@ class ProjectManagerAgent(BaseModel):
   metadata: Metadata
   model: str = Field(min_length=1)
   instruction_contract: InstructionContract
-  runtime_inputs: RuntimeInputs
-  runtime_outputs: RuntimeOutputs
+  agent_input_policy: list[AgentInputPolicyEntry]
+  agent_output_policy: list[AgentOutputPolicyEntry]

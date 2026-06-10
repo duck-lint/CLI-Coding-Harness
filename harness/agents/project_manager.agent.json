@@ -64,20 +64,18 @@
       "optionality_preservation": "does the recommendation reduce that tension while avoiding unnecessary compatibility promises, premature architecture, or hidden project-intent amendments?"
       }
   },
-  "runtime_inputs": {
-    "static_context_packet": {
+  "agent_input_policy": [
+    {
+      "input_id": "static_context_packet",
       "required": true,
-      "schema_ref": "../project_spec/StaticContextPacket.schema.json"
-    },
-    "task": {
-      "required": true,
-      "schema_ref": "../runtime/Task.schema.json"
+      "schema_ref": "../project_spec/StaticContextPacketManifest.schema.json"
     }
-  },
-  "runtime_outputs": {
-    "project_manager_report": {
+  ],
+  "agent_output_policy": [
+    {      
+      "input_id": "project_manager_report",
       "required": true,
       "schema_ref": "../contracts/ProjectManagerReport.schema.json"
     }
-  }
+  ]
 }
