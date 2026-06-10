@@ -68,7 +68,7 @@ class AgentInputPolicyEntry(BaseModel):
 
   input_id: Literal["static_context_packet"]
   required: Literal[True]
-  schema_ref: Literal["../project_spec/StaticContextPacketManifest.schema.json"]
+  schema_ref: Literal["../project_spec/StaticContextPacket.schema.json"]
 
 
 class ProjectManagerReport(BaseModel):
@@ -81,7 +81,7 @@ class ProjectManagerReport(BaseModel):
 class AgentOutputPolicyEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  input_id: Literal["project_manager_report"]
+  output_id: Literal["project_manager_report"]
   required: Literal[True]
   schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
 

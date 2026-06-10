@@ -68,12 +68,12 @@
     {
       "input_id": "static_context_packet",
       "required": true,
-      "schema_ref": "../project_spec/StaticContextPacketManifest.schema.json"
+      "schema_ref": "../project_spec/StaticContextPacket.schema.json"
     }
   ],
   "agent_output_policy": [
     {      
-      "input_id": "project_manager_report",
+      "output_id": "project_manager_report",
       "required": true,
       "schema_ref": "../contracts/ProjectManagerReport.schema.json"
     }

@@ -15,7 +15,7 @@
           "type": "boolean"
         },
         "schema_ref": {
-          "const": "../project_spec/StaticContextPacketManifest.schema.json",
+          "const": "../project_spec/StaticContextPacket.schema.json",
           "title": "Schema Ref",
           "type": "string"
         }
@@ -31,7 +31,7 @@
     "AgentOutputPolicyEntry": {
       "additionalProperties": false,
       "properties": {
-        "input_id": {
+        "output_id": {
           "const": "project_manager_report",
           "title": "Input Id",
           "type": "string"
@@ -48,7 +48,7 @@
         }
       },
       "required": [
-        "input_id",
+        "output_id",
         "required",
         "schema_ref"
       ],
