@@ -1,122 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "CurrentImplementation": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "document_authority": {
-          "const": "operational_state",
-          "title": "Document Authority",
-          "type": "string"
-        },
-        "document": {
-          "items": {
-            "enum": [
-              "../implementations/active/implementation_plan_**.json",
-              "../implementations/active/implementation_tracker_**.json"
-            ],
-            "type": "string"
-          },
-          "title": "Document",
-          "type": "array"
-        },
-        "schema_ref": {
-          "items": {
-            "enum": [
-              "../implementations/active/ImplementationPlan.schema.json",
-              "../implementations/active/ImplementationTracker.schema.json"
-            ],
-            "type": "string"
-          },
-          "title": "Schema Ref",
-          "type": "array"
-        }
-      },
-      "required": [
-        "required",
-        "document_authority",
-        "document",
-        "schema_ref"
-      ],
-      "title": "CurrentImplementation",
-      "type": "object"
-    },
-    "GovernancePrimitives": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "document_authority": {
-          "const": "invariant_authority",
-          "title": "Document Authority",
-          "type": "string"
-        },
-        "document": {
-          "const": "./governance_primitives.json",
-          "title": "Document",
-          "type": "string"
-        },
-        "schema_ref": {
-          "const": "./GovernancePrimitives.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "document_authority",
-        "document",
-        "schema_ref"
-      ],
-      "title": "GovernancePrimitives",
-      "type": "object"
-    },
-    "KnownFailures": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "document_authority": {
-          "const": "failure_evidence",
-          "title": "Document Authority",
-          "type": "string"
-        },
-        "document": {
-          "const": "./known_failures.json",
-          "title": "Document",
-          "type": "string"
-        },
-        "schema_ref": {
-          "const": "./KnownFailures.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "document_authority",
-        "document",
-        "schema_ref"
-      ],
-      "title": "KnownFailures",
-      "type": "object"
-    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
         "id": {
+          "const": "project_context_packet.manifest.json",
           "title": "Id",
           "type": "string"
         },
         "name": {
+          "const": "Project Context Packet Manifest",
           "title": "Name",
           "type": "string"
         }
@@ -128,111 +22,134 @@
       "title": "Metadata",
       "type": "object"
     },
-    "OpenDecisions": {
+    "Source": {
       "additionalProperties": false,
       "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "scope": {
+          "enum": [
+            "harness_global",
+            "target_repo"
+          ],
+          "title": "Scope",
+          "type": "string"
+        },
         "required": {
           "title": "Required",
           "type": "boolean"
         },
+        "required_when": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Required When"
+        },
         "document_authority": {
-          "const": "operational_state",
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
           "title": "Document Authority",
           "type": "string"
         },
         "document": {
-          "const": "./open_decisions.json",
-          "title": "Document",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document"
+        },
+        "document_glob": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Document Glob"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
           "type": "string"
         },
-        "schema_ref": {
-          "const": "./OpenDecisions.schema.json",
-          "title": "Schema Ref",
+        "cardinality": {
+          "enum": [
+            "exactly_one",
+            "zero_or_one",
+            "zero_or_more",
+            "one_or_more"
+          ],
+          "title": "Cardinality",
           "type": "string"
         }
       },
       "required": [
+        "source_id",
+        "scope",
         "required",
         "document_authority",
-        "document",
-        "schema_ref"
+        "schema_id",
+        "cardinality"
       ],
-      "title": "OpenDecisions",
-      "type": "object"
-    },
-    "ProjectSpec": {
-      "additionalProperties": false,
-      "properties": {
-        "required": {
-          "title": "Required",
-          "type": "boolean"
-        },
-        "document_authority": {
-          "const": "invariant_authority",
-          "title": "Document Authority",
-          "type": "string"
-        },
-        "document": {
-          "const": "./project_spec.json",
-          "title": "Document",
-          "type": "string"
-        },
-        "schema_ref": {
-          "const": "./ProjectSpec.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
-        }
-      },
-      "required": [
-        "required",
-        "document_authority",
-        "document",
-        "schema_ref"
-      ],
-      "title": "ProjectSpec",
+      "title": "Source",
       "type": "object"
     }
   },
   "additionalProperties": false,
   "properties": {
     "$schema": {
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ],
-      "default": null,
-      "title": "$Schema"
+      "title": "$Schema",
+      "type": "string"
     },
     "metadata": {
       "$ref": "#/$defs/Metadata"
     },
-    "project_spec": {
-      "$ref": "#/$defs/ProjectSpec"
-    },
-    "governance_primitives": {
-      "$ref": "#/$defs/GovernancePrimitives"
-    },
-    "known_failures": {
-      "$ref": "#/$defs/KnownFailures"
-    },
-    "open_decisions": {
-      "$ref": "#/$defs/OpenDecisions"
-    },
-    "current_implementation": {
-      "$ref": "#/$defs/CurrentImplementation"
+    "sources": {
+      "items": {
+        "$ref": "#/$defs/Source"
+      },
+      "title": "Sources",
+      "type": "array"
     }
   },
   "required": [
+    "$schema",
     "metadata",
-    "project_spec",
-    "governance_primitives",
-    "known_failures",
-    "open_decisions",
-    "current_implementation"
+    "sources"
   ],
   "title": "ProjectContextPacketManifest",
   "type": "object"

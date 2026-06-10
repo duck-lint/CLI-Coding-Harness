@@ -1,43 +1,65 @@
 {
-  "$schema": "./ProjectContextPacket.schema.json",
+  "$schema": "./ProjectContextPacketManifest.schema.json",
   "metadata": {
     "id": "project_context_packet.manifest.json",
-    "name": "Project Context Packet"
+    "name": "Project Context Packet Manifest"
   },
-  "project_spec": {
-    "required": true,
-    "document_authority": "invariant_authority",
-    "document": "./project_spec.json",
-    "schema_ref": "./ProjectSpec.schema.json"
-  },
-  "governance_primitives": {
-    "required": true,
-    "document_authority": "invariant_authority",
-    "document": "./governance_primitives.json",
-    "schema_ref": "./GovernancePrimitives.schema.json"
-  },
-  "known_failures": {
-    "required": true,
-    "document_authority": "failure_evidence",
-    "document": "./known_failures.json",
-    "schema_ref": "./KnownFailures.schema.json"
-  },
-  "open_decisions": {
-    "required": true,
-    "document_authority": "operational_state",
-    "document": "./open_decisions.json",
-    "schema_ref": "./OpenDecisions.schema.json"
-  },
-  "current_implementation": {
-    "required": true,
-    "document_authority": "operational_state",
-    "document": [
-      "../implementations/active/implementation_plan_**.json", 
-      "../implementations/active/implementation_tracker_**.json"
-    ],
-    "schema_ref": [
-      "../implementations/active/ImplementationPlan.schema.json",
-      "../implementations/active/ImplementationTracker.schema.json"
-    ]
-  }
+  "sources": [
+    {
+      "source_id": "governance_primitives",
+      "scope": "harness_global",
+      "required": true,
+      "document_authority": "invariant_authority",
+      "document": "runtime/governance_primitives.json",
+      "schema_id": "governance_primitives",
+      "cardinality": "exactly_one"
+    },
+    {
+      "source_id": "project_spec",
+      "scope": "target_repo",
+      "required": true,
+      "document_authority": "invariant_authority",
+      "document": "project_spec/project_spec.json",
+      "schema_id": "project_spec",
+      "cardinality": "exactly_one"
+    },
+    {
+      "source_id": "known_failures",
+      "scope": "target_repo",
+      "required": true,
+      "document_authority": "failure_evidence",
+      "document": "project_spec/known_failures.json",
+      "schema_id": "known_failures",
+      "cardinality": "exactly_one"
+    },
+    {
+      "source_id": "open_decisions",
+      "scope": "target_repo",
+      "required": true,
+      "document_authority": "operational_state",
+      "document": "project_spec/open_decisions.json",
+      "schema_id": "open_decisions",
+      "cardinality": "exactly_one"
+    },
+    {
+      "source_id": "active_implementation_plan",
+      "scope": "target_repo",
+      "required": false,
+      "required_when": "active_implementation_exists",
+      "document_authority": "operational_state",
+      "document_glob": "project_spec/implementations/active/implementation_plan*.json",
+      "schema_id": "implementation_plan",
+      "cardinality": "zero_or_one"
+    },
+    {
+      "source_id": "active_implementation_tracker",
+      "scope": "target_repo",
+      "required": false,
+      "required_when": "active_implementation_exists",
+      "document_authority": "operational_state",
+      "document_glob": "project_spec/implementations/active/implementation_tracker*.json",
+      "schema_id": "implementation_tracker",
+      "cardinality": "zero_or_one"
+    }
+  ]
 }
