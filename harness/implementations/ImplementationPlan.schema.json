@@ -5,12 +5,12 @@
       "additionalProperties": false,
       "properties": {
         "document_id": {
-          "const": "implementation_plan.json",
+          "pattern": "^implementation_plan_\\d+\\.json$",
           "title": "Document Id",
           "type": "string"
         },
         "title": {
-          "const": "Implementation <#> Plan",
+          "pattern": "^Implementation \\d+ Plan$",
           "title": "Title",
           "type": "string"
         },

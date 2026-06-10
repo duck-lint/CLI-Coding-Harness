@@ -3,15 +3,21 @@
 #   timestamp: 2026-06-07T03:05:32+00:00
 
 from __future__ import annotations
-from typing import Literal, Any
+from typing import Literal, Any, Annotated
 from pydantic import BaseModel, ConfigDict, Field
+
+
+ImplementationPlanTitle = Annotated[
+    str,
+    Field(pattern=r"^Implementation \d+ Plan$")
+]
 
 
 class Metadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  document_id: Literal["implementation_plan.json"]
-  title: Literal["Implementation <#> Plan"]
+  document_id: Annotated[str, Field(pattern=r"^implementation_plan_\d+\.json$")]
+  title: ImplementationPlanTitle
   purpose: Literal["This file outlines an implementation plan."]
   source_format: Literal["json"]
   document_authority: Literal["operational_state"]

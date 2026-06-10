@@ -34,12 +34,12 @@
       "additionalProperties": false,
       "properties": {
         "document_id": {
-          "const": "implementation_tracker.json",
+          "pattern": "^implementation_tracker_\\d+\\.json$",
           "title": "Document Id",
           "type": "string"
         },
         "title": {
-          "const": "Implementation <#> Tracker",
+          "pattern": "^Implementation \\d+ Tracker$",
           "title": "Title",
           "type": "string"
         },
