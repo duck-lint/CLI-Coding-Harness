@@ -5,12 +5,12 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "const": "project_context_packet.manifest.json",
+          "const": "static_context_packet.manifest.json",
           "title": "Id",
           "type": "string"
         },
         "name": {
-          "const": "Project Context Packet Manifest",
+          "const": "Static Context Packet Manifest",
           "title": "Name",
           "type": "string"
         }
@@ -132,7 +132,7 @@
   "additionalProperties": false,
   "properties": {
     "$schema": {
-      "const": "./ProjectContextPacketManifest.schema.json",
+      "const": "./StaticContextPacketManifest.schema.json",
       "title": "$Schema",
       "type": "string"
     },
@@ -152,6 +152,6 @@
     "metadata",
     "sources"
   ],
-  "title": "ProjectContextPacketManifest",
+  "title": "StaticContextPacketManifest",
   "type": "object"
 }

@@ -7,8 +7,8 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 class Metadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  id: Literal["project_context_packet.manifest.json"]
-  name: Literal["Project Context Packet Manifest"]
+  id: Literal["static_context_packet.manifest.json"]
+  name: Literal["Static Context Packet Manifest"]
 
 
 class Source(BaseModel):
@@ -26,7 +26,7 @@ class Source(BaseModel):
   scope: Literal["harness_global", "target_repo"]
 
   required: bool
-  required_when: str | None = None
+  required_when: str | None
 
   document_authority: Literal[
     "invariant_authority",
@@ -34,8 +34,8 @@ class Source(BaseModel):
     "operational_state",
   ]
 
-  document: str | None = None
-  document_glob: str | None = None
+  document: str | None
+  document_glob: str | None
 
   schema_id: Literal[
     "governance_primitives",
@@ -85,10 +85,10 @@ class Source(BaseModel):
 
     return self
 
-class ProjectContextPacketManifest(BaseModel):
+class StaticContextPacketManifest(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  schema_ref: Literal["./ProjectContextPacketManifest.schema.json"] = Field(
+  schema_ref: Literal["./StaticContextPacketManifest.schema.json"] = Field(
     ...,
     alias="$schema",
   )

@@ -37,8 +37,8 @@
       "date": "2026-06-09",
       "seam": "04-context-compiler",
       "agent": "operator",
-      "change": "Compile task text and repo-local support docs into project_context_packet.json for the first PM route.",
-      "evidence": "Pending: generated packet saved under ../runs/<timestamp>/project_context_packet.json with included and missing sources recorded.",
+      "change": "Compile task text and repo-local support docs into static_context_packet.json for the first PM route.",
+      "evidence": "Pending: generated packet saved under ../runs/<timestamp>/static_context_packet.json with included and missing sources recorded.",
       "status": "proposed"
     },
     {
@@ -46,7 +46,7 @@
       "seam": "05-pm-runtime-proof",
       "agent": "operator",
       "change": "Run first PM call through the intended runtime path and validate returned report.",
-      "evidence": "Pending: saved task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result.",
+      "evidence": "Pending: saved task.json, static_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result.",
       "status": "proposed"
     }
   ],

@@ -9,7 +9,7 @@
   "report_status": "admissibility_blocked",
   "report_summary": "Short report summary.",
   "report_source_coverage": {
-    "project_context_packet": {
+    "static_context_packet": {
       "consumed": true,
       "basis": [
         "Used to identify project thesis, invariants, open decisions, and known failures."

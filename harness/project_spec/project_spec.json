@@ -120,7 +120,7 @@
       "Deterministic orchestrator.",
       "Task brief writer.",
       "Project context compiler.",
-      "Project context packet manifest/reference policy.",
+      "Static context packet manifest/reference policy.",
       "Role contract loader.",
       "Provider/model caller boundary.",
       "Structured output parser.",
@@ -147,7 +147,7 @@
       "default_location": "../runs/<timestamp>/",
       "min_required_artifacts": [
         "task.json",
-        "project_context_packet.json",
+        "static_context_packet.json",
         "project_manager_report.json"
       ],
       "optional_debug_artifacts": [
@@ -155,7 +155,7 @@
         "validation_summary.json",
         "probe_summary.json"
       ],
-      "authoritative_context_artifact": "project_context_packet.json",
+      "authoritative_context_artifact": "static_context_packet.json",
       "authoritative_pm_runtime_output_artifacts": "project_manager_report.json"
     },
     "dependencies": {
@@ -212,7 +212,7 @@
     "must_exist": [
       "A task brief is produced from the user task.",
       "project_manager.agent.json loads through the role loader.",
-      "project_context_packet.json compiles from live repo-local context and records missing/conditional sources truthfully.",
+      "static_context_packet.json compiles from live repo-local context and records missing/conditional sources truthfully.",
       "The PM call route sends the structured context packet and receives a structured report.",
       "The PM report validates against the report contract and cross-field invariants.",
       "Required run artifacts are saved under a timestamped run directory.",
@@ -330,7 +330,7 @@
           },
           {
             "id": "context_packet",
-            "path_pattern": "../runs/<timestamp>/project_context_packet.json",
+            "path_pattern": "../runs/<timestamp>/static_context_packet.json",
             "required": true
           },
           {
@@ -394,7 +394,7 @@
         "saved_artifacts": [
           {
             "id": "compiled_context_packet",
-            "path_pattern": "../runs/<timestamp>/project_context_packet.json",
+            "path_pattern": "../runs/<timestamp>/static_context_packet.json",
             "required": false
           }
         ]

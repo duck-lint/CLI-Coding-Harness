@@ -25,7 +25,7 @@ class ReportSourceCoverageEntry(BaseModel):
 class ReportSourceCoverage(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  project_context_packet: ReportSourceCoverageEntry
+  static_context_packet: ReportSourceCoverageEntry
   task: ReportSourceCoverageEntry
 
 

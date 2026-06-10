@@ -65,9 +65,9 @@
       }
   },
   "runtime_inputs": {
-    "project_context_packet": {
+    "static_context_packet": {
       "required": true,
-      "schema_ref": "../project_spec/ProjectContextPacket.schema.json"
+      "schema_ref": "../project_spec/StaticContextPacket.schema.json"
     },
     "task": {
       "required": true,

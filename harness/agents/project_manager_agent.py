@@ -63,11 +63,11 @@ class InstructionContract(BaseModel):
   review_lenses: ReviewLenses
 
 
-class ProjectContextPacket(BaseModel):
+class StaticContextPacket(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   required: Literal[True] = True
-  schema_ref: Literal["../project_spec/ProjectContextPacket.schema.json"]
+  schema_ref: Literal["../project_spec/StaticContextPacket.schema.json"]
 
 
 class Task(BaseModel):
@@ -80,7 +80,7 @@ class Task(BaseModel):
 class RuntimeInputs(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  project_context_packet: ProjectContextPacket
+  static_context_packet: StaticContextPacket
   task: Task
 
 

@@ -55,10 +55,10 @@
     {
       "id": "seam-004",
       "title": "Prepare context compiler input assembly",
-      "description": "Compile the task text, project spec, governance primitives, known failures, open decisions, active implementation plan, active implementation tracker, and relevant runtime policy surfaces into project_context_packet.json.",
+      "description": "Compile the task text, project spec, governance primitives, known failures, open decisions, active implementation plan, active implementation tracker, and relevant runtime policy surfaces into static_context_packet.json.",
       "status": "proposed",
       "evidence_target": [
-        "A generated project_context_packet.json is saved under a run directory and records present and missing sources explicitly."
+        "A generated static_context_packet.json is saved under a run directory and records present and missing sources explicitly."
       ]
     },
     {
@@ -67,7 +67,7 @@
       "description": "Call the PM route with the compiled packet, validate the returned report, save required run artifacts, and stop before implementation.",
       "status": "proposed",
       "evidence_target": [
-        "A timestamped run directory contains task.json, project_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result."
+        "A timestamped run directory contains task.json, static_context_packet.json, project_manager_report.json, validation summary, and deterministic probe result."
       ]
     }
   ],
@@ -105,8 +105,8 @@
       "id": "ac-003",
       "criterion": "Context compiler can assemble a project context packet without treating templates/examples as live runtime requirements.",
       "required_evidence": [
-        "project_context_packet.json records live included sources",
-        "project_context_packet.json records missing optional/conditional sources without claiming they were consumed"
+        "static_context_packet.json records live included sources",
+        "static_context_packet.json records missing optional/conditional sources without claiming they were consumed"
       ]
     },
     {
@@ -114,7 +114,7 @@
       "criterion": "First PM route validates returned report and saves inspectable run artifacts.",
       "required_evidence": [
         "../runs/<timestamp>/task.json",
-        "../runs/<timestamp>/project_context_packet.json",
+        "../runs/<timestamp>/static_context_packet.json",
         "../runs/<timestamp>/project_manager_report.json",
         "../runs/<timestamp>/validation_summary.json or equivalent"
       ]
@@ -180,7 +180,7 @@
     {
       "id": "unknown-002",
       "type": "unknown",
-      "statement": "Whether the project_context_packet manifest should encode conditional requirements or whether the compiler should determine required inputs procedurally.",
+      "statement": "Whether the static_context_packet manifest should encode conditional requirements or whether the compiler should determine required inputs procedurally.",
       "risk_if_wrong": "",
       "resolution_path": "Avoid pre-call false failures by making template/example and optional/conditional sources explicit."
     },
@@ -198,7 +198,7 @@
     "harness/implementations/active support documents",
     "Pydantic document models",
     "context compiler source selection",
-    "project_context_packet manifest/reference checking",
+    "static_context_packet manifest/reference checking",
     "PM role contract loading",
     "PM report validation",
     "run artifact writer",

@@ -174,7 +174,7 @@
     "ReportSourceCoverage": {
       "additionalProperties": false,
       "properties": {
-        "project_context_packet": {
+        "static_context_packet": {
           "$ref": "#/$defs/ReportSourceCoverageEntry"
         },
         "task": {
@@ -182,7 +182,7 @@
         }
       },
       "required": [
-        "project_context_packet",
+        "static_context_packet",
         "task"
       ],
       "title": "ReportSourceCoverage",

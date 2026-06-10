@@ -55,7 +55,7 @@
       "rationale": "The PM call needs enough invariant context to evaluate whether the first slice preserves the full harness thesis rather than merely satisfying a narrow scaffold test.",
       "affected_surfaces": [
         "project_spec.json",
-        "project_context_packet.json",
+        "static_context_packet.json",
         "PM report expectations",
         "acceptance probes"
       ],

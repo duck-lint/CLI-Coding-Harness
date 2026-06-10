@@ -1,8 +1,8 @@
 {
-  "$schema": "./ProjectContextPacketManifest.schema.json",
+  "$schema": "./StaticContextPacketManifest.schema.json",
   "metadata": {
-    "id": "project_context_packet.manifest.json",
-    "name": "Project Context Packet Manifest"
+    "id": "static_context_packet.manifest.json",
+    "name": "Static Context Packet Manifest"
   },
   "sources": [
     {
