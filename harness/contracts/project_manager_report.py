@@ -141,13 +141,13 @@ class ProjectManagerReport(BaseModel):
     if self.report_status == "admissibility_blocked":
       if not frontier.missing_basis and not frontier.constraint_conflicts:
         raise ValueError(
-          "admissibility_blocked reports require missing_basis or constraint_conflicts."
+          "The PM cannot judge or proceed because required basis, context, or authority is missing."
         )
 
     if self.report_status == "needs_clarification":
       if not frontier.missing_basis:
         raise ValueError(
-          "needs_clarification reports require missing_basis naming what must be clarified."
+          "The task is ambiguous enough that user clarification is required, but no invariant conflict is established."
         )
 
     if self.report_status == "rejected":
