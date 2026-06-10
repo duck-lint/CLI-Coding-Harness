@@ -78,85 +78,85 @@ class ProjectManagerReport(BaseModel):
   trajectory_review: TrajectoryReview
   proof_frontier: ProofFrontier
 
-@model_validator(mode="after")
-def enforce_report_truth_table(self):
-  frontier = self.proof_frontier
+  @model_validator(mode="after")
+  def enforce_report_truth_table(self):
+    frontier = self.proof_frontier
 
-  if self.report_status == "admissible":
-    if frontier.blocked:
+    if self.report_status == "admissible":
+      if frontier.blocked:
+        raise ValueError(
+          "admissible reports must have proof_frontier.blocked=false."
+        )
+
+      if frontier.blocking_reason is not None:
+        raise ValueError(
+          "admissible reports must not include blocking_reason."
+        )
+
+      if frontier.missing_basis:
+        raise ValueError(
+          "admissible reports must not include missing_basis."
+        )
+
+      if frontier.constraint_conflicts:
+        raise ValueError(
+          "admissible reports must not include constraint_conflicts."
+        )
+
+      if frontier.next_admissible_transformation is None:
+        raise ValueError(
+          "admissible reports require next_admissible_transformation."
+        )
+
+      return self
+
+    # Every non-admissible status is blocked.
+    if not frontier.blocked:
       raise ValueError(
-        "admissible reports must have proof_frontier.blocked=false."
+        f"{self.report_status} reports must have proof_frontier.blocked=true."
       )
 
-    if frontier.blocking_reason is not None:
+    if not frontier.blocking_reason:
       raise ValueError(
-        "admissible reports must not include blocking_reason."
+        f"{self.report_status} reports require blocking_reason."
       )
 
-    if frontier.missing_basis:
+    if frontier.next_admissible_transformation is not None:
       raise ValueError(
-        "admissible reports must not include missing_basis."
+        f"{self.report_status} reports must not include next_admissible_transformation."
       )
 
-    if frontier.constraint_conflicts:
-      raise ValueError(
-        "admissible reports must not include constraint_conflicts."
-      )
+    if self.report_status == "admissibility_blocked":
+      if not frontier.missing_basis:
+        raise ValueError(
+          "admissibility_blocked reports require missing_basis naming the absent basis, context, evidence, or authority."
+        )
 
-    if frontier.next_admissible_transformation is None:
-      raise ValueError(
-        "admissible reports require next_admissible_transformation."
-      )
+      if frontier.constraint_conflicts:
+        raise ValueError(
+          "admissibility_blocked reports must not include established constraint_conflicts; use rejected when a constraint conflict is established."
+        )
+
+    if self.report_status == "needs_clarification":
+      if not frontier.missing_basis:
+        raise ValueError(
+          "needs_clarification reports require missing_basis naming what the user must clarify."
+        )
+
+      if frontier.constraint_conflicts:
+        raise ValueError(
+          "needs_clarification reports must not include established constraint_conflicts; use rejected when a constraint conflict is established."
+        )
+
+    if self.report_status == "rejected":
+      if frontier.missing_basis:
+        raise ValueError(
+          "rejected reports must not include missing_basis; rejection means the basis is sufficient to deny admissibility."
+        )
+
+      if not frontier.constraint_conflicts:
+        raise ValueError(
+          "rejected reports require constraint_conflicts naming the violated boundary."
+        )
 
     return self
-
-  # Every non-admissible status is blocked.
-  if not frontier.blocked:
-    raise ValueError(
-      f"{self.report_status} reports must have proof_frontier.blocked=true."
-    )
-
-  if not frontier.blocking_reason:
-    raise ValueError(
-      f"{self.report_status} reports require blocking_reason."
-    )
-
-  if frontier.next_admissible_transformation is not None:
-    raise ValueError(
-      f"{self.report_status} reports must not include next_admissible_transformation."
-    )
-
-  if self.report_status == "admissibility_blocked":
-    if not frontier.missing_basis:
-      raise ValueError(
-        "admissibility_blocked reports require missing_basis naming the absent basis, context, evidence, or authority."
-      )
-
-    if frontier.constraint_conflicts:
-      raise ValueError(
-        "admissibility_blocked reports must not include established constraint_conflicts; use rejected when a constraint conflict is established."
-      )
-
-  if self.report_status == "needs_clarification":
-    if not frontier.missing_basis:
-      raise ValueError(
-        "needs_clarification reports require missing_basis naming what the user must clarify."
-      )
-
-    if frontier.constraint_conflicts:
-      raise ValueError(
-        "needs_clarification reports must not include established constraint_conflicts; use rejected when a constraint conflict is established."
-      )
-
-  if self.report_status == "rejected":
-    if frontier.missing_basis:
-      raise ValueError(
-        "rejected reports must not include missing_basis; rejection means the basis is sufficient to deny admissibility."
-      )
-
-    if not frontier.constraint_conflicts:
-      raise ValueError(
-        "rejected reports require constraint_conflicts naming the violated boundary."
-      )
-
-  return self
