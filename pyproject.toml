@@ -13,6 +13,13 @@ dependencies = [
   "jsonschema>=4.0,<5",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "datamodel-code-generator",
+  "jsonschema",
+  "pytest",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["harness*"]

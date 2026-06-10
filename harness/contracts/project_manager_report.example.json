@@ -6,7 +6,7 @@
     "source_format": "json",
     "document_authority": "generated_artifact.example"
   },
-  "report_status": "admissible",
+  "report_status": "admissibility_blocked",
   "report_summary": "Short report summary.",
   "report_source_coverage": {
     "project_context_packet": {

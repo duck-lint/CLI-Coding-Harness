@@ -511,7 +511,7 @@
           "type": "string"
         },
         "authoritative_pm_runtime_output_artifacts": {
-          "title": "Authoritative Pm runtime_outputs Artifact",
+          "title": "Authoritative Pm Runtime Output Artifacts",
           "type": "string"
         }
       },

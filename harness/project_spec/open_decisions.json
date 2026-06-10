@@ -68,11 +68,6 @@
       "id": "note-001",
       "note": "No known failures are currently recorded. Do not create fake known-failure entries to satisfy context plumbing.",
       "status": "active"
-    },
-    {
-      "id": "note-002",
-      "note": "Implementation plan/tracker contracts were not included in this fill pass, so those files should be generated only after their schemas/templates are available or their live shape is explicitly chosen.",
-      "status": "informational"
     }
   ]
 }

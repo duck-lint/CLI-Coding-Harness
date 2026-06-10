@@ -50,14 +50,7 @@
       "status": "proposed"
     }
   ],
-  "blockers": [
-    {
-      "blocker": "ImplementationTracker.schema.json appears internally inconsistent: $schema is required but not declared as an allowed property while additionalProperties is false.",
-      "boundary": "schema/report validator",
-      "owner_agent": "operator",
-      "resolution": "Regenerate or correct the schema before treating JSON Schema validation of implementation_tracker.json as authoritative; until then, use the Pydantic model shape as the runtime target."
-    }
-  ],
+  "blockers": [],
   "closeout_notes": [
     "When this bundle completes, move it from ./active/ to ./archive/.",
     "Closeout must record whether PM route evidence was runtime-proven, blocked, or deferred."
