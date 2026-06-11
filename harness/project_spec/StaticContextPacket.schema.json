@@ -5,51 +5,23 @@
       "additionalProperties": false,
       "properties": {
         "source_id": {
-          "enum": [
-            "governance_primitives",
-            "project_spec",
-            "known_failures",
-            "open_decisions",
-            "active_implementation_plan",
-            "active_implementation_tracker"
-          ],
           "title": "Source Id",
           "type": "string"
         },
-        "schema_id": {
-          "enum": [
-            "governance_primitives",
-            "project_spec",
-            "known_failures",
-            "open_decisions",
-            "implementation_plan",
-            "implementation_tracker"
-          ],
-          "title": "Schema Id",
-          "type": "string"
-        },
-        "document_authority": {
-          "enum": [
-            "invariant_authority",
-            "failure_evidence",
-            "operational_state"
-          ],
-          "title": "Document Authority",
+        "reason": {
+          "const": "not_declared_in_manifest",
+          "title": "Reason",
           "type": "string"
         },
         "effect": {
-          "enum": [
-            "blocks_compilation",
-            "excluded_from_packet"
-          ],
+          "const": "blocks_compilation",
           "title": "Effect",
           "type": "string"
         }
       },
       "required": [
         "source_id",
-        "schema_id",
-        "document_authority",
+        "reason",
         "effect"
       ],
       "title": "InvalidSourceEntry",
@@ -124,6 +96,27 @@
           "title": "Source Id",
           "type": "string"
         },
+        "layer": {
+          "const": "static_context",
+          "title": "Layer",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "required_when": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Required When"
+        },
         "schema_id": {
           "enum": [
             "governance_primitives",
@@ -146,22 +139,13 @@
           "type": "string"
         },
         "status": {
-          "anyOf": [
-            {
-              "$ref": "#/$defs/MissingSourceEntry"
-            },
-            {
-              "$ref": "#/$defs/InvalidSourceEntry"
-            },
-            {
-              "enum": [
-                "included",
-                "skipped"
-              ],
-              "type": "string"
-            }
+          "enum": [
+            "included",
+            "missing",
+            "invalid"
           ],
-          "title": "Status"
+          "title": "Status",
+          "type": "string"
         },
         "resolved_path": {
           "anyOf": [
@@ -172,7 +156,11 @@
               "type": "null"
             }
           ],
+          "default": null,
           "title": "Resolved Path"
+        },
+        "validation": {
+          "$ref": "#/$defs/SourceValidation"
         },
         "basis": {
           "items": {
@@ -184,12 +172,69 @@
       },
       "required": [
         "source_id",
+        "layer",
+        "required",
         "schema_id",
         "document_authority",
         "status",
-        "resolved_path"
+        "validation"
       ],
       "title": "SourceCoverageEntry",
+      "type": "object"
+    },
+    "SourceValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "validator": {
+          "const": "pydantic",
+          "title": "Validator",
+          "type": "string"
+        },
+        "model": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "normalized_output_available": {
+          "title": "Normalized Output Available",
+          "type": "boolean"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failure"
+        }
+      },
+      "required": [
+        "status",
+        "validator",
+        "model",
+        "normalized_output_available"
+      ],
+      "title": "SourceValidation",
       "type": "object"
     },
     "StaticContextPacketMetadata": {

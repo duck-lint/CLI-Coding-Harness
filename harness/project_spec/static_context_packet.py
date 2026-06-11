@@ -27,6 +27,18 @@ DocumentAuthority = Literal[
   "operational_state",
 ]
 
+CoverageStatus = Literal[
+  "included",
+  "missing",
+  "invalid",
+]
+
+ValidationStatus = Literal[
+  "passed",
+  "failed",
+  "not_run",
+]
+
 
 class StaticContextPacketMetadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
@@ -53,26 +65,33 @@ class MissingSourceEntry(BaseModel):
 class InvalidSourceEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  source_id: SourceId
-  schema_id: StaticSchemaId
-  document_authority: DocumentAuthority
-  effect: Literal[
-    "blocks_compilation",
-    "excluded_from_packet"
-    ]
+  source_id: str
+  reason: Literal["not_declared_in_manifest"]
+  effect: Literal["blocks_compilation"]
+
+
+class SourceValidation(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  status: ValidationStatus
+  validator: Literal["pydantic"]
+  model: StaticSchemaId
+  normalized_output_available: bool
+  failure: str | None = None
 
 
 class SourceCoverageEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   source_id: SourceId
+  layer: Literal["static_context"]
+  required: bool
+  required_when: str | None = None
   schema_id: StaticSchemaId
   document_authority: DocumentAuthority
-  status: MissingSourceEntry | InvalidSourceEntry | Literal[
-    "included",
-    "skipped"
-    ]
-  resolved_path: str | None
+  status: CoverageStatus
+  resolved_path: str | None = None
+  validation: SourceValidation
   basis: list[str] = Field(default_factory=list)
 
 

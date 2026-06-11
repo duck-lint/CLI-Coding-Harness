@@ -26,7 +26,7 @@ class Source(BaseModel):
   scope: Literal["harness_global", "target_repo"]
 
   required: bool
-  required_when: str | None
+  required_when: str | None = None
 
   document_authority: Literal[
     "invariant_authority",
@@ -34,8 +34,8 @@ class Source(BaseModel):
     "operational_state",
   ]
 
-  document: str | None
-  document_glob: str | None
+  document: str | None = None
+  document_glob: str | None = None
 
   schema_id: Literal[
     "governance_primitives",
