@@ -66,16 +66,9 @@ class InstructionContract(BaseModel):
 class AgentInputPolicyEntry(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  input_id: Literal["static_context_packet"]
-  required: Literal[True]
-  schema_ref: Literal["../project_spec/StaticContextPacket.schema.json"]
-
-
-class ProjectManagerReport(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  required: Literal[True] = True
-  schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
+  input_id: str
+  required: bool
+  schema_ref: str
 
 
 class AgentOutputPolicyEntry(BaseModel):
@@ -84,12 +77,6 @@ class AgentOutputPolicyEntry(BaseModel):
   output_id: Literal["project_manager_report"]
   required: Literal[True]
   schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
-
-
-class RuntimeOutputs(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  project_manager_report: ProjectManagerReport
 
 
 class ProjectManagerAgent(BaseModel):

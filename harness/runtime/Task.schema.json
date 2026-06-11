@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "Metadata": {
+    "TaskMetadata": {
       "additionalProperties": false,
       "properties": {
         "document_id": {
@@ -15,7 +15,7 @@
           "type": "string"
         },
         "purpose": {
-          "const": "This file assigns the task to the agent.",
+          "const": "Records the current user task for a harness run.",
           "title": "Purpose",
           "type": "string"
         },
@@ -37,60 +37,30 @@
         "source_format",
         "document_authority"
       ],
-      "title": "Metadata",
-      "type": "object"
-    },
-    "TaskItem": {
-      "additionalProperties": false,
-      "properties": {
-        "task_text": {
-          "title": "Task Text",
-          "type": "string"
-        },
-        "created_at": {
-          "title": "Created At",
-          "type": "string"
-        },
-        "requested_agent": {
-          "title": "Requested Agent",
-          "type": "string"
-        },
-        "run_id": {
-          "title": "Run Id",
-          "type": "string"
-        }
-      },
-      "required": [
-        "task_text",
-        "created_at",
-        "requested_agent",
-        "run_id"
-      ],
-      "title": "TaskItem",
+      "title": "TaskMetadata",
       "type": "object"
     }
   },
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "title": "$Schema",
+    "metadata": {
+      "$ref": "#/$defs/TaskMetadata"
+    },
+    "task_text": {
+      "minLength": 1,
+      "title": "Task Text",
       "type": "string"
     },
-    "metadata": {
-      "$ref": "#/$defs/Metadata"
-    },
-    "task": {
-      "items": {
-        "$ref": "#/$defs/TaskItem"
-      },
-      "title": "Task",
-      "type": "array"
+    "source": {
+      "const": "cli",
+      "title": "Source",
+      "type": "string"
     }
   },
   "required": [
-    "$schema",
     "metadata",
-    "task"
+    "task_text",
+    "source"
   ],
   "title": "Task",
   "type": "object"

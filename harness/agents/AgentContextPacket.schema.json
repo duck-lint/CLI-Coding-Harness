@@ -1,0 +1,767 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "AgentContextInputCoverageEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "input_id": {
+          "title": "Input Id",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "included",
+            "missing",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "schema_ref": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema Ref"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        }
+      },
+      "required": [
+        "input_id",
+        "required",
+        "status"
+      ],
+      "title": "AgentContextInputCoverageEntry",
+      "type": "object"
+    },
+    "AgentContextPacketMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "agent_context_packet.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Agent Context Packet",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Agent-specific context compiled from the selected agent input policy.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "AgentContextPacketMetadata",
+      "type": "object"
+    },
+    "AgentInputPolicyEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "input_id": {
+          "title": "Input Id",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "input_id",
+        "required",
+        "schema_ref"
+      ],
+      "title": "AgentInputPolicyEntry",
+      "type": "object"
+    },
+    "AgentOutputPolicyEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "output_id": {
+          "const": "project_manager_report",
+          "title": "Output Id",
+          "type": "string"
+        },
+        "required": {
+          "const": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../contracts/ProjectManagerReport.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "output_id",
+        "required",
+        "schema_ref"
+      ],
+      "title": "AgentOutputPolicyEntry",
+      "type": "object"
+    },
+    "AgentResolvedInputs": {
+      "additionalProperties": false,
+      "properties": {
+        "static_context_packet": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StaticContextPacket"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "AgentResolvedInputs",
+      "type": "object"
+    },
+    "InstructionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "role": {
+          "title": "Role",
+          "type": "string"
+        },
+        "posture": {
+          "title": "Posture",
+          "type": "string"
+        },
+        "objective": {
+          "title": "Objective",
+          "type": "string"
+        },
+        "validity_conditions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Validity Conditions",
+          "type": "array"
+        },
+        "project_manager_report_derivation_rules": {
+          "$ref": "#/$defs/ProjectManagerReportDerivationRules"
+        },
+        "conduct_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Conduct Rules",
+          "type": "array"
+        },
+        "review_lenses": {
+          "$ref": "#/$defs/ReviewLenses"
+        }
+      },
+      "required": [
+        "role",
+        "posture",
+        "objective",
+        "validity_conditions",
+        "project_manager_report_derivation_rules",
+        "conduct_rules",
+        "review_lenses"
+      ],
+      "title": "InstructionContract",
+      "type": "object"
+    },
+    "Metadata": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "const": "project_manager.agent.json",
+          "title": "Id",
+          "type": "string"
+        },
+        "agent_name": {
+          "const": "Project Manager",
+          "title": "Agent Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "agent_name"
+      ],
+      "title": "Metadata",
+      "type": "object"
+    },
+    "MissingSourceEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "document_authority": {
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
+          "title": "Document Authority",
+          "type": "string"
+        },
+        "effect": {
+          "enum": [
+            "blocks_compilation",
+            "recorded_absent"
+          ],
+          "title": "Effect",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "schema_id",
+        "document_authority",
+        "effect"
+      ],
+      "title": "MissingSourceEntry",
+      "type": "object"
+    },
+    "ProjectManagerAgent": {
+      "additionalProperties": false,
+      "properties": {
+        "$schema": {
+          "title": "$Schema",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/Metadata"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "instruction_contract": {
+          "$ref": "#/$defs/InstructionContract"
+        },
+        "agent_input_policy": {
+          "items": {
+            "$ref": "#/$defs/AgentInputPolicyEntry"
+          },
+          "title": "Agent Input Policy",
+          "type": "array"
+        },
+        "agent_output_policy": {
+          "items": {
+            "$ref": "#/$defs/AgentOutputPolicyEntry"
+          },
+          "title": "Agent Output Policy",
+          "type": "array"
+        }
+      },
+      "required": [
+        "$schema",
+        "metadata",
+        "model",
+        "instruction_contract",
+        "agent_input_policy",
+        "agent_output_policy"
+      ],
+      "title": "ProjectManagerAgent",
+      "type": "object"
+    },
+    "ProjectManagerReportDerivationRules": {
+      "additionalProperties": false,
+      "properties": {
+        "evaluation_basis": {
+          "title": "Evaluation Basis",
+          "type": "string"
+        },
+        "drift_checks": {
+          "title": "Drift Checks",
+          "type": "string"
+        },
+        "next_step_recommendations": {
+          "title": "Next Step Recommendations",
+          "type": "string"
+        },
+        "repository_state": {
+          "title": "Repository State",
+          "type": "string"
+        },
+        "status_semantics": {
+          "$ref": "#/$defs/StatusSemantics"
+        }
+      },
+      "required": [
+        "evaluation_basis",
+        "drift_checks",
+        "next_step_recommendations",
+        "repository_state",
+        "status_semantics"
+      ],
+      "title": "ProjectManagerReportDerivationRules",
+      "type": "object"
+    },
+    "ReviewLenses": {
+      "additionalProperties": false,
+      "properties": {
+        "invariant_coverage": {
+          "title": "Invariant Coverage",
+          "type": "string"
+        },
+        "task_coverage": {
+          "title": "Task Coverage",
+          "type": "string"
+        },
+        "source_coverage_truthfulness": {
+          "title": "Source Coverage Truthfulness",
+          "type": "string"
+        },
+        "conflict_visibility": {
+          "title": "Conflict Visibility",
+          "type": "string"
+        },
+        "admissible_transformation_coverage": {
+          "title": "Admissible Transformation Coverage",
+          "type": "string"
+        },
+        "surface_truthfulness": {
+          "title": "Surface Truthfulness",
+          "type": "string"
+        },
+        "evidence_quality": {
+          "title": "Evidence Quality",
+          "type": "string"
+        },
+        "fixture_truthfulness": {
+          "title": "Fixture Truthfulness",
+          "type": "string"
+        },
+        "posture_concreteness": {
+          "title": "Posture Concreteness",
+          "type": "string"
+        },
+        "thesis_attractor_discipline": {
+          "title": "Thesis Attractor Discipline",
+          "type": "string"
+        },
+        "tension_selection": {
+          "title": "Tension Selection",
+          "type": "string"
+        },
+        "frontier_selection": {
+          "title": "Frontier Selection",
+          "type": "string"
+        },
+        "optionality_preservation": {
+          "title": "Optionality Preservation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "invariant_coverage",
+        "task_coverage",
+        "source_coverage_truthfulness",
+        "conflict_visibility",
+        "admissible_transformation_coverage",
+        "surface_truthfulness",
+        "evidence_quality",
+        "fixture_truthfulness",
+        "posture_concreteness",
+        "thesis_attractor_discipline",
+        "tension_selection",
+        "frontier_selection",
+        "optionality_preservation"
+      ],
+      "title": "ReviewLenses",
+      "type": "object"
+    },
+    "SourceCoverageEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "layer": {
+          "const": "static_context",
+          "title": "Layer",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "required_when": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Required When"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "document_authority": {
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
+          "title": "Document Authority",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "included",
+            "missing",
+            "invalid"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "resolved_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved Path"
+        },
+        "validation": {
+          "$ref": "#/$defs/SourceValidation"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source_id",
+        "layer",
+        "required",
+        "schema_id",
+        "document_authority",
+        "status",
+        "validation"
+      ],
+      "title": "SourceCoverageEntry",
+      "type": "object"
+    },
+    "SourceValidation": {
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "validator": {
+          "const": "pydantic",
+          "title": "Validator",
+          "type": "string"
+        },
+        "model": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Model",
+          "type": "string"
+        },
+        "normalized_output_available": {
+          "title": "Normalized Output Available",
+          "type": "boolean"
+        },
+        "failure": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Failure"
+        }
+      },
+      "required": [
+        "status",
+        "validator",
+        "model",
+        "normalized_output_available"
+      ],
+      "title": "SourceValidation",
+      "type": "object"
+    },
+    "StaticContextPacket": {
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "$ref": "#/$defs/StaticContextPacketMetadata"
+        },
+        "governance_primitives": {
+          "additionalProperties": true,
+          "title": "Governance Primitives",
+          "type": "object"
+        },
+        "project_spec": {
+          "additionalProperties": true,
+          "title": "Project Spec",
+          "type": "object"
+        },
+        "known_failures": {
+          "additionalProperties": true,
+          "title": "Known Failures",
+          "type": "object"
+        },
+        "open_decisions": {
+          "additionalProperties": true,
+          "title": "Open Decisions",
+          "type": "object"
+        },
+        "active_implementation_plan": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Active Implementation Plan"
+        },
+        "active_implementation_tracker": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Active Implementation Tracker"
+        },
+        "source_coverage": {
+          "items": {
+            "$ref": "#/$defs/SourceCoverageEntry"
+          },
+          "title": "Source Coverage",
+          "type": "array"
+        },
+        "missing_sources": {
+          "items": {
+            "$ref": "#/$defs/MissingSourceEntry"
+          },
+          "title": "Missing Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "metadata",
+        "governance_primitives",
+        "project_spec",
+        "known_failures",
+        "open_decisions",
+        "source_coverage"
+      ],
+      "title": "StaticContextPacket",
+      "type": "object"
+    },
+    "StaticContextPacketMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "static_context_packet.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Static Context Packet",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Compiled static authority and operational context from StaticContextPacketManifest.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "StaticContextPacketMetadata",
+      "type": "object"
+    },
+    "StatusSemantics": {
+      "additionalProperties": false,
+      "properties": {
+        "admissible": {
+          "const": "The task can proceed under current project and task authority.",
+          "title": "Admissible",
+          "type": "string"
+        },
+        "admissibility_blocked": {
+          "const": "The PM cannot judge or proceed because required basis, context, or authority is missing.",
+          "title": "Admissibility Blocked",
+          "type": "string"
+        },
+        "rejected": {
+          "const": "The task conflicts with invariant project or harness authority.",
+          "title": "Rejected",
+          "type": "string"
+        },
+        "needs_clarification": {
+          "const": "The task is ambiguous enough that user clarification is required, but no invariant conflict is established.",
+          "title": "Needs Clarification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "admissible",
+        "admissibility_blocked",
+        "rejected",
+        "needs_clarification"
+      ],
+      "title": "StatusSemantics",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/AgentContextPacketMetadata"
+    },
+    "agent_contract": {
+      "$ref": "#/$defs/ProjectManagerAgent"
+    },
+    "resolved_inputs": {
+      "$ref": "#/$defs/AgentResolvedInputs"
+    },
+    "input_coverage": {
+      "items": {
+        "$ref": "#/$defs/AgentContextInputCoverageEntry"
+      },
+      "title": "Input Coverage",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "agent_contract",
+    "resolved_inputs"
+  ],
+  "title": "AgentContextPacket",
+  "type": "object"
+}

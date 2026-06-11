@@ -11,6 +11,10 @@ from pydantic import BaseModel
 def load_model_class(model_file_path: Path, class_name: str) -> type[BaseModel]:
   """Load a Pydantic model class from a Python file."""
 
+  working_directory = str(Path.cwd())
+  if working_directory not in sys.path:
+    sys.path.insert(0, working_directory)
+
   module_name = model_file_path.stem
 
   module_spec = importlib.util.spec_from_file_location(

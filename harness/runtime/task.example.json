@@ -1,18 +1,11 @@
 {
-  "$schema": "./Task.schema.json",
   "metadata": {
     "document_id": "task.json",
     "title": "Task",
-    "purpose": "This file assigns the task to the agent.",
+    "purpose": "Records the current user task for a harness run.",
     "source_format": "json",
-    "document_authority": "task_authority.example"
+    "document_authority": "task_authority"
   },
-  "task": [
-    {
-      "task_text": "Text passed through the terminal that assigns the task to the agent/model.",
-      "created_at": "<date_and_timestamp>",
-      "requested_agent": "../agents/**",
-      "run_id": "string"
-    }
-  ]
+  "task_text": "Review the current project trajectory and identify the next admissible transformation.",
+  "source": "cli"
 }

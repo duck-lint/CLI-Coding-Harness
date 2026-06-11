@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "source_id": {
+      "title": "Source Id",
+      "type": "string"
+    },
+    "source_type": {
+      "enum": [
+        "user_note",
+        "file",
+        "attachment",
+        "manual_context",
+        "static_context_packet"
+      ],
+      "title": "Source Type",
+      "type": "string"
+    },
+    "content": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "items": {},
+          "type": "array"
+        }
+      ],
+      "title": "Content"
+    },
+    "included": {
+      "default": true,
+      "title": "Included",
+      "type": "boolean"
+    },
+    "basis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Basis",
+      "type": "array"
+    }
+  },
+  "required": [
+    "source_id",
+    "source_type",
+    "content"
+  ],
+  "title": "SupplementaryContextEntry",
+  "type": "object"
+}
