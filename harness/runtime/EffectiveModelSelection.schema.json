@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "EffectiveModelSelectionMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "effective_model_selection.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Effective Model Selection",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Records deterministic provider/model selection before provider-specific payload rendering.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "EffectiveModelSelectionMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/EffectiveModelSelectionMetadata"
+    },
+    "provider": {
+      "title": "Provider",
+      "type": "string"
+    },
+    "model": {
+      "title": "Model",
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "agent_contract",
+        "provider_runtime_policy.default_direct_model",
+        "provider_runtime_policy.fallback_model"
+      ],
+      "title": "Source",
+      "type": "string"
+    },
+    "fallback_used": {
+      "default": false,
+      "title": "Fallback Used",
+      "type": "boolean"
+    },
+    "requested_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Requested Model"
+    },
+    "basis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Basis",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "provider",
+    "model",
+    "source"
+  ],
+  "title": "EffectiveModelSelection",
+  "type": "object"
+}

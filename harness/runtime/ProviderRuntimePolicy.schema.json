@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "ModelRef": {
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "const": "openai",
+          "title": "Provider",
+          "type": "string"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "model"
+      ],
+      "title": "ModelRef",
+      "type": "object"
+    },
+    "ProviderRuntimePolicyMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "provider_runtime.policy.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Provider Runtime Policy",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Defines provider/model defaults, allowed models, and fallback behavior for provider rendering.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "runtime_policy",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "ProviderRuntimePolicyMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "$Schema"
+    },
+    "metadata": {
+      "$ref": "#/$defs/ProviderRuntimePolicyMetadata"
+    },
+    "default_direct_model": {
+      "$ref": "#/$defs/ModelRef"
+    },
+    "allowed_models": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "propertyNames": {
+        "const": "openai"
+      },
+      "title": "Allowed Models",
+      "type": "object"
+    },
+    "fallback_strategy": {
+      "default": "fail",
+      "enum": [
+        "fail",
+        "first_allowed_fallback"
+      ],
+      "title": "Fallback Strategy",
+      "type": "string"
+    },
+    "fallback_models": {
+      "items": {
+        "$ref": "#/$defs/ModelRef"
+      },
+      "title": "Fallback Models",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "default_direct_model",
+    "allowed_models"
+  ],
+  "title": "ProviderRuntimePolicy",
+  "type": "object"
+}

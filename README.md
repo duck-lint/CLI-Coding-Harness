@@ -53,6 +53,17 @@ Build a provider-neutral API call packet for an agent-routed task:
 python harness/runtime/api_call_packet_builder.py --task "Review the current project trajectory." --agent harness/agents/project_manager.agent.json
 ```
 
+Resolve effective model selection:
+
+```powershell
+python harness/runtime/model_resolution.py --api-call-packet harness/runs/api_call_packet.json --provider-runtime-policy harness/runtime/provider_runtime.policy.json
+```
+
+This records which provider/model would be used before provider-specific
+payload rendering. Agent-routed calls use the selected agent contract model as
+primary authority. Direct calls use the provider runtime policy default.
+Runtime budget constrains token behavior and does not select the model.
+
 These scripts emit the current bounded-slice artifacts:
 
 - `static_context_packet.json`

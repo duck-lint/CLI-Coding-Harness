@@ -1,0 +1,22 @@
+{
+  "$schema": "ProviderRuntimePolicy.schema.json",
+  "metadata": {
+    "document_id": "provider_runtime.policy.json",
+    "title": "Provider Runtime Policy",
+    "purpose": "Defines provider/model defaults, allowed models, and fallback behavior for provider rendering.",
+    "source_format": "json",
+    "document_authority": "runtime_policy"
+  },
+  "default_direct_model": {
+    "provider": "openai",
+    "model": "gpt-5.4-mini"
+  },
+  "allowed_models": {
+    "openai": [
+      "gpt-5.4-mini",
+      "gpt-5.4"
+    ]
+  },
+  "fallback_strategy": "fail",
+  "fallback_models": []
+}
