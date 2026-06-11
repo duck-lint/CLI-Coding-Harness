@@ -1,6 +1,6 @@
 work in progress
 
-hard cutting over from `.json` files to Pydantic models and `.schema.json`'s
+working on compilers for API response calls
 
 custom CLI agent harness for API calls
   constructed on semantic geometry.
