@@ -15,7 +15,7 @@ from harness.project_spec.static_context_packet_compiler import (
   StaticContextCompilationError,
   compile_static_context_packet,
   enforce_cardinality,
-  find_undeclared_sources,
+  enforce_no_undeclared_included_sources,
   load_and_validate_manifest,
 )
 from harness.project_spec.static_context_packet_manifest import Source
@@ -105,7 +105,6 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
         )
       )
       self.assertEqual(packet.missing_sources, [])
-      self.assertEqual(packet.invalid_sources, [])
       self.assertEqual(
         packet.governance_primitives["metadata"]["document_id"],
         "governance_primitives.json",
@@ -176,7 +175,7 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
         )
       )
 
-  def test_invalid_optional_source_is_excluded_and_recorded(self) -> None:
+  def test_invalid_optional_source_blocks_compilation(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
       target_root = copy_target_sources(
@@ -194,26 +193,24 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
       plan_path.write_text(json.dumps(raw), encoding="utf-8")
       output_path = temp_root / "static_context_packet.json"
 
-      packet = compile_static_context_packet(
-        MANIFEST_PATH,
-        HARNESS_ROOT,
-        target_root,
-        output_path,
-      )
+      with self.assertRaises(StaticContextCompilationError) as error:
+        compile_static_context_packet(
+          MANIFEST_PATH,
+          HARNESS_ROOT,
+          target_root,
+          output_path,
+        )
 
-      self.assertTrue(output_path.is_file())
-      self.assertIsNone(packet.active_implementation_plan)
-      self.assertIsNotNone(packet.active_implementation_tracker)
+      self.assertFalse(output_path.exists())
       self.assertTrue(
         any(
           entry.source_id == "active_implementation_plan"
           and entry.status == "invalid"
           and entry.validation.status == "failed"
           and not entry.validation.normalized_output_available
-          for entry in packet.source_coverage
+          for entry in error.exception.source_coverage
         )
       )
-      self.assertEqual(packet.invalid_sources, [])
 
   def test_missing_required_source_blocks_without_emitting_packet(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -262,7 +259,6 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
         )
 
       self.assertFalse(output_path.exists())
-      self.assertEqual(error.exception.invalid_sources, [])
       self.assertTrue(
         any(
           entry.source_id == "known_failures"
@@ -274,23 +270,19 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
 
   def test_undeclared_packet_source_is_invalid(self) -> None:
     manifest = load_and_validate_manifest(MANIFEST_PATH)
-    invalid_sources = find_undeclared_sources(
-      {
-        "governance_primitives": {},
-        "unexpected_runtime_document": {},
-      },
-      manifest,
-    )
 
-    self.assertEqual(len(invalid_sources), 1)
-    self.assertEqual(
-      invalid_sources[0].model_dump(mode="json"),
-      {
-        "source_id": "unexpected_runtime_document",
-        "reason": "not_declared_in_manifest",
-        "effect": "blocks_compilation",
-      },
-    )
+    with self.assertRaises(StaticContextCompilationError) as error:
+      enforce_no_undeclared_included_sources(
+        {
+          "governance_primitives": {},
+          "unexpected_runtime_document": {},
+        },
+        manifest,
+        source_coverage=[],
+        missing_sources=[],
+      )
+
+    self.assertIn("unexpected_runtime_document", str(error.exception))
 
   def test_emitted_packet_validates_against_generated_schema(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -307,6 +299,12 @@ class StaticContextPacketCompilerTests(unittest.TestCase):
 
       Draft202012Validator.check_schema(schema)
       Draft202012Validator(schema).validate(emitted)
+
+  def test_generated_schema_has_no_invalid_sources_category(self) -> None:
+    schema = json.loads(PACKET_SCHEMA_PATH.read_text(encoding="utf-8"))
+
+    self.assertNotIn("InvalidSourceEntry", schema.get("$defs", {}))
+    self.assertNotIn("invalid_sources", schema["properties"])
 
   def test_all_cardinality_modes(self) -> None:
     cases = [

@@ -1,32 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
-    "InvalidSourceEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "source_id": {
-          "title": "Source Id",
-          "type": "string"
-        },
-        "reason": {
-          "const": "not_declared_in_manifest",
-          "title": "Reason",
-          "type": "string"
-        },
-        "effect": {
-          "const": "blocks_compilation",
-          "title": "Effect",
-          "type": "string"
-        }
-      },
-      "required": [
-        "source_id",
-        "reason",
-        "effect"
-      ],
-      "title": "InvalidSourceEntry",
-      "type": "object"
-    },
     "MissingSourceEntry": {
       "additionalProperties": false,
       "properties": {
@@ -340,13 +314,6 @@
         "$ref": "#/$defs/MissingSourceEntry"
       },
       "title": "Missing Sources",
-      "type": "array"
-    },
-    "invalid_sources": {
-      "items": {
-        "$ref": "#/$defs/InvalidSourceEntry"
-      },
-      "title": "Invalid Sources",
       "type": "array"
     }
   },

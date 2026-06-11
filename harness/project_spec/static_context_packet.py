@@ -62,14 +62,6 @@ class MissingSourceEntry(BaseModel):
     ]
 
 
-class InvalidSourceEntry(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  source_id: str
-  reason: Literal["not_declared_in_manifest"]
-  effect: Literal["blocks_compilation"]
-
-
 class SourceValidation(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
@@ -109,4 +101,3 @@ class StaticContextPacket(BaseModel):
 
   source_coverage: list[SourceCoverageEntry]
   missing_sources: list[MissingSourceEntry] = Field(default_factory=list)
-  invalid_sources: list[InvalidSourceEntry] = Field(default_factory=list)

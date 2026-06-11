@@ -19,7 +19,6 @@ from harness.project_spec.open_decisions import OpenDecisions
 from harness.project_spec.project_spec import ProjectSpec
 from harness.project_spec.static_context_packet import (
   CoverageStatus,
-  InvalidSourceEntry,
   MissingSourceEntry,
   SourceCoverageEntry,
   SourceValidation,
@@ -56,12 +55,10 @@ class StaticContextCompilationError(RuntimeError):
     *,
     source_coverage: list[SourceCoverageEntry],
     missing_sources: list[MissingSourceEntry],
-    invalid_sources: list[InvalidSourceEntry],
   ) -> None:
     super().__init__(message)
     self.source_coverage = source_coverage
     self.missing_sources = missing_sources
-    self.invalid_sources = invalid_sources
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -161,20 +158,23 @@ def _reference_description(source: Source) -> str:
   return f"{source.scope}:{reference}"
 
 
-def find_undeclared_sources(
+def enforce_no_undeclared_included_sources(
   included: dict[str, dict[str, Any] | None],
   manifest: StaticContextPacketManifest,
-) -> list[InvalidSourceEntry]:
+  *,
+  source_coverage: list[SourceCoverageEntry],
+  missing_sources: list[MissingSourceEntry],
+) -> None:
   declared_source_ids = {source.source_id for source in manifest.sources}
+  undeclared_source_ids = sorted(set(included) - declared_source_ids)
 
-  return [
-    InvalidSourceEntry(
-      source_id=source_id,
-      reason="not_declared_in_manifest",
-      effect="blocks_compilation",
+  if undeclared_source_ids:
+    raise StaticContextCompilationError(
+      "Static context compilation blocked because undeclared sources crossed "
+      f"the manifest boundary: {undeclared_source_ids}",
+      source_coverage=source_coverage,
+      missing_sources=missing_sources,
     )
-    for source_id in sorted(set(included) - declared_source_ids)
-  ]
 
 
 def compile_static_context_packet(
@@ -188,7 +188,6 @@ def compile_static_context_packet(
   included: dict[str, dict[str, Any] | None] = {}
   source_coverage: list[SourceCoverageEntry] = []
   missing_sources: list[MissingSourceEntry] = []
-  invalid_sources: list[InvalidSourceEntry] = []
 
   for source in manifest.sources:
     paths = resolve_source_paths(source, harness_root, target_repo_root)
@@ -284,7 +283,12 @@ def compile_static_context_packet(
       )
     )
 
-  invalid_sources.extend(find_undeclared_sources(included, manifest))
+  enforce_no_undeclared_included_sources(
+    included,
+    manifest,
+    source_coverage=source_coverage,
+    missing_sources=missing_sources,
+  )
 
   blocking_missing = [
     entry for entry in missing_sources if entry.effect == "blocks_compilation"
@@ -292,15 +296,14 @@ def compile_static_context_packet(
   blocking_source_failures = [
     entry
     for entry in source_coverage
-    if entry.required and entry.status == "invalid"
+    if entry.status == "invalid"
   ]
 
-  if blocking_missing or blocking_source_failures or invalid_sources:
+  if blocking_missing or blocking_source_failures:
     raise StaticContextCompilationError(
-      "Static context compilation blocked by required source diagnostics.",
+      "Static context compilation blocked by source diagnostics.",
       source_coverage=source_coverage,
       missing_sources=missing_sources,
-      invalid_sources=invalid_sources,
     )
 
   packet = StaticContextPacket(
@@ -319,7 +322,6 @@ def compile_static_context_packet(
     active_implementation_tracker=included.get("active_implementation_tracker"),
     source_coverage=source_coverage,
     missing_sources=missing_sources,
-    invalid_sources=invalid_sources,
   )
 
   emitted = packet.model_dump(mode="json")
@@ -386,7 +388,7 @@ def main(argv: list[str] | None = None) -> int:
     "Sources: "
     f"{sum(entry.status == 'included' for entry in packet.source_coverage)} included, "
     f"{len(packet.missing_sources)} missing, "
-    f"{len(packet.invalid_sources)} invalid."
+    f"{sum(entry.status == 'invalid' for entry in packet.source_coverage)} invalid."
   )
   return 0
 
