@@ -1,8 +1,4 @@
-# Bridge Schema
-
-Use this full schema for high-risk or epistemically sensitive moves. For local code edits, use the compressed form in ../runtime/runtime_doctrine.json.
-
-## Full Bridge
+## Bridge Schema
 
 - Source / provenance: what is actually observed or reported, and what authority it can carry.
 - Method: what reasoning, trace, test, call site, or contract connects the source to the conclusion.

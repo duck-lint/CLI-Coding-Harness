@@ -238,7 +238,6 @@
         "./project_spec/project_spec.json",
         "./project_spec/known_failures.json",
         "./project_spec/open_decisions.json",
-        "../runtime/runtime_doctrine.json or current runtime doctrine file.",
         "../runtime/runtime_budget.policy.json",
         "../agents/*.agent.json",
         "../contracts/*.schema.json or generated Pydantic contracts."

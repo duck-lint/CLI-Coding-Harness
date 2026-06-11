@@ -1,11 +1,4 @@
 # Type System Operational Guide
-
-Use this during normal coding work so evidence, inference, user intent, proposed action, and validated result do not blur together.
-
-## Practical Rule
-
-For normal coding work, say the source, inference, unknowns, expected consequence, and validation path. Use the full bridge only when the move is risky or conceptually easy to confuse.
-
 ## Registers
 
 - Agent-independent constraints: runtime behavior, code contracts, schemas, tests, environmental limits, and observable regularities.
