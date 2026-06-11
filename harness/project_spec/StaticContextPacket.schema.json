@@ -1,0 +1,318 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "InvalidSourceEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "document_authority": {
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
+          "title": "Document Authority",
+          "type": "string"
+        },
+        "effect": {
+          "enum": [
+            "blocks_compilation",
+            "excluded_from_packet"
+          ],
+          "title": "Effect",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "schema_id",
+        "document_authority",
+        "effect"
+      ],
+      "title": "InvalidSourceEntry",
+      "type": "object"
+    },
+    "MissingSourceEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "document_authority": {
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
+          "title": "Document Authority",
+          "type": "string"
+        },
+        "effect": {
+          "enum": [
+            "blocks_compilation",
+            "recorded_absent"
+          ],
+          "title": "Effect",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source_id",
+        "schema_id",
+        "document_authority",
+        "effect"
+      ],
+      "title": "MissingSourceEntry",
+      "type": "object"
+    },
+    "SourceCoverageEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "source_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "active_implementation_plan",
+            "active_implementation_tracker"
+          ],
+          "title": "Source Id",
+          "type": "string"
+        },
+        "schema_id": {
+          "enum": [
+            "governance_primitives",
+            "project_spec",
+            "known_failures",
+            "open_decisions",
+            "implementation_plan",
+            "implementation_tracker"
+          ],
+          "title": "Schema Id",
+          "type": "string"
+        },
+        "document_authority": {
+          "enum": [
+            "invariant_authority",
+            "failure_evidence",
+            "operational_state"
+          ],
+          "title": "Document Authority",
+          "type": "string"
+        },
+        "status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/MissingSourceEntry"
+            },
+            {
+              "$ref": "#/$defs/InvalidSourceEntry"
+            },
+            {
+              "enum": [
+                "included",
+                "skipped"
+              ],
+              "type": "string"
+            }
+          ],
+          "title": "Status"
+        },
+        "resolved_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Resolved Path"
+        },
+        "basis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Basis",
+          "type": "array"
+        }
+      },
+      "required": [
+        "source_id",
+        "schema_id",
+        "document_authority",
+        "status",
+        "resolved_path"
+      ],
+      "title": "SourceCoverageEntry",
+      "type": "object"
+    },
+    "StaticContextPacketMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "static_context_packet.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Static Context Packet",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Compiled static authority and operational context from StaticContextPacketManifest.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "StaticContextPacketMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/StaticContextPacketMetadata"
+    },
+    "governance_primitives": {
+      "additionalProperties": true,
+      "title": "Governance Primitives",
+      "type": "object"
+    },
+    "project_spec": {
+      "additionalProperties": true,
+      "title": "Project Spec",
+      "type": "object"
+    },
+    "known_failures": {
+      "additionalProperties": true,
+      "title": "Known Failures",
+      "type": "object"
+    },
+    "open_decisions": {
+      "additionalProperties": true,
+      "title": "Open Decisions",
+      "type": "object"
+    },
+    "active_implementation_plan": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Active Implementation Plan"
+    },
+    "active_implementation_tracker": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Active Implementation Tracker"
+    },
+    "source_coverage": {
+      "items": {
+        "$ref": "#/$defs/SourceCoverageEntry"
+      },
+      "title": "Source Coverage",
+      "type": "array"
+    },
+    "missing_sources": {
+      "items": {
+        "$ref": "#/$defs/MissingSourceEntry"
+      },
+      "title": "Missing Sources",
+      "type": "array"
+    },
+    "invalid_sources": {
+      "items": {
+        "$ref": "#/$defs/InvalidSourceEntry"
+      },
+      "title": "Invalid Sources",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "governance_primitives",
+    "project_spec",
+    "known_failures",
+    "open_decisions",
+    "source_coverage"
+  ],
+  "title": "StaticContextPacket",
+  "type": "object"
+}
