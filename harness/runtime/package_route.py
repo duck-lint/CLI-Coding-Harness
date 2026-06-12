@@ -25,6 +25,11 @@ from harness.contracts.project_manager_report_extractor import (
   ProjectManagerReportExtractorError,
   extract_project_manager_report,
 )
+from harness.contracts.project_manager_report_validation import (
+  ProjectManagerReportValidationArtifact,
+  default_validation_artifact_path,
+)
+from harness.runtime.artifact_facts import sha256_file
 from harness.runtime.api_call_ledger import (
   DEFAULT_RUNTIME_CALL_LEDGER_PATH,
   finalize_runtime_call_ledger,
@@ -107,16 +112,6 @@ def _display_path(path: Path, repo_root: Path) -> str:
     return path.as_posix()
 
 
-def _sha256_file(path: Path) -> str:
-  import hashlib
-
-  digest = hashlib.sha256()
-  with path.open("rb") as file:
-    for chunk in iter(lambda: file.read(8192), b""):
-      digest.update(chunk)
-  return digest.hexdigest()
-
-
 def _load_runtime_budget_policy(harness_root: Path) -> RuntimeBudgetPolicy:
   policy_path = harness_root / "runtime" / "runtime_budget.policy.json"
   return RuntimeBudgetPolicy.model_validate(_load_json(policy_path))
@@ -135,6 +130,7 @@ def run_package_route(
   runs_root: Path,
   repo_root: Path,
 ) -> PackageRouteResult:
+  harness_root = Path(__file__).resolve().parents[1]
   task = task_from_cli(task_text.strip())
   run_directory = _new_run_directory(runs_root)
   task_path = run_directory / "task.json"
@@ -145,10 +141,11 @@ def run_package_route(
   provider_payload_path = run_directory / "provider_payload.json"
   raw_model_response_path = run_directory / "raw_model_response.json"
   report_path = run_directory / "project_manager_report.json"
+  validation_path = default_validation_artifact_path(report_path)
+  schema_path = harness_root / "contracts" / "ProjectManagerReport.schema.json"
 
   _write_json(task_path, task.model_dump(mode="json", by_alias=True))
 
-  harness_root = Path(__file__).resolve().parents[1]
   runtime_budget = _load_runtime_budget_policy(harness_root)
   git_context = collect_git_context(repo_root.resolve())
 
@@ -238,7 +235,7 @@ def run_package_route(
   try:
     report = extract_project_manager_report(
       raw_response_path=raw_model_response_path,
-      schema_path=harness_root / "contracts" / "ProjectManagerReport.schema.json",
+      schema_path=schema_path,
       output_path=report_path,
     )
   except (
@@ -253,16 +250,84 @@ def run_package_route(
   artifact_paths.append(report_path)
 
   try:
+    validation_artifact = ProjectManagerReportValidationArtifact.model_validate(
+      _load_json(validation_path)
+    )
+  except (OSError, TypeError, ValidationError, ValueError) as error:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      str(error),
+    ) from error
+
+  if not validation_artifact.validation_passed:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact reports failure.",
+    )
+
+  if validation_artifact.report_artifact_path != report_path.as_posix():
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact report_artifact_path does not match the report path.",
+    )
+
+  if validation_artifact.schema_path != schema_path.as_posix():
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact schema_path does not match the PM schema path.",
+    )
+
+  if validation_artifact.schema_name != provider_payload.request.text.format.name:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact schema_name does not match the rendered output schema name.",
+    )
+
+  if validation_artifact.report_status != report.report_status:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact report_status does not match the validated report.",
+    )
+
+  if validation_artifact.proof_frontier_blocked != report.proof_frontier.blocked:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact proof_frontier_blocked does not match the validated report.",
+    )
+
+  report_artifact_sha256 = sha256_file(report_path)
+  validation_artifact_sha256 = sha256_file(validation_path)
+  schema_sha256 = sha256_file(schema_path)
+
+  if validation_artifact.report_artifact_sha256 != report_artifact_sha256:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact report hash does not match the report file.",
+    )
+
+  if validation_artifact.schema_sha256 != schema_sha256:
+    raise PackageRouteStepError(
+      "validate_project_manager_report_validation_artifact",
+      "Validation artifact schema hash does not match the PM schema file.",
+    )
+
+  artifact_paths.append(validation_path)
+
+  try:
     finalize_runtime_call_ledger(
       route=route,
       agent=_display_path(agent_path.resolve(), repo_root.resolve()),
       model=provider_payload.request.model,
       schema_name=provider_payload.request.text.format.name,
-      context_packet_sha256=_sha256_file(agent_context_path),
-      validation_passed=True,
+      context_packet_sha256=sha256_file(agent_context_path),
+      validation_passed=validation_artifact.validation_passed,
       provider_response=raw_model_response,
       contract_status=report.report_status,
       output_artifact_path=_display_path(report_path, repo_root.resolve()),
+      report_artifact_path=_display_path(report_path, repo_root.resolve()),
+      report_artifact_sha256=report_artifact_sha256,
+      validation_artifact_path=_display_path(validation_path, repo_root.resolve()),
+      validation_artifact_sha256=validation_artifact_sha256,
       git_commit=git_context.commit,
       worktree_dirty=git_context.is_dirty,
       path=DEFAULT_RUNTIME_CALL_LEDGER_PATH,

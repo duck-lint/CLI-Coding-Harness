@@ -39,6 +39,10 @@ class RuntimeCallLedgerTests(unittest.TestCase):
     self.assertIsNone(record.openai_response_id)
     self.assertIsNone(record.contract_status)
     self.assertIsNone(record.output_artifact_path)
+    self.assertIsNone(record.report_artifact_path)
+    self.assertIsNone(record.report_artifact_sha256)
+    self.assertIsNone(record.validation_artifact_path)
+    self.assertIsNone(record.validation_artifact_sha256)
     self.assertIsNone(record.git_commit)
     self.assertIsNone(record.worktree_dirty)
     self.assertIsNone(record.notes)
@@ -141,6 +145,12 @@ class RuntimeCallLedgerTests(unittest.TestCase):
         provider_response=FakeProviderResponse(),
         contract_status="needs_clarification",
         output_artifact_path="harness/runs/example/project_manager_report.json",
+        report_artifact_path="harness/runs/example/project_manager_report.json",
+        report_artifact_sha256="abc123",
+        validation_artifact_path=(
+          "harness/runs/example/project_manager_report.validation.json"
+        ),
+        validation_artifact_sha256="def456",
         git_commit="deadbeef",
         worktree_dirty=False,
         path=ledger_path,
@@ -159,6 +169,16 @@ class RuntimeCallLedgerTests(unittest.TestCase):
         payload["output_artifact_path"],
         "harness/runs/example/project_manager_report.json",
       )
+      self.assertEqual(
+        payload["report_artifact_path"],
+        "harness/runs/example/project_manager_report.json",
+      )
+      self.assertEqual(payload["report_artifact_sha256"], "abc123")
+      self.assertEqual(
+        payload["validation_artifact_path"],
+        "harness/runs/example/project_manager_report.validation.json",
+      )
+      self.assertEqual(payload["validation_artifact_sha256"], "def456")
       RuntimeCallRecord.model_validate(payload)
 
   def test_default_ledger_path_points_to_state_ledgers(self) -> None:

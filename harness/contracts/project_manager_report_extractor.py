@@ -17,7 +17,13 @@ if __package__ in {None, ""}:
   sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from harness.contracts.project_manager_report import ProjectManagerReport
+from harness.contracts.project_manager_report_validation import (
+  PROJECT_MANAGER_REPORT_VALIDATOR,
+  ProjectManagerReportValidationArtifact,
+  default_validation_artifact_path,
+)
 from harness.providers.openai.openai_raw_response import OpenAIRawResponse
+from harness.runtime.artifact_facts import sha256_file
 
 
 class ProjectManagerReportExtractorError(RuntimeError):
@@ -103,6 +109,23 @@ def extract_project_manager_report(
 
   report = ProjectManagerReport.model_validate(parsed_output)
   _write_json_atomic(output_path, parsed_output)
+
+  validation_artifact_path = default_validation_artifact_path(output_path)
+  validation_artifact = ProjectManagerReportValidationArtifact(
+    report_artifact_path=output_path.as_posix(),
+    report_artifact_sha256=sha256_file(output_path),
+    schema_name=report.metadata.document_id.removesuffix(".json"),
+    schema_path=schema_path.as_posix(),
+    schema_sha256=sha256_file(schema_path),
+    validator=PROJECT_MANAGER_REPORT_VALIDATOR,
+    validation_passed=True,
+    report_status=report.report_status,
+    proof_frontier_blocked=report.proof_frontier.blocked,
+  )
+  _write_json_atomic(
+    validation_artifact_path,
+    validation_artifact.model_dump(mode="json", exclude_none=True),
+  )
   return report
 
 
@@ -113,7 +136,8 @@ def build_argument_parser() -> argparse.ArgumentParser:
   parser = argparse.ArgumentParser(
     description=(
       "Extract output_text from a raw OpenAI response, validate it as a "
-      "ProjectManagerReport, and write the report only if validation succeeds."
+      "ProjectManagerReport, and write the report plus validation evidence "
+      "only if validation succeeds."
     ),
   )
   parser.add_argument(

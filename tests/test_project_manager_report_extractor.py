@@ -15,6 +15,10 @@ from harness.contracts.project_manager_report_extractor import (
   ProjectManagerReportExtractorError,
   extract_project_manager_report,
 )
+from harness.contracts.project_manager_report_validation import (
+  ProjectManagerReportValidationArtifact,
+  default_validation_artifact_path,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +45,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
       output_path = temp_root / "project_manager_report.json"
+      validation_path = default_validation_artifact_path(output_path)
 
       report = extract_project_manager_report(
         raw_response_path=RAW_RESPONSE_FIXTURE_PATH,
@@ -49,6 +54,8 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       )
 
       self.assertTrue(output_path.is_file())
+      self.assertTrue(validation_path.is_file())
+      ProjectManagerReportValidationArtifact.model_validate(load_json(validation_path))
       self.assertEqual(report.report_status, "needs_clarification")
       self.assertTrue(report.proof_frontier.blocked)
 
@@ -77,6 +84,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       raw_response_path = temp_root / "raw_model_response.json"
       output_path = temp_root / "project_manager_report.json"
+      validation_path = default_validation_artifact_path(output_path)
       write_json(raw_response_path, load_json(RAW_RESPONSE_FIXTURE_PATH))
       schema = load_json(PM_SCHEMA_PATH)
       Draft202012Validator.check_schema(schema)
@@ -89,7 +97,9 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       )
 
       self.assertTrue(output_path.is_file())
+      self.assertTrue(validation_path.is_file())
       self.assertEqual(load_json(output_path), expected_output)
+      ProjectManagerReportValidationArtifact.model_validate(load_json(validation_path))
       self.assertEqual(report.report_status, "needs_clarification")
 
   def test_extractor_fails_if_raw_response_status_is_not_completed(self) -> None:
@@ -110,6 +120,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
 
       self.assertIn("status must be 'completed'", str(error.exception))
       self.assertFalse(output_path.exists())
+      self.assertFalse(default_validation_artifact_path(output_path).exists())
 
   def test_extractor_fails_if_output_text_is_null(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -170,6 +181,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
         "raw_model_response.output_text is not valid JSON.",
       )
       self.assertFalse(output_path.exists())
+      self.assertFalse(default_validation_artifact_path(output_path).exists())
 
   def test_extractor_fails_if_output_json_does_not_match_schema(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -233,6 +245,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
         )
 
       self.assertFalse(output_path.exists())
+      self.assertFalse(default_validation_artifact_path(output_path).exists())
 
   def test_extractor_preserves_valid_parsed_json_without_wrapper_metadata(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -284,6 +297,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
 
       self.assertEqual(completed.returncode, 0, completed.stderr)
       self.assertTrue(output_path.is_file())
+      self.assertTrue(default_validation_artifact_path(output_path).is_file())
       self.assertIn("PASS: Project Manager report written to", completed.stdout)
       self.assertIn("Status: needs_clarification", completed.stdout)
       self.assertIn("Blocked: True", completed.stdout)

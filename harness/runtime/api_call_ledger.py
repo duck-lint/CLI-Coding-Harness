@@ -1,21 +1,18 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
+
+from harness.runtime.artifact_facts import utc_now_isoformat
 
 
 # Cross-run append-only runtime state; old ledgers may be copied forward manually.
 DEFAULT_RUNTIME_CALL_LEDGER_PATH = (
   Path(__file__).resolve().parents[1] / "state" / "ledgers" / "api_call_ledger.jsonl"
 )
-
-
-def utc_now_isoformat() -> str:
-  return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
 def generate_local_call_id() -> str:
@@ -45,6 +42,10 @@ class RuntimeCallRecord(BaseModel):
   openai_response_id: str | None = None
   contract_status: str | None = None
   output_artifact_path: str | None = None
+  report_artifact_path: str | None = None
+  report_artifact_sha256: str | None = None
+  validation_artifact_path: str | None = None
+  validation_artifact_sha256: str | None = None
   git_commit: str | None = None
   worktree_dirty: bool | None = None
   notes: str | None = None
@@ -135,6 +136,10 @@ def finalize_runtime_call_ledger(
   openai_response_id: str | None = None,
   contract_status: str | None = None,
   output_artifact_path: str | None = None,
+  report_artifact_path: str | None = None,
+  report_artifact_sha256: str | None = None,
+  validation_artifact_path: str | None = None,
+  validation_artifact_sha256: str | None = None,
   git_commit: str | None = None,
   worktree_dirty: bool | None = None,
   notes: str | None = None,
@@ -181,6 +186,10 @@ def finalize_runtime_call_ledger(
       openai_response_id=openai_response_id,
       contract_status=contract_status,
       output_artifact_path=output_artifact_path,
+      report_artifact_path=report_artifact_path,
+      report_artifact_sha256=report_artifact_sha256,
+      validation_artifact_path=validation_artifact_path,
+      validation_artifact_sha256=validation_artifact_sha256,
       git_commit=git_commit,
       worktree_dirty=worktree_dirty,
       notes=notes,

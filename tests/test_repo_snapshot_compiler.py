@@ -476,6 +476,11 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       repo_root.mkdir()
       build_repo_fixture(repo_root)
       agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
       agent_data["agent_input_policy"].append(
         {
           "input_id": "repo_snapshot_packet",
@@ -517,6 +522,11 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       repo_root.mkdir()
       build_repo_fixture(repo_root)
       agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
       agent_data["agent_input_policy"].append(
         {
           "input_id": "repo_snapshot_packet",
@@ -561,6 +571,11 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       repo_root.mkdir()
       build_repo_fixture(repo_root)
       agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
       agent_data["agent_input_policy"].append(
         {
           "input_id": "repo_snapshot_packet",
@@ -733,6 +748,11 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       repo_root.mkdir()
       build_repo_fixture(repo_root)
       agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
       agent_data["agent_input_policy"].append(
         {
           "input_id": "repo_snapshot_packet",

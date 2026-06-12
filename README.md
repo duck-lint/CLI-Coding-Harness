@@ -157,7 +157,8 @@ python harness/contracts/project_manager_report_extractor.py --raw-response harn
 
 This extracts `output_text` from the raw OpenAI response, parses it as JSON,
 validates it against `ProjectManagerReport.schema.json`, and writes
-`project_manager_report.json` only if validation succeeds.
+`project_manager_report.json` plus `project_manager_report.validation.json`
+only if validation succeeds.
 
 Compile a repo snapshot from one file:
 
@@ -208,6 +209,8 @@ These scripts emit the current bounded-slice artifacts:
 - `provider_payload.json`
 - `raw_model_response.json`
 - `project_manager_report.json`
+- `project_manager_report.validation.json`
 
-The package route above is the normal operator entrypoint. The direct scripts
+The package route above is the normal operator entrypoint. The PM route writes
+the validated report plus its validation evidence sidecar. The direct scripts
 remain available for seam-level debugging.

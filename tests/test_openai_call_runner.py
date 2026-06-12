@@ -261,6 +261,10 @@ class OpenAICallRunnerTests(unittest.TestCase):
       self.assertEqual(payload["actual_output_tokens"], 7)
       self.assertEqual(payload["total_tokens"], 18)
       self.assertEqual(payload["output_artifact_path"], output_path.resolve().as_posix())
+      self.assertNotIn("report_artifact_path", payload)
+      self.assertNotIn("report_artifact_sha256", payload)
+      self.assertNotIn("validation_artifact_path", payload)
+      self.assertNotIn("validation_artifact_sha256", payload)
 
   def test_runner_main_appends_single_ledger_row_without_usage(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -318,6 +322,10 @@ class OpenAICallRunnerTests(unittest.TestCase):
       self.assertNotIn("actual_input_tokens", payload)
       self.assertNotIn("actual_output_tokens", payload)
       self.assertNotIn("total_tokens", payload)
+      self.assertNotIn("report_artifact_path", payload)
+      self.assertNotIn("report_artifact_sha256", payload)
+      self.assertNotIn("validation_artifact_path", payload)
+      self.assertNotIn("validation_artifact_sha256", payload)
 
   def test_runner_loads_and_validates_openai_response_payload(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -490,6 +498,9 @@ class OpenAICallRunnerTests(unittest.TestCase):
         )
 
       self.assertFalse((temp_root / "project_manager_report.json").exists())
+      self.assertFalse(
+        (temp_root / "project_manager_report.validation.json").exists()
+      )
 
   def test_runner_does_not_perform_pm_report_schema_validation(self) -> None:
     module_source = inspect.getsource(

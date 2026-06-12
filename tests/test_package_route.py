@@ -19,6 +19,11 @@ from harness.providers.openai.openai_response_payload_compiler import (
 from harness.contracts.project_manager_report_extractor import (
   ProjectManagerReportExtractorError,
 )
+from harness.contracts.project_manager_report_validation import (
+  ProjectManagerReportValidationArtifact,
+  default_validation_artifact_path,
+)
+from harness.runtime.artifact_facts import sha256_file
 from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime import package_route
 
@@ -157,6 +162,7 @@ class PackageRouteTests(unittest.TestCase):
             "provider_payload.json",
             "raw_model_response.json",
             "project_manager_report.json",
+            "project_manager_report.validation.json",
           },
         )
         self.assertFalse(
@@ -171,6 +177,9 @@ class PackageRouteTests(unittest.TestCase):
         provider_payload = load_json(run_directory / "provider_payload.json")
         raw_response = load_json(run_directory / "raw_model_response.json")
         report = load_json(run_directory / "project_manager_report.json")
+        validation_path = default_validation_artifact_path(
+          run_directory / "project_manager_report.json"
+        )
 
         self.assertEqual(api_call_packet["runtime_budget"], load_json(RUNTIME_BUDGET_PATH))
         self.assertEqual(provider_payload["request"]["model"], load_json(AGENT_PATH)["model"])
@@ -185,6 +194,31 @@ class PackageRouteTests(unittest.TestCase):
         self.assertEqual(raw_response["provider"], "openai")
         self.assertEqual(report["report_status"], "needs_clarification")
         self.assertTrue(report["proof_frontier"]["blocked"])
+        self.assertTrue(validation_path.exists())
+        validation_artifact = load_json(validation_path)
+        ProjectManagerReportValidationArtifact.model_validate(validation_artifact)
+        self.assertEqual(
+          validation_artifact["report_artifact_path"],
+          (run_directory / "project_manager_report.json").resolve().as_posix(),
+        )
+        self.assertEqual(
+          validation_artifact["report_artifact_sha256"],
+          sha256_file(run_directory / "project_manager_report.json"),
+        )
+        self.assertEqual(
+          validation_artifact["schema_name"],
+          provider_payload["request"]["text"]["format"]["name"],
+        )
+        self.assertEqual(
+          validation_artifact["schema_path"],
+          (HARNESS_ROOT / "contracts" / "ProjectManagerReport.schema.json").as_posix(),
+        )
+        self.assertEqual(
+          validation_artifact["schema_sha256"],
+          sha256_file(HARNESS_ROOT / "contracts" / "ProjectManagerReport.schema.json"),
+        )
+        self.assertEqual(validation_artifact["report_status"], "needs_clarification")
+        self.assertTrue(validation_artifact["proof_frontier_blocked"])
 
         self.assertTrue(LEDGER_PATH.exists())
         ledger_lines = LEDGER_PATH.read_text(encoding="utf-8").splitlines()
@@ -200,12 +234,32 @@ class PackageRouteTests(unittest.TestCase):
           ledger_record["output_artifact_path"],
           display_path(run_directory / "project_manager_report.json"),
         )
+        self.assertEqual(
+          ledger_record["report_artifact_path"],
+          display_path(run_directory / "project_manager_report.json"),
+        )
+        self.assertEqual(
+          ledger_record["report_artifact_sha256"],
+          sha256_file(run_directory / "project_manager_report.json"),
+        )
+        self.assertEqual(
+          ledger_record["validation_artifact_path"],
+          display_path(validation_path),
+        )
+        self.assertEqual(
+          ledger_record["validation_artifact_sha256"],
+          sha256_file(validation_path),
+        )
         self.assertNotIn("actual_input_tokens", ledger_record)
         self.assertNotIn("actual_output_tokens", ledger_record)
         self.assertNotIn("total_tokens", ledger_record)
 
         if expected_repo_snapshot_paths is not None:
           repo_snapshot_packet = load_json(run_directory / "repo_snapshot_packet.json")
+          expected_repo_snapshot_paths = [
+            path.replace("<run_directory>", run_directory.name)
+            for path in expected_repo_snapshot_paths
+          ]
           self.assertEqual(
             [file["path"] for file in repo_snapshot_packet["files"]],
             expected_repo_snapshot_paths,
@@ -239,7 +293,11 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Plan route completed.",
       expected_route="plan",
-      expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
+      expected_repo_snapshot_paths=[
+        "harness/runs/20260612-205002-agent-route/project_manager_report.json",
+        "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+        "harness/state/ledgers/api_call_ledger.jsonl",
+      ],
     )
 
   def test_package_cli_runs_generic_agent_route(self) -> None:
@@ -254,7 +312,11 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Agent route completed.",
       expected_route="agent",
-      expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
+      expected_repo_snapshot_paths=[
+        "harness/runs/20260612-205002-agent-route/project_manager_report.json",
+        "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+        "harness/state/ledgers/api_call_ledger.jsonl",
+      ],
     )
 
   def test_package_cli_runs_non_pm_agent_route(self) -> None:
@@ -280,7 +342,11 @@ class PackageRouteTests(unittest.TestCase):
         ],
         expected_banner="PASS: Agent route completed.",
         expected_route="agent",
-        expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
+        expected_repo_snapshot_paths=[
+          "harness/runs/20260612-205002-agent-route/project_manager_report.json",
+          "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+          "harness/state/ledgers/api_call_ledger.jsonl",
+        ],
         agent_path=reviewer_agent_path,
       )
 
@@ -325,6 +391,7 @@ class PackageRouteTests(unittest.TestCase):
       self.assertIn("static_context_packet.json", artifact_names)
       self.assertNotIn("repo_snapshot_packet.json", artifact_names)
       self.assertNotIn("agent_context_packet.json", artifact_names)
+      self.assertNotIn("project_manager_report.validation.json", artifact_names)
       self.assertNotIn("provider_payload.json", artifact_names)
       self.assertNotIn("raw_model_response.json", artifact_names)
       self.assertNotIn("project_manager_report.json", artifact_names)
@@ -399,6 +466,7 @@ class PackageRouteTests(unittest.TestCase):
       self.assertIn("repo_snapshot_packet.json", artifact_names)
       self.assertIn("agent_context_packet.json", artifact_names)
       self.assertIn("api_call_packet.json", artifact_names)
+      self.assertNotIn("project_manager_report.validation.json", artifact_names)
       self.assertNotIn("provider_payload.json", artifact_names)
       self.assertNotIn("raw_model_response.json", artifact_names)
       self.assertNotIn("project_manager_report.json", artifact_names)
@@ -436,6 +504,7 @@ class PackageRouteTests(unittest.TestCase):
       self.assertIn("repo_snapshot_packet.json", artifact_names)
       self.assertIn("agent_context_packet.json", artifact_names)
       self.assertIn("api_call_packet.json", artifact_names)
+      self.assertNotIn("project_manager_report.validation.json", artifact_names)
       self.assertNotIn("provider_payload.json", artifact_names)
       self.assertNotIn("raw_model_response.json", artifact_names)
       self.assertNotIn("project_manager_report.json", artifact_names)
@@ -471,6 +540,7 @@ class PackageRouteTests(unittest.TestCase):
       self.assertIn("provider_payload.json", artifact_names)
       self.assertNotIn("raw_model_response.json", artifact_names)
       self.assertNotIn("project_manager_report.json", artifact_names)
+      self.assertNotIn("project_manager_report.validation.json", artifact_names)
 
   def test_package_route_stops_on_extraction_failure(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -520,6 +590,7 @@ class PackageRouteTests(unittest.TestCase):
       artifact_names = {path.name for path in run_directory.iterdir()}
       self.assertIn("raw_model_response.json", artifact_names)
       self.assertNotIn("project_manager_report.json", artifact_names)
+      self.assertNotIn("project_manager_report.validation.json", artifact_names)
 
 
 if __name__ == "__main__":
