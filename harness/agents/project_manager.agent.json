@@ -70,6 +70,15 @@
       "input_id": "static_context_packet",
       "required": true,
       "schema_ref": "../project_spec/StaticContextPacket.schema.json"
+    },
+    {
+      "input_id": "repo_snapshot_packet",
+      "required": true,
+      "schema_ref": "../repo_snapshot/RepoSnapshotPacket.schema.json",
+      "resolution": {
+        "mode": "all_admissible",
+        "include_harness": true
+      }
     }
   ],
   "agent_output_policy": [
