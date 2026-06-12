@@ -101,6 +101,15 @@ Before any live runner exists, the compiler strips embedded schema compatibility
 keys like `$schema` / `$id` and rejects obvious unsupported Structured Outputs
 keywords during preflight.
 
+Run OpenAI provider call:
+
+```powershell
+python harness/providers/openai/openai_call_runner.py --provider-payload harness/runs/provider_payload.json --output harness/runs/raw_model_response.json
+```
+
+This sends the already-rendered OpenAI payload and captures the raw model
+response. It does not validate the response as a `ProjectManagerReport`.
+
 Compile a repo snapshot from one file:
 
 ```powershell

@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "OpenAIRawResponseMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "raw_model_response.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "OpenAI Raw Model Response",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Raw OpenAI Responses API result captured before harness output validation.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "OpenAIRawResponseMetadata",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/OpenAIRawResponseMetadata"
+    },
+    "provider": {
+      "const": "openai",
+      "title": "Provider",
+      "type": "string"
+    },
+    "endpoint": {
+      "const": "responses.create",
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "response_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Response Id"
+    },
+    "model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model"
+    },
+    "status": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Status"
+    },
+    "output_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Text"
+    },
+    "raw_response": {
+      "additionalProperties": true,
+      "title": "Raw Response",
+      "type": "object"
+    },
+    "source_artifacts": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Artifacts",
+      "type": "array"
+    },
+    "basis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Basis",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "provider",
+    "endpoint",
+    "raw_response"
+  ],
+  "title": "OpenAIRawResponse",
+  "type": "object"
+}
