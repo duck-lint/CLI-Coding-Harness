@@ -71,7 +71,12 @@ def only_run_directory(runs_root: Path) -> Path:
 
 
 class PackageRouteTests(unittest.TestCase):
-  def test_package_cli_runs_pm_route(self) -> None:
+  def _assert_successful_route(
+    self,
+    *,
+    command: list[str],
+    expected_banner: str,
+  ) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
       runs_root = temp_root / "runs"
@@ -85,16 +90,7 @@ class PackageRouteTests(unittest.TestCase):
       source_snapshots = {path: path.read_bytes() for path in source_paths}
 
       completed = subprocess.run(
-        [
-          sys.executable,
-          "-m",
-          "harness",
-          "--agent",
-          str(AGENT_PATH),
-          "Review the current project trajectory.",
-          "--runs-root",
-          str(runs_root),
-        ],
+        [*command, "--runs-root", str(runs_root)],
         cwd=REPO_ROOT,
         capture_output=True,
         text=True,
@@ -107,7 +103,7 @@ class PackageRouteTests(unittest.TestCase):
       )
 
       self.assertEqual(completed.returncode, 0, completed.stderr)
-      self.assertIn("PASS: Agent route completed.", completed.stdout)
+      self.assertIn(expected_banner, completed.stdout)
       self.assertIn("Selected agent: harness/agents/project_manager.agent.json", completed.stdout)
       self.assertIn("Provider: openai", completed.stdout)
       self.assertIn(f"Model: {load_json(AGENT_PATH)['model']}", completed.stdout)
@@ -161,6 +157,31 @@ class PackageRouteTests(unittest.TestCase):
 
       for path in source_paths:
         self.assertEqual(path.read_bytes(), source_snapshots[path])
+
+  def test_package_cli_runs_plan_route(self) -> None:
+    self._assert_successful_route(
+      command=[
+        sys.executable,
+        "-m",
+        "harness",
+        "plan",
+        "Review the current project trajectory.",
+      ],
+      expected_banner="PASS: Plan route completed.",
+    )
+
+  def test_package_cli_runs_generic_agent_route(self) -> None:
+    self._assert_successful_route(
+      command=[
+        sys.executable,
+        "-m",
+        "harness",
+        "--agent",
+        str(AGENT_PATH),
+        "Review the current project trajectory.",
+      ],
+      expected_banner="PASS: Agent route completed.",
+    )
 
   def test_package_route_requires_task_text(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:

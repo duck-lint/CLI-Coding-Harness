@@ -5,7 +5,7 @@
     "agent_name": "Project Manager"
   },
   "provider": "openai",
-  "model": "gpt-5.4-mini",
+  "model": "gpt-5.4",
   "instruction_contract": {
     "role": "Project Manager",
     "posture": "Act as a posture-to-tension detector, not a task picker. Preserve project-intent boundary discipline, implementation trajectory, and verification integrity.",

@@ -41,6 +41,8 @@ from harness.runtime.git_context import collect_git_context
 from harness.runtime.runtime_budget_policy import RuntimeBudgetPolicy
 from harness.runtime.task import Task, task_from_cli
 
+DEFAULT_PM_AGENT_PATH = Path(__file__).resolve().parents[1] / "agents" / "project_manager.agent.json"
+
 
 @dataclass(slots=True)
 class PackageRouteResult:
@@ -247,20 +249,31 @@ def run_package_route(
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
-  script_path = Path(__file__).resolve()
-  harness_root = script_path.parents[1]
-  repo_root = script_path.parents[2]
-
-  parser = argparse.ArgumentParser(
-    description="Run the package-level selected-agent orchestration route.",
+  parser = _build_base_argument_parser(
+    "Run the package-level selected-agent orchestration route.",
   )
-  parser.add_argument("task_text", nargs="?", default=None)
   parser.add_argument(
     "--agent",
     type=Path,
     default=None,
-    help="Path to the selected .agent.json contract.",
+    help="Path to the selected .agent.json contract for the generic lower-level agent route.",
   )
+  return parser
+
+
+def build_plan_argument_parser() -> argparse.ArgumentParser:
+  return _build_base_argument_parser(
+    "Run the Project Manager plan alias over the selected PM agent route.",
+  )
+
+
+def _build_base_argument_parser(description: str) -> argparse.ArgumentParser:
+  script_path = Path(__file__).resolve()
+  harness_root = script_path.parents[1]
+  repo_root = script_path.parents[2]
+
+  parser = argparse.ArgumentParser(description=description)
+  parser.add_argument("task_text", nargs="?", default=None)
   parser.add_argument(
     "--runs-root",
     type=Path,
@@ -276,23 +289,20 @@ def build_argument_parser() -> argparse.ArgumentParser:
   return parser
 
 
-def main(argv: list[str] | None = None) -> int:
-  args = build_argument_parser().parse_args(argv)
-
-  if args.task_text is None or not args.task_text.strip():
-    print("FAIL: package_cli: package CLI requires task text.", file=sys.stderr)
-    return 1
-
-  if args.agent is None:
-    print("FAIL: package_cli: package CLI requires --agent.", file=sys.stderr)
-    return 1
-
+def _run_cli_route(
+  *,
+  route_name: str,
+  task_text: str,
+  agent_path: Path,
+  runs_root: Path,
+  repo_root: Path,
+) -> int:
   try:
     result = run_package_route(
-      task_text=args.task_text,
-      agent_path=args.agent.resolve(),
-      runs_root=args.runs_root.resolve(),
-      repo_root=args.repo_root.resolve(),
+      task_text=task_text,
+      agent_path=agent_path.resolve(),
+      runs_root=runs_root.resolve(),
+      repo_root=repo_root.resolve(),
     )
   except PackageRouteStepError as error:
     return _fail(error.step, error)
@@ -304,21 +314,69 @@ def main(argv: list[str] | None = None) -> int:
   ) as error:
     return _fail("package_cli", error)
 
-  print("PASS: Agent route completed.")
-  print(
-    f"Selected agent: {_display_path(result.selected_agent, args.repo_root.resolve())}"
-  )
+  _print_route_result(route_name=route_name, result=result, repo_root=repo_root)
+  return 0
+
+
+def _print_route_result(
+  *,
+  route_name: str,
+  result: PackageRouteResult,
+  repo_root: Path,
+) -> None:
+  print(f"PASS: {route_name} route completed.")
+  print(f"Selected agent: {_display_path(result.selected_agent, repo_root.resolve())}")
   print(f"Provider: {result.agent_context_packet.agent_contract.provider}")
   print(f"Model: {result.agent_context_packet.agent_contract.model}")
-  print(
-    f"Run directory: {_display_path(result.run_directory, args.repo_root.resolve())}"
-  )
+  print(f"Run directory: {_display_path(result.run_directory, repo_root.resolve())}")
   print("Artifacts:")
   for artifact_path in result.artifact_paths:
     print(f"  {artifact_path.name}")
   print(f"Report status: {result.report.report_status}")
   print(f"Blocked: {result.report.proof_frontier.blocked}")
-  return 0
+
+
+def _run_plan_route(argv: list[str]) -> int:
+  args = build_plan_argument_parser().parse_args(argv)
+
+  if args.task_text is None or not args.task_text.strip():
+    print("FAIL: package_cli: package CLI requires task text.", file=sys.stderr)
+    return 1
+
+  return _run_cli_route(
+    route_name="Plan",
+    task_text=args.task_text,
+    agent_path=DEFAULT_PM_AGENT_PATH,
+    runs_root=args.runs_root,
+    repo_root=args.repo_root,
+  )
+
+
+def _run_generic_agent_route(argv: list[str]) -> int:
+  args = build_argument_parser().parse_args(argv)
+
+  if args.task_text is None or not args.task_text.strip():
+    print("FAIL: package_cli: package CLI requires task text.", file=sys.stderr)
+    return 1
+
+  if args.agent is None:
+    print("FAIL: package_cli: package CLI requires --agent.", file=sys.stderr)
+    return 1
+
+  return _run_cli_route(
+    route_name="Agent",
+    task_text=args.task_text,
+    agent_path=args.agent,
+    runs_root=args.runs_root,
+    repo_root=args.repo_root,
+  )
+
+
+def main(argv: list[str] | None = None) -> int:
+  argv_list = list(sys.argv[1:] if argv is None else argv)
+  if argv_list and argv_list[0] == "plan":
+    return _run_plan_route(argv_list[1:])
+  return _run_generic_agent_route(argv_list)
 
 
 if __name__ == "__main__":

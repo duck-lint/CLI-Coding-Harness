@@ -36,16 +36,22 @@ compilers/runners handle:
   output validation
 ```
 
-## Package Agent Route
+## Package Plan Route
+
+```powershell
+python -m harness plan "Review the current project trajectory."
+```
+
+This is the operator-facing Project Manager route. The built-in PM contract
+supplies provider, model, input policy, output policy, and schema refs. The
+package CLI supplies task authority and orchestrates the already-proven
+compiler, provider-runner, and output-validation seams.
+
+If you need the lower-level selector directly, `--agent` still works:
 
 ```powershell
 python -m harness --agent harness/agents/project_manager.agent.json "Review the current project trajectory."
 ```
-
-This runs the selected agent route. The selected `.agent.json` supplies
-provider, model, input policy, output policy, and schema refs. The package CLI
-supplies task authority and orchestrates the already-proven compiler,
-provider-runner, and output-validation seams.
 
 ## Provider-neutral compiler scripts
 
