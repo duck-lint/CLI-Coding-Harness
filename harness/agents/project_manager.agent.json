@@ -77,9 +77,16 @@
       "required": true,
       "schema_ref": "../repo_snapshot/RepoSnapshotPacket.schema.json",
       "resolution": {
-        "mode": "globs",
-        "globs": [
-            "harness/runs/20260612-194438-agent-route/*"
+        "mode": "paths",
+        "paths": [
+            "harness/runs/20260612-201053-agent-route/agent_context_packet.json",
+            "harness/runs/20260612-201053-agent-route/api_call_packet.json",
+            "harness/runs/20260612-201053-agent-route/project_manager_report.json",
+            "harness/runs/20260612-201053-agent-route/provider_payload.json",
+            "harness/runs/20260612-201053-agent-route/raw_model_response.json",
+            "harness/runs/20260612-201053-agent-route/repo_snapshot_packet.json",
+            "harness/runs/20260612-201053-agent-route/static_context_packet.json",
+            "harness/runs/20260612-201053-agent-route/task.json"
         ],
         "include_harness": false
       }

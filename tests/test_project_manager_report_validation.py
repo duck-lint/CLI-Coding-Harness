@@ -169,18 +169,30 @@ class ProjectManagerReportValidationTests(unittest.TestCase):
         )
       )
 
-  def test_blocked_frontier_forbids_next_move(self) -> None:
-    with self.assertRaises(ValueError):
-      ProjectManagerReport.model_validate(
-        build_report_data(
-          report_status="admissibility_blocked",
-          blocked=True,
-          blocking_reason="Required basis is missing.",
-          missing_basis=["Required basis is missing."],
-          constraint_conflicts=[],
-          next_admissible_transformation="Any frontier move would be invalid here.",
-        )
+  def test_blocked_frontier_can_still_name_next_move(self) -> None:
+    report = ProjectManagerReport.model_validate(
+      build_report_data(
+        report_status="needs_clarification",
+        blocked=True,
+        blocking_reason="The task does not specify the target surface.",
+        missing_basis=["Clarify the target surface."],
+        constraint_conflicts=[],
+        next_admissible_transformation=(
+          "Ask the user to name the target surface before proceeding."
+        ),
       )
+    )
+
+    self.assertEqual(report.report_status, "needs_clarification")
+    self.assertTrue(report.proof_frontier.blocked)
+    self.assertEqual(
+      report.proof_frontier.blocking_reason,
+      "The task does not specify the target surface.",
+    )
+    self.assertEqual(
+      report.proof_frontier.next_admissible_transformation,
+      "Ask the user to name the target surface before proceeding.",
+    )
 
   def test_unblocked_frontier_forbids_blocking_reason(self) -> None:
     with self.assertRaises(ValueError):

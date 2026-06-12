@@ -86,11 +86,6 @@ class ProjectManagerReport(BaseModel):
     if frontier.blocked:
       if not frontier.blocking_reason:
         raise ValueError("blocked proof_frontier requires blocking_reason.")
-
-      if frontier.next_admissible_transformation is not None:
-        raise ValueError(
-          "blocked proof_frontier must not include next_admissible_transformation."
-        )
     elif frontier.blocking_reason is not None:
       raise ValueError(
         "unblocked proof_frontier must not include blocking_reason."
