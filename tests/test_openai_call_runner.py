@@ -390,29 +390,6 @@ class OpenAICallRunnerTests(unittest.TestCase):
       self.assertIn("PASS: OpenAI raw response written", completed.stdout)
       self.assertIn("Response id: resp_script", completed.stdout)
 
-  def test_package_cli_still_fails_honestly(self) -> None:
-    with tempfile.TemporaryDirectory() as temp_directory:
-      runs_root = Path(temp_directory) / "runs"
-      completed = subprocess.run(
-        [
-          sys.executable,
-          "-m",
-          "harness",
-          "Review the current project trajectory.",
-          "--runs-root",
-          str(runs_root),
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
-      )
-
-      self.assertEqual(completed.returncode, 1)
-      self.assertIn("package CLI is not implemented yet", completed.stderr)
-      self.assertFalse(runs_root.exists())
-
   def test_emitted_raw_response_validates_against_generated_schema(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)

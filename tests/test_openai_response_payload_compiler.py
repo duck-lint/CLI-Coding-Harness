@@ -462,29 +462,6 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
       self.assertNotIn("$id", embedded_schema)
       self.assertNotIn("$id", embedded_schema["properties"]["report"])
 
-  def test_package_cli_still_fails_honestly(self) -> None:
-    with tempfile.TemporaryDirectory() as temp_directory:
-      runs_root = Path(temp_directory) / "runs"
-      completed = subprocess.run(
-        [
-          sys.executable,
-          "-m",
-          "harness",
-          "Review the current project trajectory.",
-          "--runs-root",
-          str(runs_root),
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
-      )
-
-      self.assertEqual(completed.returncode, 1)
-      self.assertIn("package CLI is not implemented yet", completed.stderr)
-      self.assertFalse(runs_root.exists())
-
   def test_payload_compiler_accepts_explicit_model_for_direct_call(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)

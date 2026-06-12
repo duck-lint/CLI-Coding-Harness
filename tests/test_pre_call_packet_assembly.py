@@ -68,7 +68,7 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
     self.assertEqual(agent.provider, "openai")
     self.assertEqual(
       [entry.input_id for entry in agent.agent_input_policy],
-      ["static_context_packet"],
+      ["static_context_packet", "repo_snapshot_packet"],
     )
 
   def test_agent_context_compiles_from_pm_input_policy(self) -> None:
@@ -94,12 +94,17 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
         "project_manager.agent.json",
       )
       self.assertEqual(packet.agent_contract.provider, "openai")
-      self.assertEqual(len(packet.input_coverage), 1)
-      self.assertEqual(packet.input_coverage[0].status, "included")
+      self.assertEqual(len(packet.input_coverage), 2)
+      self.assertEqual(
+        [entry.input_id for entry in packet.input_coverage],
+        ["static_context_packet", "repo_snapshot_packet"],
+      )
+      self.assertTrue(all(entry.status == "included" for entry in packet.input_coverage))
       self.assertEqual(
         packet.resolved_inputs.static_context_packet.metadata.document_id,
         "static_context_packet.json",
       )
+      self.assertIsNotNone(packet.resolved_inputs.repo_snapshot_packet)
       self.assertNotIn("task", packet.model_dump(mode="json"))
       self.assertNotIn("git_context", packet.model_dump(mode="json"))
       self.assertNotIn("supplementary_context", packet.model_dump(mode="json"))
@@ -433,6 +438,7 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
         {
           "task.json",
           "static_context_packet.json",
+          "repo_snapshot_packet.json",
           "agent_context_packet.json",
           "api_call_packet.json",
         },
@@ -442,6 +448,7 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
         {
           "task.json",
           "static_context_packet.json",
+          "repo_snapshot_packet.json",
           "agent_context_packet.json",
           "api_call_packet.json",
         },
@@ -452,29 +459,6 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
         "project_manager_report.json",
         {path.name for path in artifact_paths},
       )
-
-  def test_package_cli_fails_honestly_for_now(self) -> None:
-    with tempfile.TemporaryDirectory() as temp_directory:
-      runs_root = Path(temp_directory) / "runs"
-      completed = subprocess.run(
-        [
-          sys.executable,
-          "-m",
-          "harness",
-          "Review the current project trajectory.",
-          "--runs-root",
-          str(runs_root),
-        ],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
-      )
-
-      self.assertEqual(completed.returncode, 1)
-      self.assertIn("package CLI is not implemented yet", completed.stderr)
-      self.assertFalse(runs_root.exists())
 
   def test_agent_context_compiler_supports_direct_script_execution(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:

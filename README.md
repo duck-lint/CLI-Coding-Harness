@@ -36,6 +36,17 @@ compilers/runners handle:
   output validation
 ```
 
+## Package Agent Route
+
+```powershell
+python -m harness --agent harness/agents/project_manager.agent.json "Review the current project trajectory."
+```
+
+This runs the selected agent route. The selected `.agent.json` supplies
+provider, model, input policy, output policy, and schema refs. The package CLI
+supplies task authority and orchestrates the already-proven compiler,
+provider-runner, and output-validation seams.
+
 ## Provider-neutral compiler scripts
 
 ```powershell
@@ -192,11 +203,5 @@ These scripts emit the current bounded-slice artifacts:
 - `raw_model_response.json`
 - `project_manager_report.json`
 
-The package entrypoint is reserved for the real operator workflow. For now:
-
-```powershell
-python -m harness "Review the current project trajectory."
-```
-
-fails honestly because the package-level operator workflow that chains the
-direct scripts together is not implemented yet.
+The package route above is the normal operator entrypoint. The direct scripts
+remain available for seam-level debugging.

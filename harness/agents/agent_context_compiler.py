@@ -300,7 +300,19 @@ def compile_agent_context_packet(
   repo_snapshot_output_path: Path | None = None,
   static_context_override_path: Path | None = None,
 ) -> AgentContextPacket:
+  script_path = Path(__file__).resolve()
   agent = AgentContract.model_validate(_load_json(agent_path))
+  if repo_root is None and any(
+    policy.input_id == "repo_snapshot_packet"
+    for policy in agent.agent_input_policy
+  ):
+    repo_root = script_path.parents[2]
+  if repo_snapshot_output_path is None and any(
+    policy.input_id == "repo_snapshot_packet"
+    for policy in agent.agent_input_policy
+  ):
+    repo_snapshot_output_path = output_path.with_name("repo_snapshot_packet.json")
+
   input_coverage: list[AgentContextInputCoverageEntry] = []
   resolved_inputs = AgentResolvedInputs()
   compile_options = AgentContextCompileOptions(

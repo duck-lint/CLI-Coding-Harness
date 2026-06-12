@@ -292,26 +292,5 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       self.assertEqual(provider_payload_path.read_text(encoding="utf-8"), "sentinel payload\n")
       self.assertTrue(output_path.is_file())
 
-  def test_python_module_harness_still_fails_honestly(self) -> None:
-    completed = subprocess.run(
-      [
-        sys.executable,
-        "-m",
-        "harness",
-        "Review the current project trajectory.",
-        "--runs-root",
-        str(Path(tempfile.gettempdir()) / "harness-runs-check"),
-      ],
-      cwd=REPO_ROOT,
-      capture_output=True,
-      text=True,
-      check=False,
-      env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
-    )
-
-    self.assertEqual(completed.returncode, 1)
-    self.assertIn("package CLI is not implemented yet", completed.stderr)
-
-
 if __name__ == "__main__":
   unittest.main()

@@ -443,10 +443,18 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
   def test_agent_input_policy_without_repo_snapshot_does_not_include_it(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
+      agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
+      agent_path = temp_root / "pm_without_snapshot.agent.json"
+      write_json(agent_path, agent_data)
       output_path = temp_root / "agent_context_packet.json"
 
       packet = compile_agent_context_packet(
-        agent_path=AGENT_PATH,
+        agent_path=agent_path,
         output_path=output_path,
         manifest_path=MANIFEST_PATH,
         repo_root=REPO_ROOT,
