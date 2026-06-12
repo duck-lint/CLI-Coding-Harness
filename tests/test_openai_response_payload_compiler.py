@@ -19,6 +19,7 @@ from harness.providers.openai.openai_response_payload_compiler import (
   compile_openai_response_payload,
 )
 from harness.runtime.api_call_packet_builder import build_api_call_packet
+from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime.runtime_budget_policy import RuntimeBudgetPolicy
 from harness.runtime.task import task_from_cli
 
@@ -45,7 +46,7 @@ def write_json(path: Path, data: dict) -> None:
 
 
 def ensure_ledger_artifact() -> None:
-  ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+  ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
   ledger_path.parent.mkdir(parents=True, exist_ok=True)
   ledger_path.write_text("", encoding="utf-8")
 
@@ -74,7 +75,7 @@ def build_agent_routed_api_call_packet(
     )
     return packet
   finally:
-    ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+    ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
     if ledger_path.exists():
       ledger_path.unlink()
       try:
@@ -134,7 +135,7 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
       agent_path.write_text(json.dumps(agent_data, indent=2) + "\n", encoding="utf-8")
 
       ensure_ledger_artifact()
-      ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+      ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
       try:
         agent_context_packet = compile_agent_context_packet(
           agent_path=agent_path,

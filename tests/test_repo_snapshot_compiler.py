@@ -71,8 +71,8 @@ def build_repo_fixture(repo_root: Path) -> None:
     '{"generated": true}\n',
     encoding="utf-8",
   )
-  (repo_root / "harness" / "runs" / "ledgers").mkdir(parents=True)
-  (repo_root / "harness" / "runs" / "ledgers" / "api_call_ledger.jsonl").write_text(
+  (repo_root / "harness" / "state" / "ledgers").mkdir(parents=True)
+  (repo_root / "harness" / "state" / "ledgers" / "api_call_ledger.jsonl").write_text(
     '{"ledger_version":"0.1","route":"plan"}\n',
     encoding="utf-8",
   )
@@ -105,7 +105,7 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       self.assertEqual(packet.summary.included_count, 1)
       self.assertEqual(packet.files[0].path, "README.md")
 
-  def test_repo_snapshot_compiler_includes_explicit_harness_ledger_path(self) -> None:
+  def test_repo_snapshot_compiler_includes_explicit_harness_state_ledger_path(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
@@ -116,12 +116,12 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
         repo_root=repo_root,
         output_path=output_path,
         mode="paths",
-        requested_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
+        requested_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
       )
 
       self.assertEqual(
         [file.path for file in packet.files],
-        ["harness/runs/ledgers/api_call_ledger.jsonl"],
+        ["harness/state/ledgers/api_call_ledger.jsonl"],
       )
       self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
       self.assertTrue(packet.files[0].explicit_requested_path)

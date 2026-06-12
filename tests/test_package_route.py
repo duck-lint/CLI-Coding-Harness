@@ -239,7 +239,7 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Plan route completed.",
       expected_route="plan",
-      expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
+      expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
     )
 
   def test_package_cli_runs_generic_agent_route(self) -> None:
@@ -254,7 +254,7 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Agent route completed.",
       expected_route="agent",
-      expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
+      expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
     )
 
   def test_package_cli_runs_non_pm_agent_route(self) -> None:
@@ -280,7 +280,7 @@ class PackageRouteTests(unittest.TestCase):
         ],
         expected_banner="PASS: Agent route completed.",
         expected_route="agent",
-        expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
+        expected_repo_snapshot_paths=["harness/state/ledgers/api_call_ledger.jsonl"],
         agent_path=reviewer_agent_path,
       )
 

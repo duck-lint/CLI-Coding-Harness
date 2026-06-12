@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from harness.agents.agent_context_compiler import compile_agent_context_packet
 from harness.runtime.api_call_packet_builder import build_api_call_packet
+from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime.model_resolution import (
   EffectiveModelSelection,
   ModelResolutionError,
@@ -46,7 +47,7 @@ def write_json(path: Path, data: dict) -> None:
 
 
 def ensure_ledger_artifact() -> None:
-  ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+  ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
   ledger_path.parent.mkdir(parents=True, exist_ok=True)
   ledger_path.write_text("", encoding="utf-8")
 
@@ -114,7 +115,7 @@ def build_agent_routed_api_call_packet(
       output_path=temp_root / "api_call_packet.json",
     )
   finally:
-    ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+    ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
     if ledger_path.exists():
       ledger_path.unlink()
       try:

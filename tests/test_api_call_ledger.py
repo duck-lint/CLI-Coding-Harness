@@ -161,10 +161,10 @@ class RuntimeCallLedgerTests(unittest.TestCase):
       )
       RuntimeCallRecord.model_validate(payload)
 
-  def test_default_ledger_path_points_to_runs_ledgers(self) -> None:
+  def test_default_ledger_path_points_to_state_ledgers(self) -> None:
     self.assertEqual(
       DEFAULT_RUNTIME_CALL_LEDGER_PATH.parts[-4:],
-      ("harness", "runs", "ledgers", "api_call_ledger.jsonl"),
+      ("harness", "state", "ledgers", "api_call_ledger.jsonl"),
     )
 
 

@@ -8,8 +8,9 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 
+# Cross-run append-only runtime state; old ledgers may be copied forward manually.
 DEFAULT_RUNTIME_CALL_LEDGER_PATH = (
-  Path(__file__).resolve().parents[1] / "runs" / "ledgers" / "api_call_ledger.jsonl"
+  Path(__file__).resolve().parents[1] / "state" / "ledgers" / "api_call_ledger.jsonl"
 )
 
 

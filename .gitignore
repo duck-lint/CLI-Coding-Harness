@@ -1,4 +1,5 @@
 runs/
+harness/state/ledgers/*.jsonl
 .venv/
 .env.local
 env.local
