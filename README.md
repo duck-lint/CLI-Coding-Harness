@@ -13,6 +13,28 @@ The goal is not to make an LLM “act like” a project manager, planner, review
 The agent is not the system. The system is the governed recurrence between typed state, control input, validated transition, and feedback.
 reference repo: https://github.com/duck-lint/coding-agent-harness
 
+## Source Shape
+```
+operator supplies:
+  task text
+  selected agent contract
+
+agent contract supplies:
+  provider
+  model
+  input policy
+  output policy
+  schema refs
+
+runtime config supplies:
+  default runtime budget
+
+compilers/runners handle:
+  context resolution
+  provider payload rendering
+  provider execution
+  output validation
+```
 
 ## Provider-neutral compiler scripts
 
@@ -110,6 +132,16 @@ python harness/providers/openai/openai_call_runner.py --provider-payload harness
 This sends the already-rendered OpenAI payload and captures the raw model
 response. It does not validate the response as a `ProjectManagerReport`.
 
+Validate Project Manager output:
+
+```powershell
+python harness/contracts/project_manager_report_extractor.py --raw-response harness/runs/raw_model_response.json --schema harness/contracts/ProjectManagerReport.schema.json --output harness/runs/project_manager_report.json
+```
+
+This extracts `output_text` from the raw OpenAI response, parses it as JSON,
+validates it against `ProjectManagerReport.schema.json`, and writes
+`project_manager_report.json` only if validation succeeds.
+
 Compile a repo snapshot from one file:
 
 ```powershell
@@ -157,6 +189,8 @@ These scripts emit the current bounded-slice artifacts:
 - `repo_snapshot_packet.json`
 - `effective_model_selection.json`
 - `provider_payload.json`
+- `raw_model_response.json`
+- `project_manager_report.json`
 
 The package entrypoint is reserved for the real operator workflow. For now:
 
@@ -164,5 +198,5 @@ The package entrypoint is reserved for the real operator workflow. For now:
 python -m harness "Review the current project trajectory."
 ```
 
-fails honestly because provider-specific payload rendering and model calls are
-not implemented yet.
+fails honestly because the package-level operator workflow that chains the
+direct scripts together is not implemented yet.
