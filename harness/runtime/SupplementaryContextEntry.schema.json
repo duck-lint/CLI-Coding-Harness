@@ -12,7 +12,8 @@
         "file",
         "attachment",
         "manual_context",
-        "static_context_packet"
+        "static_context_packet",
+        "repo_snapshot_packet"
       ],
       "title": "Source Type",
       "type": "string"

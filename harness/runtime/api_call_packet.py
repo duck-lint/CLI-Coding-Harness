@@ -64,4 +64,17 @@ class ApiCallPacket(BaseModel):
         "StaticContextPacket must not be duplicated across agent and supplementary lanes."
       )
 
+    if (
+      self.agent_context_packet is not None
+      and self.agent_context_packet.resolved_inputs.repo_snapshot_packet
+      is not None
+      and any(
+        entry.source_type == "repo_snapshot_packet"
+        for entry in self.supplementary_context
+      )
+    ):
+      raise ValueError(
+        "RepoSnapshotPacket must not be duplicated across agent and supplementary lanes."
+      )
+
     return self

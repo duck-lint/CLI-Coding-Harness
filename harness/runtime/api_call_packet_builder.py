@@ -96,9 +96,21 @@ def _build_static_context_supplementary_entry(
   )
 
 
+def _build_repo_snapshot_supplementary_entry(
+  repo_snapshot_path: Path,
+) -> SupplementaryContextEntry:
+  return SupplementaryContextEntry(
+    source_id="repo_snapshot_packet",
+    source_type="repo_snapshot_packet",
+    content=_load_json(repo_snapshot_path),
+    basis=["Explicitly attached compiled RepoSnapshotPacket."],
+  )
+
+
 def build_argument_parser() -> argparse.ArgumentParser:
   script_path = Path(__file__).resolve()
   harness_root = script_path.parents[1]
+  repo_root = script_path.parents[2]
 
   parser = argparse.ArgumentParser(
     description="Build and validate an ApiCallPacket artifact.",
@@ -126,6 +138,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     help="Optional path to a StaticContextPacket JSON to attach as supplementary context in direct mode.",
   )
   parser.add_argument(
+    "--repo-snapshot",
+    type=Path,
+    default=None,
+    help="Optional path to a RepoSnapshotPacket JSON to attach as supplementary context in direct mode.",
+  )
+  parser.add_argument(
     "--runtime-budget",
     type=Path,
     default=None,
@@ -136,6 +154,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     type=Path,
     default=harness_root / "project_spec" / "static_context_packet.manifest.json",
     help="Path to StaticContextPacket manifest for policy-driven agent input resolution.",
+  )
+  parser.add_argument(
+    "--repo-root",
+    type=Path,
+    default=repo_root,
+    help="Root of the repo that repo_snapshot_packet resolution should inspect.",
   )
   parser.add_argument(
     "--harness-root",
@@ -180,6 +204,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     return 1
 
+  if args.agent is not None and args.repo_snapshot is not None:
+    print(
+      "FAIL: --repo-snapshot is only allowed for direct calls. "
+      "Agent-routed repo snapshots must be resolved through the selected agent contract.",
+      file=sys.stderr,
+    )
+    return 1
+
   try:
     task = _load_task_from_cli_text(args.task)
     call_mode: CallMode = "agent_routed" if args.agent is not None else "direct"
@@ -195,16 +227,23 @@ def main(argv: list[str] | None = None) -> int:
         agent_path=args.agent.resolve(),
         output_path=output_path.with_name("agent_context_packet.json"),
         manifest_path=args.manifest.resolve(),
+        repo_root=args.repo_root.resolve(),
         harness_root=args.harness_root.resolve(),
         target_repo_root=args.target_repo_root.resolve(),
         static_context_output_path=output_path.with_name("static_context_packet.json"),
+        repo_snapshot_output_path=output_path.with_name("repo_snapshot_packet.json"),
       )
 
-    supplementary_context = (
-      [_build_static_context_supplementary_entry(args.static_context.resolve())]
-      if args.static_context is not None and args.agent is None
-      else None
-    )
+    supplementary_context_entries: list[SupplementaryContextEntry] = []
+    if args.static_context is not None and args.agent is None:
+      supplementary_context_entries.append(
+        _build_static_context_supplementary_entry(args.static_context.resolve())
+      )
+    if args.repo_snapshot is not None and args.agent is None:
+      supplementary_context_entries.append(
+        _build_repo_snapshot_supplementary_entry(args.repo_snapshot.resolve())
+      )
+    supplementary_context = supplementary_context_entries or None
 
     packet = build_api_call_packet(
       task=task,

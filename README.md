@@ -64,6 +64,40 @@ payload rendering. Agent-routed calls use the selected agent contract model as
 primary authority. Direct calls use the provider runtime policy default.
 Runtime budget constrains token behavior and does not select the model.
 
+Compile a repo snapshot from one file:
+
+```powershell
+python harness/repo_snapshot/repo_snapshot_compiler.py --repo-root . --path README.md
+```
+
+Compile a repo snapshot from globs:
+
+```powershell
+python harness/repo_snapshot/repo_snapshot_compiler.py --repo-root . --glob "tests/*.py"
+```
+
+Compile all admissible repo files:
+
+```powershell
+python harness/repo_snapshot/repo_snapshot_compiler.py --repo-root . --all-admissible
+```
+
+Compile all admissible repo files and explicitly include the harness itself:
+
+```powershell
+python harness/repo_snapshot/repo_snapshot_compiler.py --repo-root . --all-admissible --include-harness
+```
+
+Agent-routed calls receive repo snapshots only when the selected `.agent.json`
+declares `repo_snapshot_packet` in `agent_input_policy`.
+
+Direct calls can attach an already compiled repo snapshot as supplementary
+context.
+
+By default, repo snapshots exclude the `harness/` tree across `paths`, `globs`,
+and `all_admissible`. Use `--include-harness` only for self-hosting or
+meta-level harness development.
+
 These scripts emit the current bounded-slice artifacts:
 
 - `static_context_packet.json`

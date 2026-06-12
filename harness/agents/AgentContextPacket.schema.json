@@ -88,10 +88,58 @@
       "title": "AgentContextPacketMetadata",
       "type": "object"
     },
+    "AgentContract": {
+      "additionalProperties": false,
+      "properties": {
+        "$schema": {
+          "minLength": 1,
+          "title": "$Schema",
+          "type": "string"
+        },
+        "metadata": {
+          "$ref": "#/$defs/AgentMetadata"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "instruction_contract": {
+          "additionalProperties": true,
+          "title": "Instruction Contract",
+          "type": "object"
+        },
+        "agent_input_policy": {
+          "items": {
+            "$ref": "#/$defs/AgentInputPolicyEntry"
+          },
+          "title": "Agent Input Policy",
+          "type": "array"
+        },
+        "agent_output_policy": {
+          "items": {
+            "$ref": "#/$defs/AgentOutputPolicyEntry"
+          },
+          "title": "Agent Output Policy",
+          "type": "array"
+        }
+      },
+      "required": [
+        "$schema",
+        "metadata",
+        "model",
+        "instruction_contract",
+        "agent_input_policy",
+        "agent_output_policy"
+      ],
+      "title": "AgentContract",
+      "type": "object"
+    },
     "AgentInputPolicyEntry": {
       "additionalProperties": false,
       "properties": {
         "input_id": {
+          "minLength": 1,
           "title": "Input Id",
           "type": "string"
         },
@@ -100,8 +148,20 @@
           "type": "boolean"
         },
         "schema_ref": {
+          "minLength": 1,
           "title": "Schema Ref",
           "type": "string"
+        },
+        "resolution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentInputResolution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -112,21 +172,105 @@
       "title": "AgentInputPolicyEntry",
       "type": "object"
     },
+    "AgentInputResolution": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "paths",
+            "globs",
+            "all_admissible"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "include_harness": {
+          "default": false,
+          "title": "Include Harness",
+          "type": "boolean"
+        },
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "globs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Globs",
+          "type": "array"
+        },
+        "max_file_bytes": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max File Bytes"
+        },
+        "max_total_bytes": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Total Bytes"
+        }
+      },
+      "required": [
+        "mode"
+      ],
+      "title": "AgentInputResolution",
+      "type": "object"
+    },
+    "AgentMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "agent_name": {
+          "minLength": 1,
+          "title": "Agent Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "agent_name"
+      ],
+      "title": "AgentMetadata",
+      "type": "object"
+    },
     "AgentOutputPolicyEntry": {
       "additionalProperties": false,
       "properties": {
         "output_id": {
-          "const": "project_manager_report",
+          "minLength": 1,
           "title": "Output Id",
           "type": "string"
         },
         "required": {
-          "const": true,
           "title": "Required",
           "type": "boolean"
         },
         "schema_ref": {
-          "const": "../contracts/ProjectManagerReport.schema.json",
+          "minLength": 1,
           "title": "Schema Ref",
           "type": "string"
         }
@@ -152,78 +296,20 @@
             }
           ],
           "default": null
+        },
+        "repo_snapshot_packet": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RepoSnapshotPacket"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "title": "AgentResolvedInputs",
-      "type": "object"
-    },
-    "InstructionContract": {
-      "additionalProperties": false,
-      "properties": {
-        "role": {
-          "title": "Role",
-          "type": "string"
-        },
-        "posture": {
-          "title": "Posture",
-          "type": "string"
-        },
-        "objective": {
-          "title": "Objective",
-          "type": "string"
-        },
-        "validity_conditions": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Validity Conditions",
-          "type": "array"
-        },
-        "project_manager_report_derivation_rules": {
-          "$ref": "#/$defs/ProjectManagerReportDerivationRules"
-        },
-        "conduct_rules": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Conduct Rules",
-          "type": "array"
-        },
-        "review_lenses": {
-          "$ref": "#/$defs/ReviewLenses"
-        }
-      },
-      "required": [
-        "role",
-        "posture",
-        "objective",
-        "validity_conditions",
-        "project_manager_report_derivation_rules",
-        "conduct_rules",
-        "review_lenses"
-      ],
-      "title": "InstructionContract",
-      "type": "object"
-    },
-    "Metadata": {
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "const": "project_manager.agent.json",
-          "title": "Id",
-          "type": "string"
-        },
-        "agent_name": {
-          "const": "Project Manager",
-          "title": "Agent Name",
-          "type": "string"
-        }
-      },
-      "required": [
-        "id",
-        "agent_name"
-      ],
-      "title": "Metadata",
       "type": "object"
     },
     "MissingSourceEntry": {
@@ -280,155 +366,239 @@
       "title": "MissingSourceEntry",
       "type": "object"
     },
-    "ProjectManagerAgent": {
+    "OmittedRepoSnapshotFile": {
       "additionalProperties": false,
       "properties": {
-        "$schema": {
-          "title": "$Schema",
+        "path": {
+          "title": "Path",
           "type": "string"
         },
+        "reason": {
+          "enum": [
+            "gitignored",
+            "harness_excluded",
+            "excluded_path",
+            "binary",
+            "too_large",
+            "not_found",
+            "outside_repo",
+            "read_error"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        }
+      },
+      "required": [
+        "path",
+        "reason"
+      ],
+      "title": "OmittedRepoSnapshotFile",
+      "type": "object"
+    },
+    "RepoSnapshotFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "size_bytes": {
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "size_bytes",
+        "sha256",
+        "encoding",
+        "content"
+      ],
+      "title": "RepoSnapshotFile",
+      "type": "object"
+    },
+    "RepoSnapshotPacket": {
+      "additionalProperties": false,
+      "properties": {
         "metadata": {
-          "$ref": "#/$defs/Metadata"
+          "$ref": "#/$defs/RepoSnapshotPacketMetadata"
         },
-        "model": {
-          "minLength": 1,
-          "title": "Model",
-          "type": "string"
+        "selection": {
+          "$ref": "#/$defs/RepoSnapshotSelection"
         },
-        "instruction_contract": {
-          "$ref": "#/$defs/InstructionContract"
-        },
-        "agent_input_policy": {
+        "files": {
           "items": {
-            "$ref": "#/$defs/AgentInputPolicyEntry"
+            "$ref": "#/$defs/RepoSnapshotFile"
           },
-          "title": "Agent Input Policy",
+          "title": "Files",
           "type": "array"
         },
-        "agent_output_policy": {
+        "omitted_files": {
           "items": {
-            "$ref": "#/$defs/AgentOutputPolicyEntry"
+            "$ref": "#/$defs/OmittedRepoSnapshotFile"
           },
-          "title": "Agent Output Policy",
+          "title": "Omitted Files",
           "type": "array"
+        },
+        "summary": {
+          "$ref": "#/$defs/RepoSnapshotSummary"
         }
       },
       "required": [
-        "$schema",
         "metadata",
-        "model",
-        "instruction_contract",
-        "agent_input_policy",
-        "agent_output_policy"
+        "selection",
+        "files",
+        "summary"
       ],
-      "title": "ProjectManagerAgent",
+      "title": "RepoSnapshotPacket",
       "type": "object"
     },
-    "ProjectManagerReportDerivationRules": {
+    "RepoSnapshotPacketMetadata": {
       "additionalProperties": false,
       "properties": {
-        "evaluation_basis": {
-          "title": "Evaluation Basis",
+        "document_id": {
+          "const": "repo_snapshot_packet.json",
+          "title": "Document Id",
           "type": "string"
         },
-        "drift_checks": {
-          "title": "Drift Checks",
+        "title": {
+          "const": "Repo Snapshot Packet",
+          "title": "Title",
           "type": "string"
         },
-        "next_step_recommendations": {
-          "title": "Next Step Recommendations",
+        "purpose": {
+          "const": "Compiled repo file evidence selected for a model call.",
+          "title": "Purpose",
           "type": "string"
         },
-        "repository_state": {
-          "title": "Repository State",
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
           "type": "string"
         },
-        "status_semantics": {
-          "$ref": "#/$defs/StatusSemantics"
-        }
-      },
-      "required": [
-        "evaluation_basis",
-        "drift_checks",
-        "next_step_recommendations",
-        "repository_state",
-        "status_semantics"
-      ],
-      "title": "ProjectManagerReportDerivationRules",
-      "type": "object"
-    },
-    "ReviewLenses": {
-      "additionalProperties": false,
-      "properties": {
-        "invariant_coverage": {
-          "title": "Invariant Coverage",
-          "type": "string"
-        },
-        "task_coverage": {
-          "title": "Task Coverage",
-          "type": "string"
-        },
-        "source_coverage_truthfulness": {
-          "title": "Source Coverage Truthfulness",
-          "type": "string"
-        },
-        "conflict_visibility": {
-          "title": "Conflict Visibility",
-          "type": "string"
-        },
-        "admissible_transformation_coverage": {
-          "title": "Admissible Transformation Coverage",
-          "type": "string"
-        },
-        "surface_truthfulness": {
-          "title": "Surface Truthfulness",
-          "type": "string"
-        },
-        "evidence_quality": {
-          "title": "Evidence Quality",
-          "type": "string"
-        },
-        "fixture_truthfulness": {
-          "title": "Fixture Truthfulness",
-          "type": "string"
-        },
-        "posture_concreteness": {
-          "title": "Posture Concreteness",
-          "type": "string"
-        },
-        "thesis_attractor_discipline": {
-          "title": "Thesis Attractor Discipline",
-          "type": "string"
-        },
-        "tension_selection": {
-          "title": "Tension Selection",
-          "type": "string"
-        },
-        "frontier_selection": {
-          "title": "Frontier Selection",
-          "type": "string"
-        },
-        "optionality_preservation": {
-          "title": "Optionality Preservation",
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
           "type": "string"
         }
       },
       "required": [
-        "invariant_coverage",
-        "task_coverage",
-        "source_coverage_truthfulness",
-        "conflict_visibility",
-        "admissible_transformation_coverage",
-        "surface_truthfulness",
-        "evidence_quality",
-        "fixture_truthfulness",
-        "posture_concreteness",
-        "thesis_attractor_discipline",
-        "tension_selection",
-        "frontier_selection",
-        "optionality_preservation"
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
       ],
-      "title": "ReviewLenses",
+      "title": "RepoSnapshotPacketMetadata",
+      "type": "object"
+    },
+    "RepoSnapshotSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "paths",
+            "globs",
+            "all_admissible"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "include_harness": {
+          "default": false,
+          "title": "Include Harness",
+          "type": "boolean"
+        },
+        "repo_root": {
+          "title": "Repo Root",
+          "type": "string"
+        },
+        "requested_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested Paths",
+          "type": "array"
+        },
+        "requested_globs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested Globs",
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "gitignore_respected": {
+          "title": "Gitignore Respected",
+          "type": "boolean"
+        },
+        "harness_excluded": {
+          "title": "Harness Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mode",
+        "repo_root",
+        "gitignore_respected",
+        "harness_excluded"
+      ],
+      "title": "RepoSnapshotSelection",
+      "type": "object"
+    },
+    "RepoSnapshotSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "included_count": {
+          "title": "Included Count",
+          "type": "integer"
+        },
+        "omitted_count": {
+          "title": "Omitted Count",
+          "type": "integer"
+        },
+        "total_included_bytes": {
+          "title": "Total Included Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "included_count",
+        "omitted_count",
+        "total_included_bytes"
+      ],
+      "title": "RepoSnapshotSummary",
       "type": "object"
     },
     "SourceCoverageEntry": {
@@ -703,39 +873,6 @@
       ],
       "title": "StaticContextPacketMetadata",
       "type": "object"
-    },
-    "StatusSemantics": {
-      "additionalProperties": false,
-      "properties": {
-        "admissible": {
-          "const": "The task can proceed under current project and task authority.",
-          "title": "Admissible",
-          "type": "string"
-        },
-        "admissibility_blocked": {
-          "const": "The PM cannot judge or proceed because required basis, context, or authority is missing.",
-          "title": "Admissibility Blocked",
-          "type": "string"
-        },
-        "rejected": {
-          "const": "The task conflicts with invariant project or harness authority.",
-          "title": "Rejected",
-          "type": "string"
-        },
-        "needs_clarification": {
-          "const": "The task is ambiguous enough that user clarification is required, but no invariant conflict is established.",
-          "title": "Needs Clarification",
-          "type": "string"
-        }
-      },
-      "required": [
-        "admissible",
-        "admissibility_blocked",
-        "rejected",
-        "needs_clarification"
-      ],
-      "title": "StatusSemantics",
-      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -744,7 +881,7 @@
       "$ref": "#/$defs/AgentContextPacketMetadata"
     },
     "agent_contract": {
-      "$ref": "#/$defs/ProjectManagerAgent"
+      "$ref": "#/$defs/AgentContract"
     },
     "resolved_inputs": {
       "$ref": "#/$defs/AgentResolvedInputs"

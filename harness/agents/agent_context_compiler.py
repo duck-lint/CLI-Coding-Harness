@@ -13,18 +13,23 @@ if __package__ in {None, ""}:
 
 from pydantic import ValidationError
 
+from harness.agents.agent_contract import AgentContract
 from harness.agents.agent_context_packet import (
   AgentContextInputCoverageEntry,
   AgentContextPacket,
   AgentContextPacketMetadata,
   AgentResolvedInputs,
 )
-from harness.agents.project_manager_agent import ProjectManagerAgent
 from harness.project_spec.static_context_packet import StaticContextPacket
 from harness.project_spec.static_context_packet_compiler import (
   StaticContextCompilationError,
   compile_static_context_packet,
 )
+from harness.repo_snapshot.repo_snapshot_compiler import (
+  RepoSnapshotCompilationError,
+  compile_repo_snapshot_packet,
+)
+from harness.repo_snapshot.repo_snapshot_packet import RepoSnapshotPacket
 
 
 class AgentContextCompilationError(RuntimeError):
@@ -41,9 +46,11 @@ class AgentContextCompilationError(RuntimeError):
 @dataclass(slots=True)
 class AgentContextCompileOptions:
   manifest_path: Path | None
+  repo_root: Path | None
   harness_root: Path | None
   target_repo_root: Path | None
   static_context_output_path: Path | None
+  repo_snapshot_output_path: Path | None
   static_context_packet: StaticContextPacket | dict[str, Any] | None = None
   static_context_override_path: Path | None = None
 
@@ -185,10 +192,98 @@ def resolve_static_context_packet(
     )
 
 
+def resolve_repo_snapshot_packet(
+  *,
+  policy: Any,
+  options: AgentContextCompileOptions,
+) -> ResolvedInputResult:
+  resolution = getattr(policy, "resolution", None)
+
+  if resolution is None:
+    return ResolvedInputResult(
+      resolved_value=None,
+      coverage_entry=_coverage_entry(
+        input_id=policy.input_id,
+        required=policy.required,
+        status="missing",
+        schema_ref=policy.schema_ref,
+        basis=[
+          "repo_snapshot_packet requires an explicit resolution object in agent_input_policy."
+        ],
+      ),
+    )
+
+  missing_resolution_inputs = [
+    name
+    for name, value in (
+      ("repo_root", options.repo_root),
+      ("repo_snapshot_output_path", options.repo_snapshot_output_path),
+    )
+    if value is None
+  ]
+  if missing_resolution_inputs:
+    return ResolvedInputResult(
+      resolved_value=None,
+      coverage_entry=_coverage_entry(
+        input_id=policy.input_id,
+        required=policy.required,
+        status="missing",
+        schema_ref=policy.schema_ref,
+        basis=[
+          "RepoSnapshotPacket automatic resolution was not fully configured.",
+          f"Missing compiler inputs: {', '.join(missing_resolution_inputs)}.",
+        ],
+      ),
+    )
+
+  try:
+    packet = compile_repo_snapshot_packet(
+      repo_root=options.repo_root.resolve(),
+      output_path=options.repo_snapshot_output_path.resolve(),
+      mode=resolution.mode,
+      include_harness=resolution.include_harness,
+      requested_paths=resolution.paths,
+      requested_globs=resolution.globs,
+      max_file_bytes=resolution.max_file_bytes or 100_000,
+      max_total_bytes=resolution.max_total_bytes or 1_000_000,
+    )
+    return ResolvedInputResult(
+      resolved_value=packet,
+      coverage_entry=_coverage_entry(
+        input_id=policy.input_id,
+        required=policy.required,
+        status="included",
+        schema_ref=policy.schema_ref,
+        basis=[
+          "RepoSnapshotPacket was resolved automatically from the selected agent input policy.",
+          f"Supporting artifact written to {options.repo_snapshot_output_path.resolve()}.",
+        ],
+      ),
+    )
+  except (
+    OSError,
+    RepoSnapshotCompilationError,
+    TypeError,
+    ValidationError,
+    ValueError,
+  ) as error:
+    return ResolvedInputResult(
+      resolved_value=None,
+      coverage_entry=_coverage_entry(
+        input_id=policy.input_id,
+        required=policy.required,
+        status="invalid",
+        schema_ref=policy.schema_ref,
+        basis=[f"RepoSnapshotPacket resolution failed: {error}"],
+      ),
+    )
+
+
 InputResolver = Callable[..., ResolvedInputResult]
 
 INPUT_RESOLVERS: dict[str, InputResolver] = {
   "static_context_packet": resolve_static_context_packet,
+  "repo_snapshot_packet": resolve_repo_snapshot_packet,
 }
 
 
@@ -198,19 +293,23 @@ def compile_agent_context_packet(
   output_path: Path,
   static_context_packet: StaticContextPacket | dict[str, Any] | None = None,
   manifest_path: Path | None = None,
+  repo_root: Path | None = None,
   harness_root: Path | None = None,
   target_repo_root: Path | None = None,
   static_context_output_path: Path | None = None,
+  repo_snapshot_output_path: Path | None = None,
   static_context_override_path: Path | None = None,
 ) -> AgentContextPacket:
-  agent = ProjectManagerAgent.model_validate(_load_json(agent_path))
+  agent = AgentContract.model_validate(_load_json(agent_path))
   input_coverage: list[AgentContextInputCoverageEntry] = []
   resolved_inputs = AgentResolvedInputs()
   compile_options = AgentContextCompileOptions(
     manifest_path=manifest_path,
+    repo_root=repo_root,
     harness_root=harness_root,
     target_repo_root=target_repo_root,
     static_context_output_path=static_context_output_path,
+    repo_snapshot_output_path=repo_snapshot_output_path,
     static_context_packet=static_context_packet,
     static_context_override_path=static_context_override_path,
   )
@@ -237,6 +336,8 @@ def compile_agent_context_packet(
 
     if policy.input_id == "static_context_packet":
       resolved_inputs.static_context_packet = result.resolved_value
+    elif policy.input_id == "repo_snapshot_packet":
+      resolved_inputs.repo_snapshot_packet = result.resolved_value
 
   blocking_entries = [
     entry
@@ -271,6 +372,7 @@ def compile_agent_context_packet(
 def build_argument_parser() -> argparse.ArgumentParser:
   script_path = Path(__file__).resolve()
   harness_root = script_path.parents[1]
+  repo_root = script_path.parents[2]
 
   parser = argparse.ArgumentParser(
     description="Compile and validate an AgentContextPacket artifact.",
@@ -292,6 +394,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     type=Path,
     default=harness_root / "project_spec" / "static_context_packet.manifest.json",
     help="Path to StaticContextPacket manifest for automatic policy-driven resolution.",
+  )
+  parser.add_argument(
+    "--repo-root",
+    type=Path,
+    default=repo_root,
+    help="Root of the repo that repo_snapshot_packet resolution should inspect.",
   )
   parser.add_argument(
     "--harness-root",
@@ -328,10 +436,14 @@ def main(argv: list[str] | None = None) -> int:
       output_path=args.output.resolve(),
       static_context_packet=static_context_packet,
       manifest_path=args.manifest.resolve(),
+      repo_root=args.repo_root.resolve(),
       harness_root=args.harness_root.resolve(),
       target_repo_root=args.target_repo_root.resolve(),
       static_context_output_path=(
         args.output.resolve().with_name("static_context_packet.json")
+      ),
+      repo_snapshot_output_path=(
+        args.output.resolve().with_name("repo_snapshot_packet.json")
       ),
       static_context_override_path=(
         args.static_context.resolve()

@@ -5,6 +5,7 @@
       "additionalProperties": false,
       "properties": {
         "input_id": {
+          "minLength": 1,
           "title": "Input Id",
           "type": "string"
         },
@@ -13,8 +14,20 @@
           "type": "boolean"
         },
         "schema_ref": {
+          "minLength": 1,
           "title": "Schema Ref",
           "type": "string"
+        },
+        "resolution": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AgentInputResolution"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
         }
       },
       "required": [
@@ -25,31 +38,68 @@
       "title": "AgentInputPolicyEntry",
       "type": "object"
     },
-    "AgentOutputPolicyEntry": {
+    "AgentInputResolution": {
       "additionalProperties": false,
       "properties": {
-        "output_id": {
-          "const": "project_manager_report",
-          "title": "Output Id",
+        "mode": {
+          "enum": [
+            "paths",
+            "globs",
+            "all_admissible"
+          ],
+          "title": "Mode",
           "type": "string"
         },
-        "required": {
-          "const": true,
-          "title": "Required",
+        "include_harness": {
+          "default": false,
+          "title": "Include Harness",
           "type": "boolean"
         },
-        "schema_ref": {
-          "const": "../contracts/ProjectManagerReport.schema.json",
-          "title": "Schema Ref",
-          "type": "string"
+        "paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Paths",
+          "type": "array"
+        },
+        "globs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Globs",
+          "type": "array"
+        },
+        "max_file_bytes": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max File Bytes"
+        },
+        "max_total_bytes": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Total Bytes"
         }
       },
       "required": [
-        "output_id",
-        "required",
-        "schema_ref"
+        "mode"
       ],
-      "title": "AgentOutputPolicyEntry",
+      "title": "AgentInputResolution",
       "type": "object"
     },
     "InstructionContract": {
@@ -119,6 +169,33 @@
         "agent_name"
       ],
       "title": "Metadata",
+      "type": "object"
+    },
+    "ProjectManagerOutputPolicyEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "output_id": {
+          "const": "project_manager_report",
+          "title": "Output Id",
+          "type": "string"
+        },
+        "required": {
+          "const": true,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_ref": {
+          "const": "../contracts/ProjectManagerReport.schema.json",
+          "title": "Schema Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "output_id",
+        "required",
+        "schema_ref"
+      ],
+      "title": "ProjectManagerOutputPolicyEntry",
       "type": "object"
     },
     "ProjectManagerReportDerivationRules": {
@@ -288,7 +365,7 @@
     },
     "agent_output_policy": {
       "items": {
-        "$ref": "#/$defs/AgentOutputPolicyEntry"
+        "$ref": "#/$defs/ProjectManagerOutputPolicyEntry"
       },
       "title": "Agent Output Policy",
       "type": "array"

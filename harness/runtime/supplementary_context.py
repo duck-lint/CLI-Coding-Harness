@@ -15,6 +15,7 @@ class SupplementaryContextEntry(BaseModel):
     "attachment",
     "manual_context",
     "static_context_packet",
+    "repo_snapshot_packet",
   ]
   content: str | dict | list
   included: bool = True

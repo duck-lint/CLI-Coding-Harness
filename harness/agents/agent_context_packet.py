@@ -4,8 +4,9 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from harness.agents.project_manager_agent import ProjectManagerAgent
+from harness.agents.agent_contract import AgentContract
 from harness.project_spec.static_context_packet import StaticContextPacket
+from harness.repo_snapshot.repo_snapshot_packet import RepoSnapshotPacket
 
 
 class AgentContextPacketMetadata(BaseModel):
@@ -34,13 +35,14 @@ class AgentResolvedInputs(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   static_context_packet: StaticContextPacket | None = None
+  repo_snapshot_packet: RepoSnapshotPacket | None = None
 
 
 class AgentContextPacket(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   metadata: AgentContextPacketMetadata
-  agent_contract: ProjectManagerAgent
+  agent_contract: AgentContract
   resolved_inputs: AgentResolvedInputs
   input_coverage: list[AgentContextInputCoverageEntry] = Field(
     default_factory=list

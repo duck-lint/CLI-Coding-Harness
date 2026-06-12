@@ -95,12 +95,17 @@ def build_pre_call_artifacts(
       agent_path=agent_path,
       output_path=agent_context_path,
       manifest_path=manifest_path,
+      repo_root=repo_root,
       harness_root=harness_root,
       target_repo_root=target_repo_root,
       static_context_output_path=static_context_path,
+      repo_snapshot_output_path=run_directory / "repo_snapshot_packet.json",
     )
     if static_context_path.is_file():
       artifact_paths.append(static_context_path)
+    repo_snapshot_path = run_directory / "repo_snapshot_packet.json"
+    if repo_snapshot_path.is_file():
+      artifact_paths.append(repo_snapshot_path)
     artifact_paths.append(agent_context_path)
   elif attach_static_context:
     compile_static_context_packet(

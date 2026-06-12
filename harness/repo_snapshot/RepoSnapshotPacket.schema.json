@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "OmittedRepoSnapshotFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "gitignored",
+            "harness_excluded",
+            "excluded_path",
+            "binary",
+            "too_large",
+            "not_found",
+            "outside_repo",
+            "read_error"
+          ],
+          "title": "Reason",
+          "type": "string"
+        },
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        }
+      },
+      "required": [
+        "path",
+        "reason"
+      ],
+      "title": "OmittedRepoSnapshotFile",
+      "type": "object"
+    },
+    "RepoSnapshotFile": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "size_bytes": {
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "encoding": {
+          "const": "utf-8",
+          "title": "Encoding",
+          "type": "string"
+        },
+        "content": {
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "size_bytes",
+        "sha256",
+        "encoding",
+        "content"
+      ],
+      "title": "RepoSnapshotFile",
+      "type": "object"
+    },
+    "RepoSnapshotPacketMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "repo_snapshot_packet.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "Repo Snapshot Packet",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Compiled repo file evidence selected for a model call.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "RepoSnapshotPacketMetadata",
+      "type": "object"
+    },
+    "RepoSnapshotSelection": {
+      "additionalProperties": false,
+      "properties": {
+        "mode": {
+          "enum": [
+            "paths",
+            "globs",
+            "all_admissible"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "include_harness": {
+          "default": false,
+          "title": "Include Harness",
+          "type": "boolean"
+        },
+        "repo_root": {
+          "title": "Repo Root",
+          "type": "string"
+        },
+        "requested_paths": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested Paths",
+          "type": "array"
+        },
+        "requested_globs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requested Globs",
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "gitignore_respected": {
+          "title": "Gitignore Respected",
+          "type": "boolean"
+        },
+        "harness_excluded": {
+          "title": "Harness Excluded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "mode",
+        "repo_root",
+        "gitignore_respected",
+        "harness_excluded"
+      ],
+      "title": "RepoSnapshotSelection",
+      "type": "object"
+    },
+    "RepoSnapshotSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "included_count": {
+          "title": "Included Count",
+          "type": "integer"
+        },
+        "omitted_count": {
+          "title": "Omitted Count",
+          "type": "integer"
+        },
+        "total_included_bytes": {
+          "title": "Total Included Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "included_count",
+        "omitted_count",
+        "total_included_bytes"
+      ],
+      "title": "RepoSnapshotSummary",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/RepoSnapshotPacketMetadata"
+    },
+    "selection": {
+      "$ref": "#/$defs/RepoSnapshotSelection"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/RepoSnapshotFile"
+      },
+      "title": "Files",
+      "type": "array"
+    },
+    "omitted_files": {
+      "items": {
+        "$ref": "#/$defs/OmittedRepoSnapshotFile"
+      },
+      "title": "Omitted Files",
+      "type": "array"
+    },
+    "summary": {
+      "$ref": "#/$defs/RepoSnapshotSummary"
+    }
+  },
+  "required": [
+    "metadata",
+    "selection",
+    "files",
+    "summary"
+  ],
+  "title": "RepoSnapshotPacket",
+  "type": "object"
+}
