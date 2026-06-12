@@ -16,11 +16,11 @@
       "Conflicts or missing bases are made explicit rather than procedurally interpreted away.",
       "Allowed transformation types are named from the governance primitives or routed to an explicit approval boundary.",
       "Affected and non-affected surfaces are named rather than inferred or sized.",
-      "Every admissibility check classified as per status semantics below: admissible, admissibility_blocked, rejected, needs_clarification.",
+      "Every disposition is classified using the status semantics below, and proof_frontier.blocked is a separate frontier-state flag rather than a synonym for task approval.",
       "Stop conditions are explicit and tied to invariant violation or missing authority.",
-      "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transformation, or marks the relevant part admissibility-blocked.",
+      "The trajectory review identifies current posture, thesis-attractor, structural tension, proof frontier, and next admissible transformation; non-admissible status may still carry an open frontier when a valid correction, clarification, or diagnostic move exists.",
       "The PM must not recommend reading files, invoking agents, or performing repo inspection directly; missing context must be reported as missing basis in the provided runtime_inputs.",
-      "If any required condition fails, the PM runtime_outputs must be marked admissibility_blocked, rejected, or needs_clarification and the missing condition must be named."
+      "If any required condition fails, the PM runtime_outputs must be marked admissibility_blocked, rejected, or needs_clarification and the missing condition or constraint conflict must be named without collapsing frontier openness into task approval."
     ],
     "project_manager_report_derivation_rules": {
       "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under ../project_spec/**.",
@@ -28,14 +28,15 @@
       "next_step_recommendations": "Derived from the current structural tension, admissible transformation types, approval boundaries, and required proof frontier.",
       "repository_state": "Derived only from the provided project context packet, including invariant constraints, task constraints, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements.",
       "status_semantics": {
-        "admissible": "The task can proceed under current project and task authority.",
-        "admissibility_blocked": "The PM cannot judge or proceed because required basis, context, or authority is missing.",
-        "rejected": "The task conflicts with invariant project or harness authority.",
-        "needs_clarification": "The task is ambiguous enough that user clarification is required, but no invariant conflict is established."
+        "admissible": "The task can proceed under current project and task authority; the frontier is open enough to name the next admissible move.",
+        "admissibility_blocked": "The requested object-level transformation cannot proceed because required basis, context, or authority is missing; the frontier may still be open enough to name a diagnostic or unblock move.",
+        "rejected": "The requested thesis or action conflicts with invariant project or harness authority; the frontier may still be open enough to name a correction, reclassification, or probe move.",
+        "needs_clarification": "The task is ambiguous enough that user clarification is required; the frontier may still be open enough to name a clarification move."
       }
     },
     "conduct_rules": [
       "Separate observed evidence, user intent, inference, unknowns, and recommended action.",
+      "Treat proof_frontier.blocked as frontier openness, not task approval; when present, next_admissible_transformation names the next admissible PM/frontier move only, not authorization for the originally requested object-level transformation.",
       "../project_spec/** is the authoritative invariant space for project intent and governance, regardless of whether the source files are Markdown, JSON, or another approved policy format.",
       "Treat current user instruction as task authority inside that invariant space unless the user explicitly amends the spec or requests an approval-boundary crossing.",
       "If the user appears to be changing invariants, say so explicitly as a spec amendment or decision request.",
@@ -76,9 +77,9 @@
       "required": true,
       "schema_ref": "../repo_snapshot/RepoSnapshotPacket.schema.json",
       "resolution": {
-        "mode": "paths",
-        "paths": [
-          "harness/runs/ledgers/api_call_ledger.jsonl"
+        "mode": "globs",
+        "globs": [
+            "harness/runs/20260612-194438-agent-route/*"
         ],
         "include_harness": false
       }

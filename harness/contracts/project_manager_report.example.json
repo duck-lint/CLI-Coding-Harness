@@ -38,16 +38,14 @@
     "structural_tension": "Main actionable mismatch."
   },
   "proof_frontier": {
-    "constraint_conflicts": [
-      "Conflict between invariant and task."
-    ],
-    "dominant_tension_justification": "Why this tension governs.",
+    "constraint_conflicts": [],
+    "dominant_tension_justification": "The requested object-level transformation cannot proceed without the missing basis, but the frontier may still support a diagnostic unblock move.",
     "blocked": true,
-    "blocking_reason": ". . .",
+    "blocking_reason": "Required basis is missing for the requested object-level transformation.",
     "missing_basis": [
-      
+      "Required basis or runtime evidence is absent."
     ],
-    "next_admissible_transformation": "One bounded transformation.",
+    "next_admissible_transformation": null,
     "affected_surfaces": [
       "Surface touched by next transition."
     ],

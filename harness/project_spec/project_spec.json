@@ -192,7 +192,7 @@
       "Treating example/template files as live runtime inputs.",
       "Claiming runtime capability without a saved runtime artifact and deterministic probe.",
       "Letting a governance role mutate repository source files.",
-      "Letting report_status and proof_frontier.blocked disagree."
+      "Collapsing report_status and proof_frontier.blocked into the same axis."
     ],
     "deferred_surfaces": [
       "Planner route beyond the PM-admissibility slice.",

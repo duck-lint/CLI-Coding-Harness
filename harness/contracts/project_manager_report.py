@@ -82,6 +82,20 @@ class ProjectManagerReport(BaseModel):
   def enforce_report_truth_table(self):
     frontier = self.proof_frontier
 
+    # Disposition and frontier openness are separate axes.
+    if frontier.blocked:
+      if not frontier.blocking_reason:
+        raise ValueError("blocked proof_frontier requires blocking_reason.")
+
+      if frontier.next_admissible_transformation is not None:
+        raise ValueError(
+          "blocked proof_frontier must not include next_admissible_transformation."
+        )
+    elif frontier.blocking_reason is not None:
+      raise ValueError(
+        "unblocked proof_frontier must not include blocking_reason."
+      )
+
     if self.report_status == "admissible":
       if frontier.blocked:
         raise ValueError(
@@ -110,22 +124,6 @@ class ProjectManagerReport(BaseModel):
 
       return self
 
-    # Every non-admissible status is blocked.
-    if not frontier.blocked:
-      raise ValueError(
-        f"{self.report_status} reports must have proof_frontier.blocked=true."
-      )
-
-    if not frontier.blocking_reason:
-      raise ValueError(
-        f"{self.report_status} reports require blocking_reason."
-      )
-
-    if frontier.next_admissible_transformation is not None:
-      raise ValueError(
-        f"{self.report_status} reports must not include next_admissible_transformation."
-      )
-
     if self.report_status == "admissibility_blocked":
       if not frontier.missing_basis:
         raise ValueError(
@@ -149,11 +147,6 @@ class ProjectManagerReport(BaseModel):
         )
 
     if self.report_status == "rejected":
-      if frontier.missing_basis:
-        raise ValueError(
-          "rejected reports must not include missing_basis; rejection means the basis is sufficient to deny admissibility."
-        )
-
       if not frontier.constraint_conflicts:
         raise ValueError(
           "rejected reports require constraint_conflicts naming the violated boundary."

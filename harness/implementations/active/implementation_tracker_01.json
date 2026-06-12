@@ -22,7 +22,7 @@
       "seam": "02-pydantic-invariants",
       "agent": "operator",
       "change": "Clean Pydantic models so fixed invariants are enforced locally before the loader trusts role/config/report data.",
-      "evidence": "Target checks include fixed PM identity, required task input, absent PM tools surface, and report_status/proof_frontier.blocked coherence.",
+      "evidence": "Target checks include fixed PM identity, required task input, absent PM tools surface, and the distinct semantics of report_status versus proof_frontier.blocked.",
       "status": "active"
     },
     {

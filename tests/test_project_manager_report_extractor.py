@@ -21,6 +21,9 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 HARNESS_ROOT = REPO_ROOT / "harness"
 FIXTURES_ROOT = REPO_ROOT / "tests" / "fixtures"
 RAW_RESPONSE_FIXTURE_PATH = FIXTURES_ROOT / "raw_model_response.json"
+REJECTED_UNBLOCKED_RAW_RESPONSE_FIXTURE_PATH = (
+  FIXTURES_ROOT / "raw_model_response_rejected_unblocked.json"
+)
 PM_SCHEMA_PATH = HARNESS_ROOT / "contracts" / "ProjectManagerReport.schema.json"
 
 
@@ -48,6 +51,26 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       self.assertTrue(output_path.is_file())
       self.assertEqual(report.report_status, "needs_clarification")
       self.assertTrue(report.proof_frontier.blocked)
+
+  def test_extractor_accepts_rejected_report_with_unblocked_frontier(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      output_path = temp_root / "project_manager_report.json"
+
+      report = extract_project_manager_report(
+        raw_response_path=REJECTED_UNBLOCKED_RAW_RESPONSE_FIXTURE_PATH,
+        schema_path=PM_SCHEMA_PATH,
+        output_path=output_path,
+      )
+
+      self.assertTrue(output_path.is_file())
+      self.assertEqual(report.report_status, "rejected")
+      self.assertFalse(report.proof_frontier.blocked)
+      self.assertIsNone(report.proof_frontier.blocking_reason)
+      self.assertEqual(
+        report.proof_frontier.next_admissible_transformation,
+        "Classify the ledger as evidence of a recorded API call, not as proof of runtime state; if runtime proof is needed, require the corresponding saved run artifacts and validation/probe outputs.",
+      )
 
   def test_extractor_writes_only_after_schema_validation_succeeds(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:

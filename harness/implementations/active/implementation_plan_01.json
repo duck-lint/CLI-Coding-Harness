@@ -40,7 +40,7 @@
       "description": "Encode true fixed invariants in Pydantic models, including fixed role/document identities, required PM task inputs, forbidden unexpected fields, and post-call coherence checks where state can otherwise contradict itself.",
       "status": "active",
       "evidence_target": [
-        "Unit or validation checks reject false PM identity, optional task requirements, unexpected tool surfaces, and report_status/proof_frontier.blocked disagreement."
+        "Unit or validation checks reject false PM identity, optional task requirements, unexpected tool surfaces, and invalid coupling of report_status and proof_frontier.blocked."
       ]
     },
     {

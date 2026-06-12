@@ -19,10 +19,10 @@ class Metadata(BaseModel):
 class StatusSemantics(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  admissible: Literal["The task can proceed under current project and task authority."]
-  admissibility_blocked: Literal["The PM cannot judge or proceed because required basis, context, or authority is missing."]
-  rejected: Literal["The task conflicts with invariant project or harness authority."]
-  needs_clarification: Literal["The task is ambiguous enough that user clarification is required, but no invariant conflict is established."]
+  admissible: Literal["The task can proceed under current project and task authority; the frontier is open enough to name the next admissible move."]
+  admissibility_blocked: Literal["The requested object-level transformation cannot proceed because required basis, context, or authority is missing; the frontier may still be open enough to name a diagnostic or unblock move."]
+  rejected: Literal["The requested thesis or action conflicts with invariant project or harness authority; the frontier may still be open enough to name a correction, reclassification, or probe move."]
+  needs_clarification: Literal["The task is ambiguous enough that user clarification is required; the frontier may still be open enough to name a clarification move."]
 
 
 class ProjectManagerReportDerivationRules(BaseModel):
