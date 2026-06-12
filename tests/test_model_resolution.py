@@ -45,6 +45,14 @@ def write_json(path: Path, data: dict) -> None:
   path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
+def write_agent_variant(temp_root: Path, *, model: str) -> Path:
+  agent_path = temp_root / "project_manager.agent.json"
+  agent_data = load_json(AGENT_PATH)
+  agent_data["model"] = model
+  write_json(agent_path, agent_data)
+  return agent_path
+
+
 def build_provider_policy_data(
   *,
   default_direct_model: str = "gpt-5.4-mini",
@@ -76,11 +84,15 @@ def build_provider_policy_data(
   }
 
 
-def build_agent_routed_api_call_packet(temp_root: Path):
+def build_agent_routed_api_call_packet(
+  temp_root: Path,
+  *,
+  agent_path: Path = AGENT_PATH,
+):
   agent_context_path = temp_root / "agent_context_packet.json"
   static_context_path = temp_root / "static_context_packet.json"
   agent_context_packet = compile_agent_context_packet(
-    agent_path=AGENT_PATH,
+    agent_path=agent_path,
     output_path=agent_context_path,
     manifest_path=MANIFEST_PATH,
     harness_root=HARNESS_ROOT,
@@ -114,6 +126,7 @@ class ModelResolutionTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       packet = build_agent_routed_api_call_packet(temp_root)
       policy = ProviderRuntimePolicy.model_validate(load_json(PROVIDER_POLICY_PATH))
+      agent_model = load_json(AGENT_PATH)["model"]
 
       selection = resolve_effective_model(
         api_call_packet=packet,
@@ -121,9 +134,10 @@ class ModelResolutionTests(unittest.TestCase):
       )
 
       self.assertEqual(selection.provider, "openai")
-      self.assertEqual(selection.model, "gpt-5.4")
+      self.assertEqual(selection.model, agent_model)
       self.assertEqual(selection.source, "agent_contract")
       self.assertFalse(selection.fallback_used)
+      self.assertEqual(selection.requested_model, agent_model)
 
   def test_direct_call_uses_provider_runtime_policy_default_direct_model(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -180,7 +194,8 @@ class ModelResolutionTests(unittest.TestCase):
   def test_agent_model_disallowed_fail_strategy_raises(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
-      packet = build_agent_routed_api_call_packet(temp_root)
+      agent_path = write_agent_variant(temp_root, model="gpt-5.4")
+      packet = build_agent_routed_api_call_packet(temp_root, agent_path=agent_path)
       policy = ProviderRuntimePolicy.model_validate(
         build_provider_policy_data(
           allowed_models=["gpt-5.4-mini"],
@@ -197,7 +212,8 @@ class ModelResolutionTests(unittest.TestCase):
   def test_agent_model_disallowed_fallback_strategy_selects_first_allowed_fallback(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
-      packet = build_agent_routed_api_call_packet(temp_root)
+      agent_path = write_agent_variant(temp_root, model="gpt-5.4")
+      packet = build_agent_routed_api_call_packet(temp_root, agent_path=agent_path)
       policy = ProviderRuntimePolicy.model_validate(
         build_provider_policy_data(
           allowed_models=["gpt-5.4-mini"],
