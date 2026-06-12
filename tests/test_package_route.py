@@ -19,6 +19,7 @@ from harness.providers.openai.openai_response_payload_compiler import (
 from harness.contracts.project_manager_report_extractor import (
   ProjectManagerReportExtractorError,
 )
+from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime import package_route
 
 
@@ -27,6 +28,7 @@ HARNESS_ROOT = REPO_ROOT / "harness"
 AGENT_PATH = HARNESS_ROOT / "agents" / "project_manager.agent.json"
 RAW_RESPONSE_FIXTURE_PATH = REPO_ROOT / "tests" / "fixtures" / "raw_model_response.json"
 RUNTIME_BUDGET_PATH = HARNESS_ROOT / "runtime" / "runtime_budget.policy.json"
+LEDGER_PATH = DEFAULT_RUNTIME_CALL_LEDGER_PATH
 
 
 def load_json(path: Path) -> dict:
@@ -70,12 +72,33 @@ def only_run_directory(runs_root: Path) -> Path:
   return run_directories[0]
 
 
+def display_path(path: Path) -> str:
+  try:
+    return path.relative_to(REPO_ROOT).as_posix()
+  except ValueError:
+    return path.as_posix()
+
+
+def remove_ledger_artifact() -> None:
+  if LEDGER_PATH.exists():
+    LEDGER_PATH.unlink()
+
+  ledger_parent = LEDGER_PATH.parent
+  if ledger_parent.exists():
+    try:
+      ledger_parent.rmdir()
+    except OSError:
+      pass
+
+
 class PackageRouteTests(unittest.TestCase):
   def _assert_successful_route(
     self,
     *,
     command: list[str],
     expected_banner: str,
+    expected_route: str,
+    agent_path: Path = AGENT_PATH,
   ) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
@@ -85,78 +108,99 @@ class PackageRouteTests(unittest.TestCase):
       source_paths = [
         REPO_ROOT / "README.md",
         HARNESS_ROOT / "__main__.py",
-        AGENT_PATH,
+        agent_path,
       ]
       source_snapshots = {path: path.read_bytes() for path in source_paths}
-
-      completed = subprocess.run(
-        [*command, "--runs-root", str(runs_root)],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-        env={
-          **os.environ,
-          "PYTHONDONTWRITEBYTECODE": "1",
-          "PYTHONPATH": str(fake_openai_root),
-        },
-      )
-
-      self.assertEqual(completed.returncode, 0, completed.stderr)
-      self.assertIn(expected_banner, completed.stdout)
-      self.assertIn("Selected agent: harness/agents/project_manager.agent.json", completed.stdout)
-      self.assertIn("Provider: openai", completed.stdout)
-      self.assertIn(f"Model: {load_json(AGENT_PATH)['model']}", completed.stdout)
-      self.assertIn("Run directory:", completed.stdout)
-      self.assertIn("Report status: needs_clarification", completed.stdout)
-      self.assertIn("Blocked: True", completed.stdout)
-
-      run_directory = only_run_directory(runs_root)
-      self.assertIn("agent-route", run_directory.name)
-      self.assertTrue(runs_root.exists())
-      self.assertEqual(len([path for path in runs_root.iterdir() if path.is_dir()]), 1)
-      self.assertEqual(
-        {path.name for path in run_directory.iterdir()},
-        {
-          "task.json",
-          "static_context_packet.json",
-          "repo_snapshot_packet.json",
-          "agent_context_packet.json",
-          "api_call_packet.json",
-          "provider_payload.json",
-          "raw_model_response.json",
-          "project_manager_report.json",
-        },
-      )
-      self.assertFalse(
-        any(
-          forbidden in name
-          for name in {path.name for path in run_directory.iterdir()}
-          for forbidden in ("planner", "reviewer", "worker")
+      remove_ledger_artifact()
+      try:
+        completed = subprocess.run(
+          [*command, "--runs-root", str(runs_root)],
+          cwd=REPO_ROOT,
+          capture_output=True,
+          text=True,
+          check=False,
+          env={
+            **os.environ,
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "PYTHONPATH": str(fake_openai_root),
+          },
         )
-      )
 
-      api_call_packet = load_json(run_directory / "api_call_packet.json")
-      provider_payload = load_json(run_directory / "provider_payload.json")
-      raw_response = load_json(run_directory / "raw_model_response.json")
-      report = load_json(run_directory / "project_manager_report.json")
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertIn(expected_banner, completed.stdout)
+        self.assertIn(f"Selected agent: {display_path(agent_path)}", completed.stdout)
+        self.assertIn("Provider: openai", completed.stdout)
+        self.assertIn(f"Model: {load_json(agent_path)['model']}", completed.stdout)
+        self.assertIn("Run directory:", completed.stdout)
+        self.assertIn("Report status: needs_clarification", completed.stdout)
+        self.assertIn("Blocked: True", completed.stdout)
 
-      self.assertEqual(api_call_packet["runtime_budget"], load_json(RUNTIME_BUDGET_PATH))
-      self.assertEqual(provider_payload["request"]["model"], load_json(AGENT_PATH)["model"])
-      self.assertEqual(
-        provider_payload["request"]["max_output_tokens"],
-        load_json(RUNTIME_BUDGET_PATH)["default"]["reserved_output_tokens"],
-      )
-      self.assertEqual(
-        provider_payload["request"]["text"]["format"]["name"],
-        "project_manager_report",
-      )
-      self.assertEqual(raw_response["provider"], "openai")
-      self.assertEqual(report["report_status"], "needs_clarification")
-      self.assertTrue(report["proof_frontier"]["blocked"])
+        run_directory = only_run_directory(runs_root)
+        self.assertIn("agent-route", run_directory.name)
+        self.assertTrue(runs_root.exists())
+        self.assertEqual(len([path for path in runs_root.iterdir() if path.is_dir()]), 1)
+        self.assertEqual(
+          {path.name for path in run_directory.iterdir()},
+          {
+            "task.json",
+            "static_context_packet.json",
+            "repo_snapshot_packet.json",
+            "agent_context_packet.json",
+            "api_call_packet.json",
+            "provider_payload.json",
+            "raw_model_response.json",
+            "project_manager_report.json",
+          },
+        )
+        self.assertFalse(
+          any(
+            forbidden in name
+            for name in {path.name for path in run_directory.iterdir()}
+            for forbidden in ("planner", "reviewer", "worker")
+          )
+        )
 
-      for path in source_paths:
-        self.assertEqual(path.read_bytes(), source_snapshots[path])
+        api_call_packet = load_json(run_directory / "api_call_packet.json")
+        provider_payload = load_json(run_directory / "provider_payload.json")
+        raw_response = load_json(run_directory / "raw_model_response.json")
+        report = load_json(run_directory / "project_manager_report.json")
+
+        self.assertEqual(api_call_packet["runtime_budget"], load_json(RUNTIME_BUDGET_PATH))
+        self.assertEqual(provider_payload["request"]["model"], load_json(AGENT_PATH)["model"])
+        self.assertEqual(
+          provider_payload["request"]["max_output_tokens"],
+          load_json(RUNTIME_BUDGET_PATH)["default"]["reserved_output_tokens"],
+        )
+        self.assertEqual(
+          provider_payload["request"]["text"]["format"]["name"],
+          "project_manager_report",
+        )
+        self.assertEqual(raw_response["provider"], "openai")
+        self.assertEqual(report["report_status"], "needs_clarification")
+        self.assertTrue(report["proof_frontier"]["blocked"])
+
+        self.assertTrue(LEDGER_PATH.exists())
+        ledger_lines = LEDGER_PATH.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(ledger_lines), 1)
+        ledger_record = json.loads(ledger_lines[0])
+        self.assertEqual(ledger_record["route"], expected_route)
+        self.assertEqual(ledger_record["agent"], display_path(agent_path))
+        self.assertEqual(ledger_record["model"], load_json(agent_path)["model"])
+        self.assertEqual(ledger_record["schema_name"], "project_manager_report")
+        self.assertTrue(ledger_record["validation_passed"])
+        self.assertEqual(ledger_record["contract_status"], "needs_clarification")
+        self.assertEqual(
+          ledger_record["output_artifact_path"],
+          display_path(run_directory / "project_manager_report.json"),
+        )
+        self.assertNotIn("actual_input_tokens", ledger_record)
+        self.assertNotIn("actual_output_tokens", ledger_record)
+        self.assertNotIn("total_tokens", ledger_record)
+
+        for path in source_paths:
+          self.assertEqual(path.read_bytes(), source_snapshots[path])
+      finally:
+        remove_ledger_artifact()
 
   def test_package_cli_runs_plan_route(self) -> None:
     self._assert_successful_route(
@@ -168,6 +212,7 @@ class PackageRouteTests(unittest.TestCase):
         "Review the current project trajectory.",
       ],
       expected_banner="PASS: Plan route completed.",
+      expected_route="plan",
     )
 
   def test_package_cli_runs_generic_agent_route(self) -> None:
@@ -181,7 +226,34 @@ class PackageRouteTests(unittest.TestCase):
         "Review the current project trajectory.",
       ],
       expected_banner="PASS: Agent route completed.",
+      expected_route="agent",
     )
+
+  def test_package_cli_runs_non_pm_agent_route(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      reviewer_agent_path = temp_root / "reviewer.agent.json"
+      reviewer_agent_data = load_json(AGENT_PATH)
+      reviewer_agent_data["metadata"]["id"] = "reviewer.agent.json"
+      reviewer_agent_data["metadata"]["agent_name"] = "reviewer"
+      reviewer_agent_path.write_text(
+        json.dumps(reviewer_agent_data, indent=2) + "\n",
+        encoding="utf-8",
+      )
+
+      self._assert_successful_route(
+        command=[
+          sys.executable,
+          "-m",
+          "harness",
+          "--agent",
+          str(reviewer_agent_path),
+          "Review the current project trajectory.",
+        ],
+        expected_banner="PASS: Agent route completed.",
+        expected_route="agent",
+        agent_path=reviewer_agent_path,
+      )
 
   def test_package_route_requires_task_text(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -326,8 +398,14 @@ class PackageRouteTests(unittest.TestCase):
       runs_root = temp_root / "runs"
       stderr = io.StringIO()
 
-      def fake_run_openai_call(*, provider_payload_path: Path, output_path: Path):
+      def fake_run_openai_call(
+        *,
+        provider_payload_path: Path,
+        output_path: Path,
+        payload: object | None = None,
+      ):
         _ = provider_payload_path
+        _ = payload
         output_path.write_text(
           json.dumps(load_json(RAW_RESPONSE_FIXTURE_PATH), indent=2) + "\n",
           encoding="utf-8",

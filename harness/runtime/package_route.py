@@ -25,6 +25,10 @@ from harness.contracts.project_manager_report_extractor import (
   ProjectManagerReportExtractorError,
   extract_project_manager_report,
 )
+from harness.runtime.api_call_ledger import (
+  DEFAULT_RUNTIME_CALL_LEDGER_PATH,
+  finalize_runtime_call_ledger,
+)
 from harness.providers.openai.openai_call_runner import (
   OpenAICallRunnerError,
   run_openai_call,
@@ -103,6 +107,16 @@ def _display_path(path: Path, repo_root: Path) -> str:
     return path.as_posix()
 
 
+def _sha256_file(path: Path) -> str:
+  import hashlib
+
+  digest = hashlib.sha256()
+  with path.open("rb") as file:
+    for chunk in iter(lambda: file.read(8192), b""):
+      digest.update(chunk)
+  return digest.hexdigest()
+
+
 def _load_runtime_budget_policy(harness_root: Path) -> RuntimeBudgetPolicy:
   policy_path = harness_root / "runtime" / "runtime_budget.policy.json"
   return RuntimeBudgetPolicy.model_validate(_load_json(policy_path))
@@ -115,6 +129,7 @@ def _fail(step: str, error: BaseException) -> int:
 
 def run_package_route(
   *,
+  route: str,
   task_text: str,
   agent_path: Path,
   runs_root: Path,
@@ -135,6 +150,7 @@ def run_package_route(
 
   harness_root = Path(__file__).resolve().parents[1]
   runtime_budget = _load_runtime_budget_policy(harness_root)
+  git_context = collect_git_context(repo_root.resolve())
 
   try:
     agent_context_packet = compile_agent_context_packet(
@@ -167,7 +183,7 @@ def run_package_route(
       call_mode="agent_routed",
       agent_context_packet=agent_context_packet,
       runtime_budget=runtime_budget,
-      git_context=collect_git_context(repo_root.resolve()),
+      git_context=git_context,
       output_path=api_call_path,
     )
   except (OSError, TypeError, ValidationError, ValueError) as error:
@@ -205,6 +221,7 @@ def run_package_route(
     raw_model_response = run_openai_call(
       provider_payload_path=provider_payload_path,
       output_path=raw_model_response_path,
+      payload=provider_payload,
     )
   except (OpenAICallRunnerError, OSError, TypeError, ValidationError, ValueError) as error:
     raise PackageRouteStepError("run_provider", str(error)) from error
@@ -234,6 +251,24 @@ def run_package_route(
     raise PackageRouteStepError("extract_project_manager_report", str(error)) from error
 
   artifact_paths.append(report_path)
+
+  try:
+    finalize_runtime_call_ledger(
+      route=route,
+      agent=_display_path(agent_path.resolve(), repo_root.resolve()),
+      model=provider_payload.request.model,
+      schema_name=provider_payload.request.text.format.name,
+      context_packet_sha256=_sha256_file(agent_context_path),
+      validation_passed=True,
+      provider_response=raw_model_response,
+      contract_status=report.report_status,
+      output_artifact_path=_display_path(report_path, repo_root.resolve()),
+      git_commit=git_context.commit,
+      worktree_dirty=git_context.is_dirty,
+      path=DEFAULT_RUNTIME_CALL_LEDGER_PATH,
+    )
+  except RuntimeError as error:
+    raise PackageRouteStepError("finalize_runtime_call_ledger", str(error)) from error
 
   return PackageRouteResult(
     selected_agent=agent_path.resolve(),
@@ -292,6 +327,7 @@ def _build_base_argument_parser(description: str) -> argparse.ArgumentParser:
 def _run_cli_route(
   *,
   route_name: str,
+  route: str,
   task_text: str,
   agent_path: Path,
   runs_root: Path,
@@ -299,6 +335,7 @@ def _run_cli_route(
 ) -> int:
   try:
     result = run_package_route(
+      route=route,
       task_text=task_text,
       agent_path=agent_path.resolve(),
       runs_root=runs_root.resolve(),
@@ -345,6 +382,7 @@ def _run_plan_route(argv: list[str]) -> int:
 
   return _run_cli_route(
     route_name="Plan",
+    route="plan",
     task_text=args.task_text,
     agent_path=DEFAULT_PM_AGENT_PATH,
     runs_root=args.runs_root,
@@ -365,6 +403,7 @@ def _run_generic_agent_route(argv: list[str]) -> int:
 
   return _run_cli_route(
     route_name="Agent",
+    route="agent",
     task_text=args.task_text,
     agent_path=args.agent,
     runs_root=args.runs_root,

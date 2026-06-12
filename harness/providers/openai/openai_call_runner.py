@@ -18,6 +18,11 @@ from harness.providers.openai.openai_raw_response import (
   OpenAIRawResponseMetadata,
 )
 from harness.providers.openai.openai_response_payload import OpenAIResponsePayload
+from harness.runtime.api_call_ledger import (
+  DEFAULT_RUNTIME_CALL_LEDGER_PATH,
+  finalize_runtime_call_ledger,
+)
+from harness.runtime.git_context import collect_git_context
 
 
 class OpenAICallRunnerError(RuntimeError):
@@ -39,6 +44,13 @@ def _write_json(path: Path, data: dict[str, Any]) -> None:
   with path.open("w", encoding="utf-8") as file:
     json.dump(data, file, indent=2)
     file.write("\n")
+
+
+def _display_path(path: Path, repo_root: Path) -> str:
+  try:
+    return path.relative_to(repo_root).as_posix()
+  except ValueError:
+    return path.as_posix()
 
 
 def _load_openai_client_class():
@@ -84,20 +96,22 @@ def run_openai_call(
   *,
   provider_payload_path: Path,
   output_path: Path,
+  payload: OpenAIResponsePayload | None = None,
 ) -> OpenAIRawResponse:
-  raw_payload = _load_json(provider_payload_path)
+  if payload is None:
+    raw_payload = _load_json(provider_payload_path)
 
-  if raw_payload.get("provider") != "openai":
-    raise OpenAICallRunnerError(
-      "OpenAI call runner requires provider payload provider == 'openai'."
-    )
+    if raw_payload.get("provider") != "openai":
+      raise OpenAICallRunnerError(
+        "OpenAI call runner requires provider payload provider == 'openai'."
+      )
 
-  if raw_payload.get("endpoint") != "responses.create":
-    raise OpenAICallRunnerError(
-      "OpenAI call runner requires provider payload endpoint == 'responses.create'."
-    )
+    if raw_payload.get("endpoint") != "responses.create":
+      raise OpenAICallRunnerError(
+        "OpenAI call runner requires provider payload endpoint == 'responses.create'."
+      )
 
-  payload = OpenAIResponsePayload.model_validate(raw_payload)
+    payload = OpenAIResponsePayload.model_validate(raw_payload)
 
   request_body = payload.request.model_dump(
     mode="json",
@@ -180,11 +194,30 @@ def build_argument_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
   args = build_argument_parser().parse_args(argv)
+  repo_root = Path(__file__).resolve().parents[3]
 
   try:
+    raw_payload = _load_json(args.provider_payload.resolve())
+    payload = OpenAIResponsePayload.model_validate(raw_payload)
     artifact = run_openai_call(
       provider_payload_path=args.provider_payload.resolve(),
       output_path=args.output.resolve(),
+      payload=payload,
+    )
+    git_context = collect_git_context(repo_root)
+    finalize_runtime_call_ledger(
+      route="openai_call_runner",
+      agent="unknown",
+      model=payload.request.model,
+      schema_name=payload.request.text.format.name,
+      context_packet_sha256="unknown",
+      validation_passed=True,
+      provider_response=artifact,
+      output_artifact_path=_display_path(args.output.resolve(), repo_root),
+      git_commit=git_context.commit,
+      worktree_dirty=git_context.is_dirty,
+      notes="Direct OpenAI runner boundary; no structured output validation.",
+      path=DEFAULT_RUNTIME_CALL_LEDGER_PATH,
     )
   except (
     OpenAICallRunnerError,
@@ -192,6 +225,7 @@ def main(argv: list[str] | None = None) -> int:
     TypeError,
     ValidationError,
     ValueError,
+    RuntimeError,
   ) as error:
     print(f"FAIL: {error}", file=sys.stderr)
     return 1

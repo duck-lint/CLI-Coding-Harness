@@ -76,8 +76,11 @@
       "required": true,
       "schema_ref": "../repo_snapshot/RepoSnapshotPacket.schema.json",
       "resolution": {
-        "mode": "all_admissible",
-        "include_harness": true
+        "mode": "paths",
+        "paths": [
+          "harness/runs/ledgers/api_call_ledger.jsonl"
+        ],
+        "include_harness": false
       }
     }
   ],

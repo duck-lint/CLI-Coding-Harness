@@ -14,15 +14,20 @@ from unittest.mock import patch
 from jsonschema import Draft202012Validator
 
 from harness.agents.agent_context_compiler import compile_agent_context_packet
+import harness.providers.openai.openai_call_runner as openai_call_runner
 from harness.providers.openai.openai_call_runner import (
   OpenAICallRunnerError,
   run_openai_call,
 )
-from harness.providers.openai.openai_raw_response import OpenAIRawResponse
+from harness.providers.openai.openai_raw_response import (
+  OpenAIRawResponse,
+  OpenAIRawResponseMetadata,
+)
 from harness.providers.openai.openai_response_payload_compiler import (
   compile_openai_response_payload,
 )
 from harness.runtime.api_call_packet_builder import build_api_call_packet
+from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime.task import task_from_cli
 
 
@@ -34,6 +39,7 @@ PM_SCHEMA_PATH = HARNESS_ROOT / "contracts" / "ProjectManagerReport.schema.json"
 RAW_RESPONSE_SCHEMA_PATH = (
   HARNESS_ROOT / "providers" / "openai" / "OpenAIRawResponse.schema.json"
 )
+LEDGER_PATH = DEFAULT_RUNTIME_CALL_LEDGER_PATH
 
 
 def load_json(path: Path) -> dict:
@@ -43,6 +49,18 @@ def load_json(path: Path) -> dict:
 def write_json(path: Path, data: dict) -> None:
   path.parent.mkdir(parents=True, exist_ok=True)
   path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
+
+
+def remove_ledger_artifact() -> None:
+  if LEDGER_PATH.exists():
+    LEDGER_PATH.unlink()
+
+  ledger_parent = LEDGER_PATH.parent
+  if ledger_parent.exists():
+    try:
+      ledger_parent.rmdir()
+    except OSError:
+      pass
 
 
 def build_agent_routed_provider_payload(temp_root: Path) -> Path:
@@ -66,6 +84,31 @@ def build_agent_routed_provider_payload(temp_root: Path) -> Path:
     output_path=provider_payload_path,
   )
   return provider_payload_path
+
+
+def build_raw_response_artifact(*, raw_response: dict) -> OpenAIRawResponse:
+  return OpenAIRawResponse(
+    metadata=OpenAIRawResponseMetadata(
+      document_id="raw_model_response.json",
+      title="OpenAI Raw Model Response",
+      purpose=(
+        "Raw OpenAI Responses API result captured before harness output validation."
+      ),
+      source_format="json",
+      document_authority="generated_artifact",
+    ),
+    provider="openai",
+    endpoint="responses.create",
+    response_id=raw_response.get("id"),
+    model=raw_response.get("model"),
+    status=raw_response.get("status"),
+    output_text=raw_response.get("output_text"),
+    raw_response=raw_response,
+    source_artifacts=["provider_payload.json"],
+    basis=[
+      "Mocked OpenAI raw response artifact for ledger tests.",
+    ],
+  )
 
 
 class FakeResponse:
@@ -111,6 +154,161 @@ class OpenAICallRunnerTests(unittest.TestCase):
     FakeOpenAIClient.last_request_kwargs = None
     FakeOpenAIClient.error_to_raise = None
     FakeOpenAIClient.next_response = None
+    remove_ledger_artifact()
+
+  def tearDown(self) -> None:
+    remove_ledger_artifact()
+
+  def test_runner_does_not_write_ledger_on_its_own(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      provider_payload_path = build_agent_routed_provider_payload(temp_root)
+      FakeOpenAIClient.next_response = FakeResponse(
+        raw_response={"id": "resp_123", "model": "gpt-5.4", "status": "completed"}
+      )
+
+      remove_ledger_artifact()
+      try:
+        with patch(
+          "harness.providers.openai.openai_call_runner._load_openai_client_class",
+          return_value=FakeOpenAIClient,
+        ):
+          run_openai_call(
+            provider_payload_path=provider_payload_path,
+            output_path=temp_root / "raw_model_response.json",
+          )
+
+        self.assertFalse(LEDGER_PATH.exists())
+      finally:
+        remove_ledger_artifact()
+
+  def test_runner_main_appends_single_ledger_row_with_usage(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      provider_payload_path = build_agent_routed_provider_payload(temp_root)
+      output_path = temp_root / "raw_model_response.json"
+      ledger_path = temp_root / "api_call_ledger.jsonl"
+      artifact = build_raw_response_artifact(
+        raw_response={
+          "id": "resp_usage",
+          "model": "gpt-5.4",
+          "status": "completed",
+          "usage": {
+            "input_tokens": 11,
+            "output_tokens": 7,
+            "total_tokens": 18,
+          },
+          "output_text": "{\"status\":\"admissible\"}",
+        }
+      )
+
+      def fake_run_openai_call(
+        *,
+        provider_payload_path: Path,
+        output_path: Path,
+        payload: object | None = None,
+      ) -> OpenAIRawResponse:
+        _ = provider_payload_path, payload
+        output_path.write_text(
+          json.dumps(artifact.model_dump(mode="json", by_alias=True), indent=2)
+          + "\n",
+          encoding="utf-8",
+        )
+        return artifact
+
+      with patch(
+        "harness.providers.openai.openai_call_runner.run_openai_call",
+        side_effect=fake_run_openai_call,
+      ):
+        with patch(
+          "harness.providers.openai.openai_call_runner.DEFAULT_RUNTIME_CALL_LEDGER_PATH",
+          ledger_path,
+        ):
+          code = openai_call_runner.main(
+            [
+              "--provider-payload",
+              str(provider_payload_path),
+              "--output",
+              str(output_path),
+            ]
+          )
+
+      self.assertEqual(code, 0)
+      self.assertTrue(output_path.exists())
+      self.assertTrue(ledger_path.exists())
+      lines = ledger_path.read_text(encoding="utf-8").splitlines()
+      self.assertEqual(len(lines), 1)
+      payload = json.loads(lines[0])
+      self.assertEqual(payload["route"], "openai_call_runner")
+      self.assertEqual(payload["agent"], "unknown")
+      self.assertEqual(payload["schema_name"], "project_manager_report")
+      self.assertEqual(
+        payload["model"],
+        load_json(provider_payload_path)["request"]["model"],
+      )
+      self.assertTrue(payload["validation_passed"])
+      self.assertEqual(payload["openai_response_id"], "resp_usage")
+      self.assertEqual(payload["actual_input_tokens"], 11)
+      self.assertEqual(payload["actual_output_tokens"], 7)
+      self.assertEqual(payload["total_tokens"], 18)
+      self.assertEqual(payload["output_artifact_path"], output_path.resolve().as_posix())
+
+  def test_runner_main_appends_single_ledger_row_without_usage(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      provider_payload_path = build_agent_routed_provider_payload(temp_root)
+      output_path = temp_root / "raw_model_response.json"
+      ledger_path = temp_root / "api_call_ledger.jsonl"
+      artifact = build_raw_response_artifact(
+        raw_response={
+          "id": "resp_no_usage",
+          "model": "gpt-5.4",
+          "status": "completed",
+          "output_text": "{\"status\":\"admissible\"}",
+        }
+      )
+
+      def fake_run_openai_call(
+        *,
+        provider_payload_path: Path,
+        output_path: Path,
+        payload: object | None = None,
+      ) -> OpenAIRawResponse:
+        _ = provider_payload_path, payload
+        output_path.write_text(
+          json.dumps(artifact.model_dump(mode="json", by_alias=True), indent=2)
+          + "\n",
+          encoding="utf-8",
+        )
+        return artifact
+
+      with patch(
+        "harness.providers.openai.openai_call_runner.run_openai_call",
+        side_effect=fake_run_openai_call,
+      ):
+        with patch(
+          "harness.providers.openai.openai_call_runner.DEFAULT_RUNTIME_CALL_LEDGER_PATH",
+          ledger_path,
+        ):
+          code = openai_call_runner.main(
+            [
+              "--provider-payload",
+              str(provider_payload_path),
+              "--output",
+              str(output_path),
+            ]
+          )
+
+      self.assertEqual(code, 0)
+      self.assertTrue(ledger_path.exists())
+      lines = ledger_path.read_text(encoding="utf-8").splitlines()
+      self.assertEqual(len(lines), 1)
+      payload = json.loads(lines[0])
+      self.assertEqual(payload["route"], "openai_call_runner")
+      self.assertEqual(payload["openai_response_id"], "resp_no_usage")
+      self.assertNotIn("actual_input_tokens", payload)
+      self.assertNotIn("actual_output_tokens", payload)
+      self.assertNotIn("total_tokens", payload)
 
   def test_runner_loads_and_validates_openai_response_payload(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -368,27 +566,39 @@ class OpenAICallRunnerTests(unittest.TestCase):
       env = dict(os.environ)
       env["PYTHONDONTWRITEBYTECODE"] = "1"
       env["PYTHONPATH"] = str(fake_openai_root)
+      remove_ledger_artifact()
+      try:
+        completed = subprocess.run(
+          [
+            sys.executable,
+            str(script_path),
+            "--provider-payload",
+            str(provider_payload_path),
+            "--output",
+            str(output_path),
+          ],
+          cwd=script_path.parent,
+          capture_output=True,
+          text=True,
+          check=False,
+          env=env,
+        )
 
-      completed = subprocess.run(
-        [
-          sys.executable,
-          str(script_path),
-          "--provider-payload",
-          str(provider_payload_path),
-          "--output",
-          str(output_path),
-        ],
-        cwd=script_path.parent,
-        capture_output=True,
-        text=True,
-        check=False,
-        env=env,
-      )
-
-      self.assertEqual(completed.returncode, 0, completed.stderr)
-      self.assertTrue(output_path.is_file())
-      self.assertIn("PASS: OpenAI raw response written", completed.stdout)
-      self.assertIn("Response id: resp_script", completed.stdout)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        self.assertTrue(output_path.is_file())
+        self.assertIn("PASS: OpenAI raw response written", completed.stdout)
+        self.assertIn("Response id: resp_script", completed.stdout)
+        self.assertTrue(LEDGER_PATH.exists())
+        ledger_lines = LEDGER_PATH.read_text(encoding="utf-8").splitlines()
+        self.assertEqual(len(ledger_lines), 1)
+        ledger_record = json.loads(ledger_lines[0])
+        self.assertEqual(ledger_record["route"], "openai_call_runner")
+        self.assertEqual(ledger_record["agent"], "unknown")
+        self.assertEqual(ledger_record["schema_name"], "project_manager_report")
+        self.assertEqual(ledger_record["openai_response_id"], "resp_script")
+        self.assertTrue(ledger_record["validation_passed"])
+      finally:
+        remove_ledger_artifact()
 
   def test_emitted_raw_response_validates_against_generated_schema(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
