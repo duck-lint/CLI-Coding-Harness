@@ -4,6 +4,7 @@
     "id": "project_manager.agent.json",
     "agent_name": "Project Manager"
   },
+  "provider": "openai",
   "model": "gpt-5.4",
   "instruction_contract": {
     "role": "Project Manager",

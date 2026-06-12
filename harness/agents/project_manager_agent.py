@@ -8,6 +8,9 @@ from harness.agents.agent_contract import (
 )
 
 
+ProviderId = Literal["openai", "anthropic"]
+
+
 class Metadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
@@ -66,7 +69,7 @@ class InstructionContract(BaseModel):
 
 class ProjectManagerOutputPolicyEntry(AgentOutputPolicyEntry):
   output_id: Literal["project_manager_report"]
-  required: Literal[True]
+  required: bool
   schema_ref: Literal["../contracts/ProjectManagerReport.schema.json"]
 
 
@@ -75,6 +78,10 @@ class ProjectManagerAgent(BaseModel):
 
   schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
+  provider: Literal[
+    "openai",
+    "anthropic"
+    ]
   model: str = Field(min_length=1)
   instruction_contract: InstructionContract
   agent_input_policy: list[AgentInputPolicyEntry]
