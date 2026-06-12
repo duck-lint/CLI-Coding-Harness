@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "OpenAIResponsePayloadMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "document_id": {
+          "const": "provider_payload.json",
+          "title": "Document Id",
+          "type": "string"
+        },
+        "title": {
+          "const": "OpenAI Response Payload",
+          "title": "Title",
+          "type": "string"
+        },
+        "purpose": {
+          "const": "Provider-specific OpenAI Responses API payload rendered from a provider-neutral ApiCallPacket.",
+          "title": "Purpose",
+          "type": "string"
+        },
+        "source_format": {
+          "const": "json",
+          "title": "Source Format",
+          "type": "string"
+        },
+        "document_authority": {
+          "const": "generated_artifact",
+          "title": "Document Authority",
+          "type": "string"
+        }
+      },
+      "required": [
+        "document_id",
+        "title",
+        "purpose",
+        "source_format",
+        "document_authority"
+      ],
+      "title": "OpenAIResponsePayloadMetadata",
+      "type": "object"
+    },
+    "OpenAIResponseRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "input": {
+          "items": {
+            "$ref": "#/$defs/PayloadMessage"
+          },
+          "title": "Input",
+          "type": "array"
+        },
+        "text": {
+          "$ref": "#/$defs/PayloadTextFormat"
+        },
+        "max_output_tokens": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Output Tokens"
+        },
+        "tools": {
+          "items": {},
+          "title": "Tools",
+          "type": "array"
+        }
+      },
+      "required": [
+        "model",
+        "input",
+        "text"
+      ],
+      "title": "OpenAIResponseRequest",
+      "type": "object"
+    },
+    "PayloadInputText": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "input_text",
+          "title": "Type",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "text"
+      ],
+      "title": "PayloadInputText",
+      "type": "object"
+    },
+    "PayloadMessage": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "message",
+          "default": "message",
+          "title": "Type",
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "developer",
+            "user"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "content": {
+          "items": {
+            "$ref": "#/$defs/PayloadInputText"
+          },
+          "title": "Content",
+          "type": "array"
+        }
+      },
+      "required": [
+        "role",
+        "content"
+      ],
+      "title": "PayloadMessage",
+      "type": "object"
+    },
+    "PayloadTextFormat": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/PayloadTextFormatSchema"
+        }
+      },
+      "required": [
+        "format"
+      ],
+      "title": "PayloadTextFormat",
+      "type": "object"
+    },
+    "PayloadTextFormatSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "json_schema",
+          "title": "Type",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "strict": {
+          "const": true,
+          "title": "Strict",
+          "type": "boolean"
+        },
+        "schema": {
+          "additionalProperties": true,
+          "title": "Schema",
+          "type": "object"
+        }
+      },
+      "required": [
+        "type",
+        "name",
+        "strict",
+        "schema"
+      ],
+      "title": "PayloadTextFormatSchema",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "$ref": "#/$defs/OpenAIResponsePayloadMetadata"
+    },
+    "provider": {
+      "const": "openai",
+      "title": "Provider",
+      "type": "string"
+    },
+    "endpoint": {
+      "const": "responses.create",
+      "title": "Endpoint",
+      "type": "string"
+    },
+    "request": {
+      "$ref": "#/$defs/OpenAIResponseRequest"
+    },
+    "source_artifacts": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Artifacts",
+      "type": "array"
+    },
+    "basis": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Basis",
+      "type": "array"
+    }
+  },
+  "required": [
+    "metadata",
+    "provider",
+    "endpoint",
+    "request"
+  ],
+  "title": "OpenAIResponsePayload",
+  "type": "object"
+}

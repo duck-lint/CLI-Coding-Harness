@@ -62,7 +62,37 @@ python harness/runtime/model_resolution.py --api-call-packet harness/runs/api_ca
 This records which provider/model would be used before provider-specific
 payload rendering. Agent-routed calls use the selected agent contract model as
 primary authority. Direct calls use the provider runtime policy default.
-Runtime budget constrains token behavior and does not select the model.
+Runtime budget constrains token behavior and does not select the model. This
+artifact is inspectable, but it is not required for agent-routed OpenAI payload
+rendering.
+
+Render OpenAI provider payload for an agent-routed packet:
+
+```powershell
+python harness/providers/openai/openai_response_payload_compiler.py --api-call-packet harness/runs/api_call_packet.json --output harness/runs/provider_payload.json
+```
+
+For agent-routed calls, `request.model` is rendered directly from
+`api_call_packet.agent_context_packet.agent_contract.model`.
+
+Render OpenAI provider payload for a direct packet with an explicit model:
+
+```powershell
+python harness/providers/openai/openai_response_payload_compiler.py --api-call-packet harness/runs/api_call_packet.json --model gpt-5.4-mini --output-schema harness/contracts/ProjectManagerReport.schema.json --output harness/runs/provider_payload.json
+```
+
+Or render a direct packet using `provider_runtime.policy.json` only as the
+source of `default_direct_model`:
+
+```powershell
+python harness/providers/openai/openai_response_payload_compiler.py --api-call-packet harness/runs/api_call_packet.json --provider-runtime-policy harness/runtime/provider_runtime.policy.json --output-schema harness/contracts/ProjectManagerReport.schema.json --output harness/runs/provider_payload.json
+```
+
+This emits an inspectable OpenAI Responses API payload. It does not call the
+model.
+Before any live runner exists, the compiler strips embedded schema compatibility
+keys like `$schema` / `$id` and rejects obvious unsupported Structured Outputs
+keywords during preflight.
 
 Compile a repo snapshot from one file:
 
@@ -103,6 +133,9 @@ These scripts emit the current bounded-slice artifacts:
 - `static_context_packet.json`
 - `agent_context_packet.json`
 - `api_call_packet.json`
+- `repo_snapshot_packet.json`
+- `effective_model_selection.json`
+- `provider_payload.json`
 
 The package entrypoint is reserved for the real operator workflow. For now:
 
