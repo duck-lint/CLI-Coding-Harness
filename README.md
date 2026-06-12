@@ -1,10 +1,6 @@
-work in progress
-
-current implementation seam: compilers for API response calls
-
 # Coding Agent CLI Harness
 
-**Hard-typed, but flexible. Every line earns its keep.**
+**Hard-typed, semantically flexible. Every line earns its keep.**
 
 This harness defines a typed semantic state substrate: user input is parsed into control signals, and those controls determine which operations are allowed over the current project state.
 
