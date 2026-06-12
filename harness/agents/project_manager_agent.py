@@ -5,10 +5,8 @@ from pydantic import BaseModel, ConfigDict, Field
 from harness.agents.agent_contract import (
   AgentInputPolicyEntry,
   AgentOutputPolicyEntry,
+  ProviderId,
 )
-
-
-ProviderId = Literal["openai", "anthropic"]
 
 
 class Metadata(BaseModel):
@@ -78,10 +76,7 @@ class ProjectManagerAgent(BaseModel):
 
   schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
-  provider: Literal[
-    "openai",
-    "anthropic"
-    ]
+  provider: ProviderId
   model: str = Field(min_length=1)
   instruction_contract: InstructionContract
   agent_input_policy: list[AgentInputPolicyEntry]

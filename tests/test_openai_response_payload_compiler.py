@@ -104,6 +104,41 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
       )
 
       self.assertEqual(payload.request.model, expected_model)
+      self.assertIn(
+        "Provider sourced directly from api_call_packet.agent_context_packet.agent_contract.provider.",
+        payload.basis,
+      )
+
+  def test_openai_payload_compiler_rejects_non_openai_agent_provider(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      agent_path = temp_root / "anthropic_pm.agent.json"
+      agent_data = load_json(AGENT_PATH)
+      agent_data["provider"] = "anthropic"
+      agent_path.write_text(json.dumps(agent_data, indent=2) + "\n", encoding="utf-8")
+
+      agent_context_packet = compile_agent_context_packet(
+        agent_path=agent_path,
+        output_path=temp_root / "agent_context_packet.json",
+        manifest_path=MANIFEST_PATH,
+        harness_root=HARNESS_ROOT,
+        target_repo_root=HARNESS_ROOT,
+        static_context_output_path=temp_root / "static_context_packet.json",
+      )
+      build_api_call_packet(
+        task=task_from_cli("Review the current project trajectory."),
+        call_mode="agent_routed",
+        agent_context_packet=agent_context_packet,
+        output_path=temp_root / "api_call_packet.json",
+      )
+
+      with self.assertRaises(OpenAIResponsePayloadCompilationError) as error:
+        compile_openai_response_payload(
+          api_call_packet_path=temp_root / "api_call_packet.json",
+          output_path=temp_root / "provider_payload.json",
+        )
+
+      self.assertIn("agent_contract.provider == 'openai'", str(error.exception))
 
   def test_payload_compiler_embeds_strict_json_schema_output_format(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:

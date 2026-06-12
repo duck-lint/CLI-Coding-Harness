@@ -166,6 +166,12 @@ def _resolve_request_model(
         "agent_routed ApiCallPacket requires agent_context_packet."
       )
 
+    provider = api_call_packet.agent_context_packet.agent_contract.provider
+    if provider != "openai":
+      raise OpenAIResponsePayloadCompilationError(
+        "OpenAI payload compiler requires api_call_packet.agent_context_packet.agent_contract.provider == 'openai'."
+      )
+
     model = api_call_packet.agent_context_packet.agent_contract.model
     if not model:
       raise OpenAIResponsePayloadCompilationError(
@@ -176,6 +182,7 @@ def _resolve_request_model(
       model,
       [api_call_packet_path.name],
       [
+        "Provider sourced directly from api_call_packet.agent_context_packet.agent_contract.provider.",
         "Model sourced directly from api_call_packet.agent_context_packet.agent_contract.model.",
       ],
     )

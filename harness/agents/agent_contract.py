@@ -5,6 +5,9 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
+ProviderId = Literal["openai", "anthropic"]
+
+
 class AgentMetadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
@@ -60,6 +63,7 @@ class AgentContract(BaseModel):
 
   schema_ref: str = Field(..., alias="$schema", min_length=1)
   metadata: AgentMetadata
+  provider: ProviderId
   model: str = Field(min_length=1)
   instruction_contract: dict[str, Any]
   agent_input_policy: list[AgentInputPolicyEntry]

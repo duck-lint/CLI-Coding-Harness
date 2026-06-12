@@ -99,6 +99,14 @@
         "metadata": {
           "$ref": "#/$defs/AgentMetadata"
         },
+        "provider": {
+          "enum": [
+            "openai",
+            "anthropic"
+          ],
+          "title": "Provider",
+          "type": "string"
+        },
         "model": {
           "minLength": 1,
           "title": "Model",
@@ -127,6 +135,7 @@
       "required": [
         "$schema",
         "metadata",
+        "provider",
         "model",
         "instruction_contract",
         "agent_input_policy",

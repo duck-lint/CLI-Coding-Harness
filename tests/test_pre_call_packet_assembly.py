@@ -65,6 +65,7 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
     agent = ProjectManagerAgent.model_validate(load_json(AGENT_PATH))
 
     self.assertEqual(agent.metadata.id, "project_manager.agent.json")
+    self.assertEqual(agent.provider, "openai")
     self.assertEqual(
       [entry.input_id for entry in agent.agent_input_policy],
       ["static_context_packet"],
@@ -92,6 +93,7 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
         packet.agent_contract.metadata.id,
         "project_manager.agent.json",
       )
+      self.assertEqual(packet.agent_contract.provider, "openai")
       self.assertEqual(len(packet.input_coverage), 1)
       self.assertEqual(packet.input_coverage[0].status, "included")
       self.assertEqual(
