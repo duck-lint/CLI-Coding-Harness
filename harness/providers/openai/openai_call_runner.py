@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 from typing import Any
+from dotenv import load_dotenv
 
 # Support direct execution from harness/providers/openai while preserving package imports.
 if __package__ in {None, ""}:
@@ -105,6 +106,9 @@ def run_openai_call(
   )
 
   OpenAI = _load_openai_client_class()
+
+  repo_root = Path(__file__).resolve().parents[3]
+  load_dotenv(repo_root / ".env.local")
 
   try:
     client = OpenAI()
