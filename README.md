@@ -40,6 +40,9 @@ Build a provider-neutral API call packet for a direct task:
 python harness/runtime/api_call_packet_builder.py --task "Review the current project trajectory." --direct
 ```
 
+This collects git context automatically from `--repo-root`. Use
+`--no-git-context` to disable that for debugging or fixture work.
+
 Build a provider-neutral API call packet for a direct task with explicit static
 context attached as supplementary context:
 
@@ -52,6 +55,10 @@ Build a provider-neutral API call packet for an agent-routed task:
 ```powershell
 python harness/runtime/api_call_packet_builder.py --task "Review the current project trajectory." --agent harness/agents/project_manager.agent.json
 ```
+
+Git context is packet-level ambient context and is collected automatically from
+`--repo-root` for both direct and agent-routed calls. It is not declared in
+`agent_input_policy`.
 
 Resolve effective model selection:
 
@@ -120,6 +127,11 @@ python harness/repo_snapshot/repo_snapshot_compiler.py --repo-root . --all-admis
 
 Agent-routed calls receive repo snapshots only when the selected `.agent.json`
 declares `repo_snapshot_packet` in `agent_input_policy`.
+
+For agent-routed repo selection, declare `repo_snapshot_packet` with a
+`resolution` object in the agent contract, for example `mode: "paths"` plus the
+requested `paths`. Git context is separate from repo snapshot selection and
+does not need an agent-policy entry.
 
 Direct calls can attach an already compiled repo snapshot as supplementary
 context.

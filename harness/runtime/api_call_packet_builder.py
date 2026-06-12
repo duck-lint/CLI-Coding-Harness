@@ -22,7 +22,7 @@ from harness.runtime.api_call_packet import (
   ApiCallPacketMetadata,
   CallMode,
 )
-from harness.runtime.git_context import GitContext
+from harness.runtime.git_context import GitContext, collect_git_context
 from harness.runtime.runtime_budget_policy import RuntimeBudgetPolicy
 from harness.runtime.supplementary_context import SupplementaryContextEntry
 from harness.runtime.task import Task, task_from_cli
@@ -159,7 +159,12 @@ def build_argument_parser() -> argparse.ArgumentParser:
     "--repo-root",
     type=Path,
     default=repo_root,
-    help="Root of the repo that repo_snapshot_packet resolution should inspect.",
+    help="Root of the repo used for repo_snapshot_packet resolution and git context collection.",
+  )
+  parser.add_argument(
+    "--no-git-context",
+    action="store_true",
+    help="Do not collect git context into the emitted ApiCallPacket.",
   )
   parser.add_argument(
     "--harness-root",
@@ -244,13 +249,18 @@ def main(argv: list[str] | None = None) -> int:
         _build_repo_snapshot_supplementary_entry(args.repo_snapshot.resolve())
       )
     supplementary_context = supplementary_context_entries or None
+    git_context = (
+      None
+      if args.no_git_context
+      else collect_git_context(args.repo_root.resolve())
+    )
 
     packet = build_api_call_packet(
       task=task,
       call_mode=call_mode,
       runtime_budget=runtime_budget,
       agent_context_packet=agent_context_packet,
-      git_context=None,
+      git_context=git_context,
       supplementary_context=supplementary_context,
       output_path=output_path,
     )
@@ -266,6 +276,10 @@ def main(argv: list[str] | None = None) -> int:
 
   print(f"PASS: API call packet written to {args.output.resolve()}")
   print(f"Mode: {packet.call_mode}")
+  print(
+    "Git context: "
+    f"{'collected' if packet.git_context is not None else 'disabled'}."
+  )
   print(
     "Supplementary context: "
     f"{len(packet.supplementary_context)} attached."

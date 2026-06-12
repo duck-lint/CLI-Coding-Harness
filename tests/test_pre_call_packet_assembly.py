@@ -575,9 +575,41 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
       self.assertIn("runtime_budget", emitted)
       self.assertIsNone(emitted["agent_context_packet"])
       self.assertEqual(
+        emitted["git_context"],
+        collect_git_context(REPO_ROOT).model_dump(mode="json"),
+      )
+      self.assertEqual(
         emitted["supplementary_context"][0]["source_type"],
         "static_context_packet",
       )
+
+  def test_api_call_builder_supports_no_git_context_flag(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      output_path = temp_root / "api_call_packet.json"
+      script_path = HARNESS_ROOT / "runtime" / "api_call_packet_builder.py"
+
+      completed = subprocess.run(
+        [
+          sys.executable,
+          str(script_path),
+          "--task",
+          "Review the current project trajectory.",
+          "--direct",
+          "--no-git-context",
+          "--output",
+          str(output_path),
+        ],
+        cwd=script_path.parent,
+        capture_output=True,
+        text=True,
+        check=False,
+      )
+
+      self.assertEqual(completed.returncode, 0, completed.stderr)
+      emitted = load_json(output_path)
+      self.assertIsNone(emitted["git_context"])
+      self.assertIn("Git context: disabled.", completed.stdout)
 
   def test_api_call_builder_supports_direct_script_execution_for_agent_route(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -615,6 +647,10 @@ class PreCallPacketAssemblyTests(unittest.TestCase):
       self.assertTrue(agent_context_path.is_file())
       self.assertTrue(static_path.is_file())
       self.assertEqual(emitted["call_mode"], "agent_routed")
+      self.assertEqual(
+        emitted["git_context"],
+        collect_git_context(REPO_ROOT).model_dump(mode="json"),
+      )
       self.assertIn("agent_context_packet", emitted)
       self.assertIn(
         "static_context_packet",
