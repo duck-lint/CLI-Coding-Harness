@@ -26,7 +26,34 @@ def build_report_data(
   missing_basis: list[str],
   constraint_conflicts: list[str],
   next_admissible_transformation: str | None,
+  include_repo_snapshot_packet: bool = True,
+  repo_snapshot_packet_basis: list[str] | None = None,
 ) -> dict:
+  report_source_coverage: dict[str, dict[str, object]] = {
+    "static_context_packet": {
+      "consumed": True,
+      "basis": [
+        "Used project_spec, governance_primitives, open_decisions, active_implementation_plan, and active_implementation_tracker.",
+      ],
+    },
+    "task": {
+      "consumed": True,
+      "basis": [
+        "Used the task text as current task authority.",
+      ],
+    },
+  }
+
+  if include_repo_snapshot_packet:
+    report_source_coverage["repo_snapshot_packet"] = {
+      "consumed": True,
+      "basis": repo_snapshot_packet_basis
+      or [
+        "Used repo_snapshot_packet as historical artifact evidence for the current PM slice.",
+        "Historical artifact paths named in the repo snapshot packet included harness/runs/20260612-214948-agent-route/project_manager_report.json and harness/runs/20260612-214948-agent-route/raw_model_response.json.",
+      ],
+    }
+
   return {
     "metadata": {
       "document_id": "project_manager_report.json",
@@ -36,20 +63,7 @@ def build_report_data(
     },
     "report_status": report_status,
     "report_summary": "Short report summary.",
-    "report_source_coverage": {
-      "static_context_packet": {
-        "consumed": True,
-        "basis": [
-          "Used project_spec, governance_primitives, open_decisions, active_implementation_plan, and active_implementation_tracker.",
-        ],
-      },
-      "task": {
-        "consumed": True,
-        "basis": [
-          "Used the task text as current task authority.",
-        ],
-      },
-    },
+    "report_source_coverage": report_source_coverage,
     "trajectory_review": {
       "current_posture": "Concrete repo-state evidenced from the provided context.",
       "thesis_attractor": "Direction implied by project spec without invented roadmap.",
@@ -100,10 +114,33 @@ class ProjectManagerReportValidationTests(unittest.TestCase):
 
     self.assertEqual(report.report_status, "admissible")
     self.assertFalse(report.proof_frontier.blocked)
+    self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
+    self.assertTrue(
+      any(
+        "harness/runs/20260612-214948-agent-route/project_manager_report.json"
+        in basis
+        for basis in report.report_source_coverage.repo_snapshot_packet.basis
+      )
+    )
     self.assertEqual(
       report.proof_frontier.next_admissible_transformation,
       "Produce the validated PM report.",
     )
+
+  def test_report_source_coverage_allows_omitting_repo_snapshot_packet(self) -> None:
+    report = ProjectManagerReport.model_validate(
+      build_report_data(
+        report_status="needs_clarification",
+        blocked=False,
+        blocking_reason=None,
+        missing_basis=["Clarify the target surface."],
+        constraint_conflicts=[],
+        next_admissible_transformation="Ask the user to name the target surface.",
+        include_repo_snapshot_packet=False,
+      )
+    )
+
+    self.assertIsNone(report.report_source_coverage.repo_snapshot_packet)
 
   def test_rejected_can_be_unblocked_with_next_move(self) -> None:
     raw_response = load_json(CANONICAL_REJECTED_UNBLOCKED_RESPONSE_PATH)
@@ -114,6 +151,14 @@ class ProjectManagerReportValidationTests(unittest.TestCase):
     self.assertEqual(report.report_status, "rejected")
     self.assertFalse(report.proof_frontier.blocked)
     self.assertIsNone(report.proof_frontier.blocking_reason)
+    self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
+    self.assertTrue(
+      any(
+        "harness/runs/20260612-214948-agent-route/project_manager_report.json"
+        in basis
+        for basis in report.report_source_coverage.repo_snapshot_packet.basis
+      )
+    )
     self.assertEqual(
       report.proof_frontier.next_admissible_transformation,
       "Classify the ledger as evidence of a recorded API call, not as proof of runtime state; if runtime proof is needed, require the corresponding saved run artifacts and validation/probe outputs.",
@@ -133,6 +178,7 @@ class ProjectManagerReportValidationTests(unittest.TestCase):
 
     self.assertEqual(report.report_status, "needs_clarification")
     self.assertFalse(report.proof_frontier.blocked)
+    self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
     self.assertEqual(report.proof_frontier.missing_basis, ["Clarify the target surface."])
 
   def test_admissibility_blocked_can_be_unblocked_with_next_move(self) -> None:
@@ -151,6 +197,7 @@ class ProjectManagerReportValidationTests(unittest.TestCase):
 
     self.assertEqual(report.report_status, "admissibility_blocked")
     self.assertFalse(report.proof_frontier.blocked)
+    self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
     self.assertEqual(
       report.proof_frontier.next_admissible_transformation,
       "Request the missing saved runtime artifacts before judging runtime state.",

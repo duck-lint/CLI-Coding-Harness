@@ -27,6 +27,7 @@ class ReportSourceCoverage(BaseModel):
 
   static_context_packet: ReportSourceCoverageEntry
   task: ReportSourceCoverageEntry
+  repo_snapshot_packet: ReportSourceCoverageEntry | None = None
 
 
 class DriftDetection(BaseModel):

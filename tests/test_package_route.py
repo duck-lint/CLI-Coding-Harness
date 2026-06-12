@@ -194,6 +194,14 @@ class PackageRouteTests(unittest.TestCase):
         self.assertEqual(raw_response["provider"], "openai")
         self.assertEqual(report["report_status"], "needs_clarification")
         self.assertTrue(report["proof_frontier"]["blocked"])
+        self.assertTrue(report["report_source_coverage"]["repo_snapshot_packet"]["consumed"])
+        self.assertTrue(
+          any(
+            "harness/runs/20260612-214948-agent-route/project_manager_report.json"
+            in basis
+            for basis in report["report_source_coverage"]["repo_snapshot_packet"]["basis"]
+          )
+        )
         self.assertTrue(validation_path.exists())
         validation_artifact = load_json(validation_path)
         ProjectManagerReportValidationArtifact.model_validate(validation_artifact)
@@ -294,8 +302,9 @@ class PackageRouteTests(unittest.TestCase):
       expected_banner="PASS: Plan route completed.",
       expected_route="plan",
       expected_repo_snapshot_paths=[
-        "harness/runs/20260612-205002-agent-route/project_manager_report.json",
-        "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+        "harness/runs/20260612-214948-agent-route/project_manager_report.json",
+        "harness/runs/20260612-214948-agent-route/project_manager_report.validation.json",
+        "harness/runs/20260612-214948-agent-route/raw_model_response.json",
         "harness/state/ledgers/api_call_ledger.jsonl",
       ],
     )
@@ -313,8 +322,9 @@ class PackageRouteTests(unittest.TestCase):
       expected_banner="PASS: Agent route completed.",
       expected_route="agent",
       expected_repo_snapshot_paths=[
-        "harness/runs/20260612-205002-agent-route/project_manager_report.json",
-        "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+        "harness/runs/20260612-214948-agent-route/project_manager_report.json",
+        "harness/runs/20260612-214948-agent-route/project_manager_report.validation.json",
+        "harness/runs/20260612-214948-agent-route/raw_model_response.json",
         "harness/state/ledgers/api_call_ledger.jsonl",
       ],
     )
@@ -343,8 +353,9 @@ class PackageRouteTests(unittest.TestCase):
         expected_banner="PASS: Agent route completed.",
         expected_route="agent",
         expected_repo_snapshot_paths=[
-          "harness/runs/20260612-205002-agent-route/project_manager_report.json",
-          "harness/runs/20260612-205002-agent-route/raw_model_response.json",
+          "harness/runs/20260612-214948-agent-route/project_manager_report.json",
+          "harness/runs/20260612-214948-agent-route/project_manager_report.validation.json",
+          "harness/runs/20260612-214948-agent-route/raw_model_response.json",
           "harness/state/ledgers/api_call_ledger.jsonl",
         ],
         agent_path=reviewer_agent_path,

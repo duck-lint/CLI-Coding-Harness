@@ -58,6 +58,15 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       ProjectManagerReportValidationArtifact.model_validate(load_json(validation_path))
       self.assertEqual(report.report_status, "needs_clarification")
       self.assertTrue(report.proof_frontier.blocked)
+      self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
+      self.assertTrue(report.report_source_coverage.repo_snapshot_packet.consumed)
+      self.assertTrue(
+        any(
+          "harness/runs/20260612-214948-agent-route/project_manager_report.json"
+          in basis
+          for basis in report.report_source_coverage.repo_snapshot_packet.basis
+        )
+      )
 
   def test_extractor_accepts_rejected_report_with_unblocked_frontier(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -74,6 +83,15 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       self.assertEqual(report.report_status, "rejected")
       self.assertFalse(report.proof_frontier.blocked)
       self.assertIsNone(report.proof_frontier.blocking_reason)
+      self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
+      self.assertTrue(report.report_source_coverage.repo_snapshot_packet.consumed)
+      self.assertTrue(
+        any(
+          "harness/runs/20260612-214948-agent-route/project_manager_report.json"
+          in basis
+          for basis in report.report_source_coverage.repo_snapshot_packet.basis
+        )
+      )
       self.assertEqual(
         report.proof_frontier.next_admissible_transformation,
         "Classify the ledger as evidence of a recorded API call, not as proof of runtime state; if runtime proof is needed, require the corresponding saved run artifacts and validation/probe outputs.",
@@ -101,6 +119,7 @@ class ProjectManagerReportExtractorTests(unittest.TestCase):
       self.assertEqual(load_json(output_path), expected_output)
       ProjectManagerReportValidationArtifact.model_validate(load_json(validation_path))
       self.assertEqual(report.report_status, "needs_clarification")
+      self.assertIsNotNone(report.report_source_coverage.repo_snapshot_packet)
 
   def test_extractor_fails_if_raw_response_status_is_not_completed(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:

@@ -14,6 +14,8 @@
       "Invariant constraints are grounded in the project context packet sources.",
       "Task constraints are separated from invariant constraints.",
       "Conflicts or missing bases are made explicit rather than procedurally interpreted away.",
+      "Consumed input surfaces must be named explicitly in report_source_coverage, and repo_snapshot_packet evidence must be reported under report_source_coverage.repo_snapshot_packet when that surface was consumed.",
+      "When historical artifacts inside the repo snapshot matter, record that evidence in repo_snapshot_packet.basis rather than duplicating it under static_context_packet.basis.",
       "Allowed transformation types are named from the governance primitives or routed to an explicit approval boundary.",
       "Affected and non-affected surfaces are named rather than inferred or sized.",
       "Every disposition is classified using the status semantics below, and proof_frontier.blocked is a separate frontier-state flag rather than a synonym for task approval.",
@@ -26,7 +28,7 @@
       "evaluation_basis": "Derived from project thesis, desired outcomes, non-goals, architectural shape, quality bar, and acceptance probes under ../project_spec/**.",
       "drift_checks": "Derived from governance primitives defining invariant authority, task authority, approval boundaries, admissible transformations, review checkpoints, active implementation state, open decisions, and known failures.",
       "next_step_recommendations": "Derived from the current structural tension, admissible transformation types, approval boundaries, and required proof frontier.",
-      "repository_state": "Derived only from the provided project context packet, including invariant constraints, task constraints, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements.",
+      "repository_state": "Derived only from the provided project context packet, including invariant constraints, task constraints, repo_snapshot_packet when present, conflicts, admissible transformations, affected surfaces, non-affected surfaces, and evidence requirements.",
       "status_semantics": {
         "admissible": "The task can proceed under current project and task authority; the frontier is open enough to name the next admissible move.",
         "admissibility_blocked": "The requested object-level transformation cannot proceed because required basis, context, or authority is missing; the frontier may still be open enough to name a diagnostic or unblock move.",
