@@ -63,27 +63,36 @@ def remove_ledger_artifact() -> None:
       pass
 
 
+def ensure_ledger_artifact() -> None:
+  LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
+  LEDGER_PATH.write_text("", encoding="utf-8")
+
+
 def build_agent_routed_provider_payload(temp_root: Path) -> Path:
-  agent_context_packet = compile_agent_context_packet(
-    agent_path=AGENT_PATH,
-    output_path=temp_root / "agent_context_packet.json",
-    manifest_path=MANIFEST_PATH,
-    harness_root=HARNESS_ROOT,
-    target_repo_root=HARNESS_ROOT,
-    static_context_output_path=temp_root / "static_context_packet.json",
-  )
-  build_api_call_packet(
-    task=task_from_cli("Review the current project trajectory."),
-    call_mode="agent_routed",
-    agent_context_packet=agent_context_packet,
-    output_path=temp_root / "api_call_packet.json",
-  )
-  provider_payload_path = temp_root / "provider_payload.json"
-  compile_openai_response_payload(
-    api_call_packet_path=temp_root / "api_call_packet.json",
-    output_path=provider_payload_path,
-  )
-  return provider_payload_path
+  ensure_ledger_artifact()
+  try:
+    agent_context_packet = compile_agent_context_packet(
+      agent_path=AGENT_PATH,
+      output_path=temp_root / "agent_context_packet.json",
+      manifest_path=MANIFEST_PATH,
+      harness_root=HARNESS_ROOT,
+      target_repo_root=HARNESS_ROOT,
+      static_context_output_path=temp_root / "static_context_packet.json",
+    )
+    build_api_call_packet(
+      task=task_from_cli("Review the current project trajectory."),
+      call_mode="agent_routed",
+      agent_context_packet=agent_context_packet,
+      output_path=temp_root / "api_call_packet.json",
+    )
+    provider_payload_path = temp_root / "provider_payload.json"
+    compile_openai_response_payload(
+      api_call_packet_path=temp_root / "api_call_packet.json",
+      output_path=provider_payload_path,
+    )
+    return provider_payload_path
+  finally:
+    remove_ledger_artifact()
 
 
 def build_raw_response_artifact(*, raw_response: dict) -> OpenAIRawResponse:

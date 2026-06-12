@@ -44,27 +44,43 @@ def write_json(path: Path, data: dict) -> None:
   path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
+def ensure_ledger_artifact() -> None:
+  ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+  ledger_path.parent.mkdir(parents=True, exist_ok=True)
+  ledger_path.write_text("", encoding="utf-8")
+
+
 def build_agent_routed_api_call_packet(
   temp_root: Path,
   *,
   runtime_budget: RuntimeBudgetPolicy | None = None,
 ):
-  agent_context_packet = compile_agent_context_packet(
-    agent_path=AGENT_PATH,
-    output_path=temp_root / "agent_context_packet.json",
-    manifest_path=MANIFEST_PATH,
-    harness_root=HARNESS_ROOT,
-    target_repo_root=HARNESS_ROOT,
-    static_context_output_path=temp_root / "static_context_packet.json",
-  )
-  packet = build_api_call_packet(
-    task=task_from_cli("Review the current project trajectory."),
-    call_mode="agent_routed",
-    agent_context_packet=agent_context_packet,
-    runtime_budget=runtime_budget,
-    output_path=temp_root / "api_call_packet.json",
-  )
-  return packet
+  ensure_ledger_artifact()
+  try:
+    agent_context_packet = compile_agent_context_packet(
+      agent_path=AGENT_PATH,
+      output_path=temp_root / "agent_context_packet.json",
+      manifest_path=MANIFEST_PATH,
+      harness_root=HARNESS_ROOT,
+      target_repo_root=HARNESS_ROOT,
+      static_context_output_path=temp_root / "static_context_packet.json",
+    )
+    packet = build_api_call_packet(
+      task=task_from_cli("Review the current project trajectory."),
+      call_mode="agent_routed",
+      agent_context_packet=agent_context_packet,
+      runtime_budget=runtime_budget,
+      output_path=temp_root / "api_call_packet.json",
+    )
+    return packet
+  finally:
+    ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+    if ledger_path.exists():
+      ledger_path.unlink()
+      try:
+        ledger_path.parent.rmdir()
+      except OSError:
+        pass
 
 
 def build_direct_api_call_packet(temp_root: Path):
@@ -117,20 +133,30 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
       agent_data["provider"] = "anthropic"
       agent_path.write_text(json.dumps(agent_data, indent=2) + "\n", encoding="utf-8")
 
-      agent_context_packet = compile_agent_context_packet(
-        agent_path=agent_path,
-        output_path=temp_root / "agent_context_packet.json",
-        manifest_path=MANIFEST_PATH,
-        harness_root=HARNESS_ROOT,
-        target_repo_root=HARNESS_ROOT,
-        static_context_output_path=temp_root / "static_context_packet.json",
-      )
-      build_api_call_packet(
-        task=task_from_cli("Review the current project trajectory."),
-        call_mode="agent_routed",
-        agent_context_packet=agent_context_packet,
-        output_path=temp_root / "api_call_packet.json",
-      )
+      ensure_ledger_artifact()
+      ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+      try:
+        agent_context_packet = compile_agent_context_packet(
+          agent_path=agent_path,
+          output_path=temp_root / "agent_context_packet.json",
+          manifest_path=MANIFEST_PATH,
+          harness_root=HARNESS_ROOT,
+          target_repo_root=HARNESS_ROOT,
+          static_context_output_path=temp_root / "static_context_packet.json",
+        )
+        build_api_call_packet(
+          task=task_from_cli("Review the current project trajectory."),
+          call_mode="agent_routed",
+          agent_context_packet=agent_context_packet,
+          output_path=temp_root / "api_call_packet.json",
+        )
+      finally:
+        if ledger_path.exists():
+          ledger_path.unlink()
+          try:
+            ledger_path.parent.rmdir()
+          except OSError:
+            pass
 
       with self.assertRaises(OpenAIResponsePayloadCompilationError) as error:
         compile_openai_response_payload(

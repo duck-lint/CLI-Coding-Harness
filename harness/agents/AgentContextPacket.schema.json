@@ -423,6 +423,11 @@
           "title": "Path",
           "type": "string"
         },
+        "explicit_requested_path": {
+          "default": false,
+          "title": "Explicit Requested Path",
+          "type": "boolean"
+        },
         "size_bytes": {
           "title": "Size Bytes",
           "type": "integer"
@@ -541,6 +546,11 @@
         "include_harness": {
           "default": false,
           "title": "Include Harness",
+          "type": "boolean"
+        },
+        "explicit_path_overrides_default_exclusions": {
+          "default": false,
+          "title": "Explicit Path Overrides Default Exclusions",
           "type": "boolean"
         },
         "repo_root": {

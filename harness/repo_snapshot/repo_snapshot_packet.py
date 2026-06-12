@@ -29,6 +29,7 @@ class RepoSnapshotSelection(BaseModel):
 
   mode: SnapshotMode
   include_harness: bool = False
+  explicit_path_overrides_default_exclusions: bool = False
   repo_root: str
   requested_paths: list[str] = Field(default_factory=list)
   requested_globs: list[str] = Field(default_factory=list)
@@ -41,6 +42,7 @@ class RepoSnapshotFile(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   path: str
+  explicit_requested_path: bool = False
   size_bytes: int
   sha256: str
   encoding: Literal["utf-8"]

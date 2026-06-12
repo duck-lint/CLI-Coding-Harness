@@ -45,6 +45,12 @@ def write_json(path: Path, data: dict) -> None:
   path.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
 
 
+def ensure_ledger_artifact() -> None:
+  ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+  ledger_path.parent.mkdir(parents=True, exist_ok=True)
+  ledger_path.write_text("", encoding="utf-8")
+
+
 def write_agent_variant(temp_root: Path, *, model: str) -> Path:
   agent_path = temp_root / "project_manager.agent.json"
   agent_data = load_json(AGENT_PATH)
@@ -89,22 +95,32 @@ def build_agent_routed_api_call_packet(
   *,
   agent_path: Path = AGENT_PATH,
 ):
-  agent_context_path = temp_root / "agent_context_packet.json"
-  static_context_path = temp_root / "static_context_packet.json"
-  agent_context_packet = compile_agent_context_packet(
-    agent_path=agent_path,
-    output_path=agent_context_path,
-    manifest_path=MANIFEST_PATH,
-    harness_root=HARNESS_ROOT,
-    target_repo_root=HARNESS_ROOT,
-    static_context_output_path=static_context_path,
-  )
-  return build_api_call_packet(
-    task=task_from_cli("Review the current project trajectory."),
-    call_mode="agent_routed",
-    agent_context_packet=agent_context_packet,
-    output_path=temp_root / "api_call_packet.json",
-  )
+  ensure_ledger_artifact()
+  try:
+    agent_context_path = temp_root / "agent_context_packet.json"
+    static_context_path = temp_root / "static_context_packet.json"
+    agent_context_packet = compile_agent_context_packet(
+      agent_path=agent_path,
+      output_path=agent_context_path,
+      manifest_path=MANIFEST_PATH,
+      harness_root=HARNESS_ROOT,
+      target_repo_root=HARNESS_ROOT,
+      static_context_output_path=static_context_path,
+    )
+    return build_api_call_packet(
+      task=task_from_cli("Review the current project trajectory."),
+      call_mode="agent_routed",
+      agent_context_packet=agent_context_packet,
+      output_path=temp_root / "api_call_packet.json",
+    )
+  finally:
+    ledger_path = HARNESS_ROOT / "runs" / "ledgers" / "api_call_ledger.jsonl"
+    if ledger_path.exists():
+      ledger_path.unlink()
+      try:
+        ledger_path.parent.rmdir()
+      except OSError:
+        pass
 
 
 def build_direct_api_call_packet(

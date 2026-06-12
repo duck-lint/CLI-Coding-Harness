@@ -15,6 +15,7 @@ from harness.agents.agent_context_compiler import (
   compile_agent_context_packet,
 )
 from harness.repo_snapshot.repo_snapshot_compiler import (
+  RepoSnapshotCompilationError,
   compile_repo_snapshot_packet,
 )
 from harness.repo_snapshot.repo_snapshot_packet import RepoSnapshotPacket
@@ -56,13 +57,23 @@ def build_repo_fixture(repo_root: Path) -> None:
   (repo_root / "README.md").write_text("# Example Repo\n", encoding="utf-8")
   (repo_root / "src").mkdir()
   (repo_root / "src" / "app.py").write_text("print('hello')\n", encoding="utf-8")
-  (repo_root / ".gitignore").write_text("ignored.txt\n", encoding="utf-8")
+  (repo_root / ".gitignore").write_text("ignored.txt\nruns/\n", encoding="utf-8")
   (repo_root / "ignored.txt").write_text("ignore me\n", encoding="utf-8")
+  (repo_root / "runs").mkdir()
+  (repo_root / "runs" / "ignored_artifact.json").write_text(
+    '{"generated": true}\n',
+    encoding="utf-8",
+  )
   (repo_root / "binary.bin").write_bytes(b"\x00\x01\x02\xff")
   (repo_root / "large.txt").write_text("x" * 256, encoding="utf-8")
   (repo_root / "harness" / "runs").mkdir(parents=True)
   (repo_root / "harness" / "runs" / "generated.json").write_text(
     '{"generated": true}\n',
+    encoding="utf-8",
+  )
+  (repo_root / "harness" / "runs" / "ledgers").mkdir(parents=True)
+  (repo_root / "harness" / "runs" / "ledgers" / "api_call_ledger.jsonl").write_text(
+    '{"ledger_version":"0.1","route":"plan"}\n',
     encoding="utf-8",
   )
   (repo_root / "harness" / "runtime").mkdir(parents=True)
@@ -94,6 +105,45 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       self.assertEqual(packet.summary.included_count, 1)
       self.assertEqual(packet.files[0].path, "README.md")
 
+  def test_repo_snapshot_compiler_includes_explicit_harness_ledger_path(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+      output_path = repo_root / "snapshot.json"
+
+      packet = compile_repo_snapshot_packet(
+        repo_root=repo_root,
+        output_path=output_path,
+        mode="paths",
+        requested_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
+      )
+
+      self.assertEqual(
+        [file.path for file in packet.files],
+        ["harness/runs/ledgers/api_call_ledger.jsonl"],
+      )
+      self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(packet.files[0].explicit_requested_path)
+
+  def test_repo_snapshot_compiler_includes_explicit_gitignored_runs_path(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+      output_path = repo_root / "snapshot.json"
+
+      packet = compile_repo_snapshot_packet(
+        repo_root=repo_root,
+        output_path=output_path,
+        mode="paths",
+        requested_paths=["runs/ignored_artifact.json"],
+      )
+
+      self.assertEqual([file.path for file in packet.files], ["runs/ignored_artifact.json"])
+      self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(packet.files[0].explicit_requested_path)
+
   def test_repo_snapshot_compiler_includes_files_matched_by_glob(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
@@ -111,7 +161,25 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       self.assertEqual([file.path for file in packet.files], ["src/app.py"])
       self.assertTrue(packet.selection.harness_excluded)
 
-  def test_repo_snapshot_compiler_omits_harness_path_by_default(self) -> None:
+  def test_repo_snapshot_compiler_default_traversal_still_excludes_harness(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+      output_path = repo_root / "snapshot.json"
+
+      packet = compile_repo_snapshot_packet(
+        repo_root=repo_root,
+        output_path=output_path,
+        mode="all_admissible",
+      )
+
+      self.assertFalse(
+        any(file.path.startswith("harness/") for file in packet.files)
+      )
+      self.assertTrue(packet.selection.harness_excluded)
+
+  def test_repo_snapshot_compiler_includes_explicit_harness_path_without_include_harness(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
@@ -125,11 +193,31 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
         requested_paths=["harness/runtime/core.py"],
       )
 
-      self.assertEqual(packet.summary.included_count, 0)
+      self.assertEqual(packet.summary.included_count, 1)
+      self.assertEqual([file.path for file in packet.files], ["harness/runtime/core.py"])
       self.assertFalse(packet.selection.include_harness)
       self.assertTrue(packet.selection.harness_excluded)
-      self.assertEqual(packet.omitted_files[0].reason, "harness_excluded")
-      self.assertIn("harness/**", packet.omitted_files[0].detail)
+      self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(packet.files[0].explicit_requested_path)
+
+  def test_repo_snapshot_compiler_requested_glob_does_not_broaden_harness_inclusion(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+      output_path = repo_root / "snapshot.json"
+
+      packet = compile_repo_snapshot_packet(
+        repo_root=repo_root,
+        output_path=output_path,
+        mode="globs",
+        requested_globs=["harness/**/*.json"],
+      )
+
+      self.assertEqual(packet.summary.included_count, 0)
+      self.assertTrue(
+        all(omitted.reason == "harness_excluded" for omitted in packet.omitted_files)
+      )
 
   def test_repo_snapshot_compiler_omits_harness_glob_by_default(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -210,7 +298,7 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       self.assertTrue(packet.selection.include_harness)
       self.assertFalse(packet.selection.harness_excluded)
 
-  def test_repo_snapshot_compiler_respects_gitignore(self) -> None:
+  def test_repo_snapshot_compiler_includes_explicit_gitignored_file(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
@@ -224,8 +312,10 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
         requested_paths=["ignored.txt"],
       )
 
-      self.assertEqual(packet.summary.included_count, 0)
-      self.assertEqual(packet.omitted_files[0].reason, "gitignored")
+      self.assertEqual(packet.summary.included_count, 1)
+      self.assertEqual([file.path for file in packet.files], ["ignored.txt"])
+      self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(packet.files[0].explicit_requested_path)
 
   def test_repo_snapshot_compiler_excludes_dot_git(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -242,7 +332,7 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
 
       self.assertFalse(any(file.path.startswith(".git/") for file in packet.files))
 
-  def test_repo_snapshot_compiler_excludes_harness_runs(self) -> None:
+  def test_repo_snapshot_compiler_includes_explicit_harness_runs_file(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
@@ -256,43 +346,109 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
         requested_paths=["harness/runs/generated.json"],
       )
 
-      self.assertEqual(packet.summary.included_count, 0)
-      self.assertEqual(packet.omitted_files[0].reason, "harness_excluded")
+      self.assertEqual(packet.summary.included_count, 1)
+      self.assertEqual([file.path for file in packet.files], ["harness/runs/generated.json"])
+      self.assertTrue(packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(packet.files[0].explicit_requested_path)
 
-  def test_repo_snapshot_compiler_excludes_binary_files(self) -> None:
+  def test_repo_snapshot_compiler_explicit_binary_file_fails(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
       build_repo_fixture(repo_root)
-      output_path = repo_root / "snapshot.json"
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=["binary.bin"],
+        )
 
-      packet = compile_repo_snapshot_packet(
-        repo_root=repo_root,
-        output_path=output_path,
-        mode="paths",
-        requested_paths=["binary.bin"],
-      )
+      self.assertIn("binary.bin", str(error.exception))
+      self.assertIn("not UTF-8 text", str(error.exception))
 
-      self.assertEqual(packet.summary.included_count, 0)
-      self.assertEqual(packet.omitted_files[0].reason, "binary")
-
-  def test_repo_snapshot_compiler_omits_oversized_files_visibly(self) -> None:
+  def test_repo_snapshot_compiler_explicit_dot_git_path_fails(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       repo_root = Path(temp_directory) / "repo"
       repo_root.mkdir()
       build_repo_fixture(repo_root)
-      output_path = repo_root / "snapshot.json"
 
-      packet = compile_repo_snapshot_packet(
-        repo_root=repo_root,
-        output_path=output_path,
-        mode="paths",
-        requested_paths=["large.txt"],
-        max_file_bytes=32,
-      )
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=[".git/config"],
+        )
 
-      self.assertEqual(packet.summary.included_count, 0)
-      self.assertEqual(packet.omitted_files[0].reason, "too_large")
+      self.assertIn(".git/config", str(error.exception))
+      self.assertIn("hard-denied", str(error.exception))
+
+  def test_repo_snapshot_compiler_explicit_outside_repo_path_fails(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=["../outside.txt"],
+        )
+
+      self.assertIn("outside repo root", str(error.exception))
+
+  def test_repo_snapshot_compiler_explicit_missing_path_fails_clearly(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=["missing.txt"],
+        )
+
+      self.assertIn("missing.txt", str(error.exception))
+      self.assertIn("was not found", str(error.exception))
+
+  def test_repo_snapshot_compiler_explicit_directory_path_fails(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=["src"],
+        )
+
+      self.assertIn("directory", str(error.exception))
+
+  def test_repo_snapshot_compiler_explicit_oversized_file_fails(self) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      repo_root = Path(temp_directory) / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
+      with self.assertRaises(RepoSnapshotCompilationError) as error:
+        compile_repo_snapshot_packet(
+          repo_root=repo_root,
+          output_path=repo_root / "snapshot.json",
+          mode="paths",
+          requested_paths=["large.txt"],
+          max_file_bytes=32,
+        )
+
+      self.assertIn("large.txt", str(error.exception))
+      self.assertIn("exceeds max_file_bytes", str(error.exception))
 
   def test_repo_snapshot_packet_validates_against_generated_schema(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -347,10 +503,11 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
       )
 
       self.assertIsNotNone(packet.resolved_inputs.repo_snapshot_packet)
-      self.assertEqual(
-        packet.resolved_inputs.repo_snapshot_packet.files[0].path,
-        "README.md",
-      )
+      repo_snapshot_packet = packet.resolved_inputs.repo_snapshot_packet
+      self.assertIsNotNone(repo_snapshot_packet)
+      self.assertEqual(repo_snapshot_packet.files[0].path, "README.md")
+      self.assertTrue(repo_snapshot_packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(repo_snapshot_packet.files[0].explicit_requested_path)
       self.assertEqual(packet.input_coverage[1].status, "included")
 
   def test_agent_input_policy_repo_snapshot_omits_harness_by_default(self) -> None:
@@ -387,17 +544,15 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
 
       self.assertEqual(packet.input_coverage[1].status, "included")
       self.assertIsNotNone(packet.resolved_inputs.repo_snapshot_packet)
-      self.assertEqual(packet.resolved_inputs.repo_snapshot_packet.files, [])
-      self.assertFalse(
-        packet.resolved_inputs.repo_snapshot_packet.selection.include_harness
-      )
-      self.assertTrue(
-        packet.resolved_inputs.repo_snapshot_packet.selection.harness_excluded
-      )
+      repo_snapshot_packet = packet.resolved_inputs.repo_snapshot_packet
       self.assertEqual(
-        packet.resolved_inputs.repo_snapshot_packet.omitted_files[0].reason,
-        "harness_excluded",
+        [file.path for file in repo_snapshot_packet.files],
+        ["harness/runtime/core.py"],
       )
+      self.assertFalse(repo_snapshot_packet.selection.include_harness)
+      self.assertTrue(repo_snapshot_packet.selection.harness_excluded)
+      self.assertTrue(repo_snapshot_packet.selection.explicit_path_overrides_default_exclusions)
+      self.assertTrue(repo_snapshot_packet.files[0].explicit_requested_path)
 
   def test_agent_input_policy_repo_snapshot_may_explicitly_include_harness(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -497,7 +652,15 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
   def test_optional_repo_snapshot_without_resolution_is_recorded_missing(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
       temp_root = Path(temp_directory)
+      repo_root = temp_root / "repo"
+      repo_root.mkdir()
+      build_repo_fixture(repo_root)
       agent_data = load_json(AGENT_PATH)
+      agent_data["agent_input_policy"] = [
+        entry
+        for entry in agent_data["agent_input_policy"]
+        if entry["input_id"] != "repo_snapshot_packet"
+      ]
       agent_data["agent_input_policy"].append(
         {
           "input_id": "repo_snapshot_packet",
@@ -512,7 +675,7 @@ class RepoSnapshotCompilerTests(unittest.TestCase):
         agent_path=agent_path,
         output_path=temp_root / "agent_context_packet.json",
         manifest_path=MANIFEST_PATH,
-        repo_root=REPO_ROOT,
+        repo_root=repo_root,
         harness_root=HARNESS_ROOT,
         target_repo_root=HARNESS_ROOT,
         static_context_output_path=temp_root / "static_context_packet.json",

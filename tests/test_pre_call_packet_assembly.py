@@ -21,6 +21,7 @@ from harness.project_spec.static_context_packet_compiler import (
 )
 from harness.runtime.api_call_packet import ApiCallPacket
 from harness.runtime.api_call_packet_builder import build_api_call_packet
+from harness.runtime.api_call_ledger import DEFAULT_RUNTIME_CALL_LEDGER_PATH
 from harness.runtime.git_context import GitContext, collect_git_context
 from harness.runtime.runtime_budget_policy import RuntimeBudgetPolicy
 from harness.runtime.supplementary_context import SupplementaryContextEntry
@@ -48,6 +49,22 @@ def compile_static_packet(output_path: Path):
     target_repo_root=HARNESS_ROOT,
     output_path=output_path,
   )
+
+
+def setUpModule() -> None:
+  ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
+  ledger_path.parent.mkdir(parents=True, exist_ok=True)
+  ledger_path.write_text("", encoding="utf-8")
+
+
+def tearDownModule() -> None:
+  ledger_path = DEFAULT_RUNTIME_CALL_LEDGER_PATH
+  if ledger_path.exists():
+    ledger_path.unlink()
+  try:
+    ledger_path.parent.rmdir()
+  except OSError:
+    pass
 
 
 class PreCallPacketAssemblyTests(unittest.TestCase):

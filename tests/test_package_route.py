@@ -91,6 +91,11 @@ def remove_ledger_artifact() -> None:
       pass
 
 
+def ensure_ledger_artifact() -> None:
+  LEDGER_PATH.parent.mkdir(parents=True, exist_ok=True)
+  LEDGER_PATH.write_text("", encoding="utf-8")
+
+
 class PackageRouteTests(unittest.TestCase):
   def _assert_successful_route(
     self,
@@ -98,6 +103,7 @@ class PackageRouteTests(unittest.TestCase):
     command: list[str],
     expected_banner: str,
     expected_route: str,
+    expected_repo_snapshot_paths: list[str] | None = None,
     agent_path: Path = AGENT_PATH,
   ) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -112,6 +118,7 @@ class PackageRouteTests(unittest.TestCase):
       ]
       source_snapshots = {path: path.read_bytes() for path in source_paths}
       remove_ledger_artifact()
+      ensure_ledger_artifact()
       try:
         completed = subprocess.run(
           [*command, "--runs-root", str(runs_root)],
@@ -197,6 +204,25 @@ class PackageRouteTests(unittest.TestCase):
         self.assertNotIn("actual_output_tokens", ledger_record)
         self.assertNotIn("total_tokens", ledger_record)
 
+        if expected_repo_snapshot_paths is not None:
+          repo_snapshot_packet = load_json(run_directory / "repo_snapshot_packet.json")
+          self.assertEqual(
+            [file["path"] for file in repo_snapshot_packet["files"]],
+            expected_repo_snapshot_paths,
+          )
+          self.assertEqual(
+            repo_snapshot_packet["selection"]["requested_paths"],
+            expected_repo_snapshot_paths,
+          )
+          self.assertTrue(
+            repo_snapshot_packet["selection"][
+              "explicit_path_overrides_default_exclusions"
+            ]
+          )
+          self.assertTrue(
+            all(file["explicit_requested_path"] for file in repo_snapshot_packet["files"])
+          )
+
         for path in source_paths:
           self.assertEqual(path.read_bytes(), source_snapshots[path])
       finally:
@@ -213,6 +239,7 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Plan route completed.",
       expected_route="plan",
+      expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
     )
 
   def test_package_cli_runs_generic_agent_route(self) -> None:
@@ -227,6 +254,7 @@ class PackageRouteTests(unittest.TestCase):
       ],
       expected_banner="PASS: Agent route completed.",
       expected_route="agent",
+      expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
     )
 
   def test_package_cli_runs_non_pm_agent_route(self) -> None:
@@ -252,8 +280,54 @@ class PackageRouteTests(unittest.TestCase):
         ],
         expected_banner="PASS: Agent route completed.",
         expected_route="agent",
+        expected_repo_snapshot_paths=["harness/runs/ledgers/api_call_ledger.jsonl"],
         agent_path=reviewer_agent_path,
       )
+
+  def test_package_route_stops_before_provider_render_when_explicit_snapshot_path_is_missing(
+    self,
+  ) -> None:
+    with tempfile.TemporaryDirectory() as temp_directory:
+      temp_root = Path(temp_directory)
+      runs_root = temp_root / "runs"
+      missing_agent_path = temp_root / "reviewer_missing_snapshot.agent.json"
+      agent_data = load_json(AGENT_PATH)
+      agent_data["metadata"]["id"] = "reviewer_missing_snapshot.agent.json"
+      agent_data["metadata"]["agent_name"] = "reviewer"
+      agent_data["agent_input_policy"][1]["resolution"]["paths"] = ["missing.txt"]
+      missing_agent_path.write_text(
+        json.dumps(agent_data, indent=2) + "\n",
+        encoding="utf-8",
+      )
+      stderr = io.StringIO()
+
+      with patch(
+        "harness.runtime.package_route.compile_openai_response_payload"
+      ) as render_provider_payload:
+        with redirect_stderr(stderr):
+          code = package_route.main(
+            [
+              "Review the current project trajectory.",
+              "--agent",
+              str(missing_agent_path),
+              "--runs-root",
+              str(runs_root),
+            ]
+          )
+
+      self.assertEqual(code, 1)
+      self.assertIn("FAIL: compile_agent_context_packet:", stderr.getvalue())
+      render_provider_payload.assert_not_called()
+
+      run_directory = only_run_directory(runs_root)
+      artifact_names = {path.name for path in run_directory.iterdir()}
+      self.assertIn("task.json", artifact_names)
+      self.assertIn("static_context_packet.json", artifact_names)
+      self.assertNotIn("repo_snapshot_packet.json", artifact_names)
+      self.assertNotIn("agent_context_packet.json", artifact_names)
+      self.assertNotIn("provider_payload.json", artifact_names)
+      self.assertNotIn("raw_model_response.json", artifact_names)
+      self.assertNotIn("project_manager_report.json", artifact_names)
 
   def test_package_route_requires_task_text(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
@@ -298,6 +372,8 @@ class PackageRouteTests(unittest.TestCase):
         encoding="utf-8",
       )
       stderr = io.StringIO()
+      ensure_ledger_artifact()
+      self.addCleanup(remove_ledger_artifact)
 
       with redirect_stderr(stderr):
         code = package_route.main(
@@ -332,6 +408,8 @@ class PackageRouteTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       runs_root = temp_root / "runs"
       stderr = io.StringIO()
+      ensure_ledger_artifact()
+      self.addCleanup(remove_ledger_artifact)
 
       with patch(
         "harness.runtime.package_route.compile_openai_response_payload",
@@ -367,6 +445,8 @@ class PackageRouteTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       runs_root = temp_root / "runs"
       stderr = io.StringIO()
+      ensure_ledger_artifact()
+      self.addCleanup(remove_ledger_artifact)
 
       with patch(
         "harness.runtime.package_route.run_openai_call",
@@ -397,6 +477,8 @@ class PackageRouteTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       runs_root = temp_root / "runs"
       stderr = io.StringIO()
+      ensure_ledger_artifact()
+      self.addCleanup(remove_ledger_artifact)
 
       def fake_run_openai_call(
         *,
