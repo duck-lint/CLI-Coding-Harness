@@ -25,7 +25,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "raw_provider_artifact",
           "title": "Document Authority",
           "type": "string"
         }

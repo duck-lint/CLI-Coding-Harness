@@ -106,7 +106,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "compiled_runtime_artifact",
           "title": "Document Authority",
           "type": "string"
         }

@@ -12,7 +12,7 @@ class TaskMetadata(BaseModel):
   title: Literal["Task"]
   purpose: Literal["Records the current user task for a harness run."]
   source_format: Literal["json"]
-  document_authority: Literal["task_authority"]
+  document_authority: Literal["operational_state"]
 
 
 class Task(BaseModel):
@@ -30,7 +30,7 @@ def task_from_cli(task_text: str) -> Task:
       title="Task",
       purpose="Records the current user task for a harness run.",
       source_format="json",
-      document_authority="task_authority",
+      document_authority="operational_state",
     ),
     task_text=task_text,
     source="cli",

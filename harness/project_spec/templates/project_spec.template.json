@@ -5,7 +5,7 @@
     "title": "Project Spec",
     "purpose": "This file, together with the other docs under ./project_spec/, is the authoritative invariant space for harnessed work in this repo",
     "source_format": "json",
-    "document_authority": "invariant_authority.template"
+    "document_authority": "harness_target.template"
   },
   "project_thesis": {
     "project_is": [],

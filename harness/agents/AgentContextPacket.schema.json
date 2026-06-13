@@ -73,7 +73,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "compiled_runtime_artifact",
           "title": "Document Authority",
           "type": "string"
         }
@@ -257,11 +257,17 @@
           "minLength": 1,
           "title": "Agent Name",
           "type": "string"
+        },
+        "document_authority": {
+          "const": "global_harness",
+          "title": "Document Authority",
+          "type": "string"
         }
       },
       "required": [
         "id",
-        "agent_name"
+        "agent_name",
+        "document_authority"
       ],
       "title": "AgentMetadata",
       "type": "object"
@@ -350,9 +356,12 @@
         },
         "document_authority": {
           "enum": [
-            "invariant_authority",
-            "failure_evidence",
-            "operational_state"
+            "global_harness",
+            "harness_target",
+            "operational_state",
+            "compiled_runtime_artifact",
+            "output_policy_artifact",
+            "raw_provider_artifact"
           ],
           "title": "Document Authority",
           "type": "string"
@@ -516,7 +525,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "compiled_runtime_artifact",
           "title": "Document Authority",
           "type": "string"
         }
@@ -670,9 +679,12 @@
         },
         "document_authority": {
           "enum": [
-            "invariant_authority",
-            "failure_evidence",
-            "operational_state"
+            "global_harness",
+            "harness_target",
+            "operational_state",
+            "compiled_runtime_artifact",
+            "output_policy_artifact",
+            "raw_provider_artifact"
           ],
           "title": "Document Authority",
           "type": "string"
@@ -878,7 +890,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "compiled_runtime_artifact",
           "title": "Document Authority",
           "type": "string"
         }

@@ -9,7 +9,7 @@
       "source_id": "governance_primitives",
       "scope": "harness_global",
       "required": true,
-      "document_authority": "invariant_authority",
+      "document_authority": "global_harness",
       "document": "runtime/governance_primitives.json",
       "schema_id": "governance_primitives",
       "cardinality": "exactly_one"
@@ -18,7 +18,7 @@
       "source_id": "project_spec",
       "scope": "target_repo",
       "required": true,
-      "document_authority": "invariant_authority",
+      "document_authority": "harness_target",
       "document": "project_spec/project_spec.json",
       "schema_id": "project_spec",
       "cardinality": "exactly_one"
@@ -27,7 +27,7 @@
       "source_id": "known_failures",
       "scope": "target_repo",
       "required": true,
-      "document_authority": "failure_evidence",
+      "document_authority": "harness_target",
       "document": "project_spec/known_failures.json",
       "schema_id": "known_failures",
       "cardinality": "exactly_one"
@@ -36,7 +36,7 @@
       "source_id": "open_decisions",
       "scope": "target_repo",
       "required": true,
-      "document_authority": "operational_state",
+      "document_authority": "harness_target",
       "document": "project_spec/open_decisions.json",
       "schema_id": "open_decisions",
       "cardinality": "exactly_one"

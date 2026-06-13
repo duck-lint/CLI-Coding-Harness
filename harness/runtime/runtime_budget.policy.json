@@ -1,5 +1,6 @@
 {
   "$schema": "RuntimeBudgetPolicy.schema.json",
+  "document_authority": "runtime_policy",
   "default": {
     "max_input_tokens": 60000,
     "reserved_output_tokens": 4000,

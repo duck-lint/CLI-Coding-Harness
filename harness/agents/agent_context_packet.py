@@ -18,7 +18,7 @@ class AgentContextPacketMetadata(BaseModel):
     "Agent-specific context compiled from the selected agent input policy."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class AgentContextInputCoverageEntry(BaseModel):

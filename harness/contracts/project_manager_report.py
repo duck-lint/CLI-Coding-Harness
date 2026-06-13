@@ -13,7 +13,7 @@ class Metadata(BaseModel):
   document_id: Literal["project_manager_report.json"]
   title: Literal["Project Manager Report"]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["output_policy_artifact"]
 
 
 class ReportSourceCoverageEntry(BaseModel):

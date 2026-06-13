@@ -21,7 +21,7 @@ class RepoSnapshotPacketMetadata(BaseModel):
     "Compiled repo file evidence selected for a model call."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class RepoSnapshotSelection(BaseModel):

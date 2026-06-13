@@ -22,9 +22,12 @@ StaticSchemaId = Literal[
 ]
 
 DocumentAuthority = Literal[
-  "invariant_authority",
-  "failure_evidence",
+  "harness_target",
+  "compiled_runtime_artifact",
   "operational_state",
+  "global_harness",
+  "output_policy_artifact",
+  "raw_provider_artifact"
 ]
 
 CoverageStatus = Literal[
@@ -47,7 +50,7 @@ class StaticContextPacketMetadata(BaseModel):
   title: Literal["Static Context Packet"]
   purpose: Literal["Compiled static authority and operational context from StaticContextPacketManifest."]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class MissingSourceEntry(BaseModel):

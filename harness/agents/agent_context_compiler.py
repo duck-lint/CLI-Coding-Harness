@@ -370,7 +370,7 @@ def compile_agent_context_packet(
       title="Agent Context Packet",
       purpose="Agent-specific context compiled from the selected agent input policy.",
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     agent_contract=agent,
     resolved_inputs=resolved_inputs,

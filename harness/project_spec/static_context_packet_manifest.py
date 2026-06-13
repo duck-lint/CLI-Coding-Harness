@@ -29,9 +29,12 @@ class Source(BaseModel):
   required_when: str | None = None
 
   document_authority: Literal[
-    "invariant_authority",
-    "failure_evidence",
+    "harness_target",
     "operational_state",
+    "global_harness",
+    "compiled_runtime_artifact",
+    "output_policy_artifact",
+    "raw_provider_artifact"
   ]
 
   document: str | None = None
@@ -124,7 +127,7 @@ SOURCE_CONTRACTS = {
     "scope": "harness_global",
     "required": True,
     "required_when": None,
-    "document_authority": "invariant_authority",
+    "document_authority": "global_harness",
     "schema_id": "governance_primitives",
     "cardinality": "exactly_one",
   },
@@ -132,7 +135,7 @@ SOURCE_CONTRACTS = {
     "scope": "target_repo",
     "required": True,
     "required_when": None,
-    "document_authority": "invariant_authority",
+    "document_authority": "harness_target",
     "schema_id": "project_spec",
     "cardinality": "exactly_one",
   },
@@ -140,7 +143,7 @@ SOURCE_CONTRACTS = {
     "scope": "target_repo",
     "required": True,
     "required_when": None,
-    "document_authority": "failure_evidence",
+    "document_authority": "harness_target",
     "schema_id": "known_failures",
     "cardinality": "exactly_one",
   },
@@ -148,7 +151,7 @@ SOURCE_CONTRACTS = {
     "scope": "target_repo",
     "required": True,
     "required_when": None,
-    "document_authority": "operational_state",
+    "document_authority": "harness_target",
     "schema_id": "open_decisions",
     "cardinality": "exactly_one",
   },

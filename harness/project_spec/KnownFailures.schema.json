@@ -74,7 +74,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "failure_evidence",
+          "const": "harness_target",
           "title": "Document Authority",
           "type": "string"
         }

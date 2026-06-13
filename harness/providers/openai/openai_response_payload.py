@@ -14,7 +14,7 @@ class OpenAIResponsePayloadMetadata(BaseModel):
     "Provider-specific OpenAI Responses API payload rendered from a provider-neutral ApiCallPacket."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class PayloadInputText(BaseModel):

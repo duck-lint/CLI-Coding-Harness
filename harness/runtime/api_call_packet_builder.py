@@ -64,7 +64,7 @@ def build_api_call_packet(
         "rendering."
       ),
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     call_mode=call_mode,
     task=task,

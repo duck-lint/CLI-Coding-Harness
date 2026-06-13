@@ -272,7 +272,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "invariant_authority",
+          "const": "harness_target",
           "title": "Document Authority",
           "type": "string"
         }

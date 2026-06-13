@@ -4,7 +4,7 @@
     "document_id": "project_manager_report.json",
     "title": "Project Manager Report",
     "source_format": "json",
-    "document_authority": "generated_artifact.example"
+    "document_authority": "output_policy_artifact.example"
   },
   "report_status": "admissibility_blocked",
   "report_summary": "Short report summary.",

@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 from typing import Literal
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 
 
 class Metadata(BaseModel):
@@ -13,7 +13,7 @@ class Metadata(BaseModel):
   document_id: Literal["open_decisions.json"]
   title: Literal["Open Decisions"]
   source_format: Literal["json"]
-  document_authority: Literal["operational_state"]
+  document_authority: Literal["harness_target"]
 
 
 class CurrentDecision(BaseModel):

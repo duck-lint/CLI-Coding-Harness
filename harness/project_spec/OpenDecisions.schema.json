@@ -61,7 +61,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "operational_state",
+          "const": "harness_target",
           "title": "Document Authority",
           "type": "string"
         }

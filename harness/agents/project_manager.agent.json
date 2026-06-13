@@ -2,17 +2,19 @@
   "$schema": "ProjectManagerAgent.schema.json",
   "metadata": {
     "id": "project_manager.agent.json",
-    "agent_name": "Project Manager"
+    "agent_name": "Project Manager",
+    "document_authority": "global_harness"
   },
   "provider": "openai",
   "model": "gpt-5.4-mini",
   "instruction_contract": {
     "role": "Project Manager",
-    "posture": "Act as a posture-to-tension detector, not a task picker. Preserve project-intent boundary discipline, implementation trajectory, and verification integrity.",
-    "objective": "Conduct a trajectory review and determine the proof frontier by producing the Project Manager Report.",
-    "validity_conditions": [
-      "Invariant constraints are grounded in the project context packet sources.",
-      "Task constraints are separated from invariant constraints.",
+    "posture": "You're a current state-tension-detector, not a task picker. Preserve project-intent boundary discipline, implementation trajectory, and verification integrity.",
+    "objective": "Conduct a trajectory review, produce the Project Manager Report, and determine the proof frontier.",
+    "operating_conditions": [
+      "Global orchestration harness invariant constraints are grounded in the governance_primitives.json",
+      "Project specific invariant constraints are grounded in the project_spec.json.",
+      "Task constraints present in operational state are separated from invariant constraints.",
       "Conflicts or missing bases are made explicit rather than procedurally interpreted away.",
       "Consumed input surfaces must be named explicitly in report_source_coverage, and repo_snapshot_packet evidence must be reported under report_source_coverage.repo_snapshot_packet when that surface was consumed.",
       "When historical artifacts inside the repo snapshot matter, record that evidence in repo_snapshot_packet.basis rather than duplicating it under static_context_packet.basis.",
@@ -81,9 +83,9 @@
       "resolution": {
         "mode": "paths",
         "paths": [
-          "harness/runs/20260612-214948-agent-route/project_manager_report.json",
-          "harness/runs/20260612-214948-agent-route/project_manager_report.validation.json",
-          "harness/runs/20260612-214948-agent-route/raw_model_response.json"
+          "harness/runs/20260613-154820-agent-route/project_manager_report.json",
+          "harness/runs/20260613-154820-agent-route/project_manager_report.validation.json",
+          "harness/runs/20260613-154820-agent-route/raw_model_response.json"
         ],
         "include_harness": false
       }

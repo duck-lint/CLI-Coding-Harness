@@ -20,4 +20,5 @@ class RuntimeBudgetPolicy(BaseModel):
   model_config = ConfigDict(extra="forbid")
   
   schema_ref: str | None = Field(default=None, alias="$schema")
+  document_authority: Literal["runtime_policy"]
   default: RuntimeBudgetDefaults

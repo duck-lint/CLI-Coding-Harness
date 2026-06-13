@@ -59,7 +59,7 @@ def build_report_data(
       "document_id": "project_manager_report.json",
       "title": "Project Manager Report",
       "source_format": "json",
-      "document_authority": "generated_artifact",
+      "document_authority": "output_policy_artifact",
     },
     "report_status": report_status,
     "report_summary": "Short report summary.",

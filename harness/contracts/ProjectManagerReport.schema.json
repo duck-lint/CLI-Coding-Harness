@@ -45,7 +45,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "output_policy_artifact",
           "title": "Document Authority",
           "type": "string"
         }

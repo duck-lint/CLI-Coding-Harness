@@ -312,7 +312,7 @@ def compile_static_context_packet(
       title="Static Context Packet",
       purpose="Compiled static authority and operational context from StaticContextPacketManifest.",
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     governance_primitives=included["governance_primitives"],
     project_spec=included["project_spec"],

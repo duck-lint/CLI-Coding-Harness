@@ -49,6 +49,11 @@
       "default": null,
       "title": "$Schema"
     },
+    "document_authority": {
+      "const": "runtime_policy",
+      "title": "Document Authority",
+      "type": "string"
+    },
     "default": {
       "$ref": "#/$defs/RuntimeBudgetDefaults"
     }

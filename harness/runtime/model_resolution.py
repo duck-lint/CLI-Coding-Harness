@@ -32,7 +32,7 @@ class EffectiveModelSelectionMetadata(BaseModel):
     "Records deterministic provider/model selection before provider-specific payload rendering."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class EffectiveModelSelection(BaseModel):
@@ -105,7 +105,7 @@ def _fallback_or_raise(
         "provider-specific payload rendering."
       ),
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     provider=fallback_model.provider,
     model=fallback_model.model,
@@ -150,7 +150,7 @@ def resolve_effective_model(
             "provider-specific payload rendering."
           ),
           source_format="json",
-          document_authority="generated_artifact",
+          document_authority="compiled_runtime_artifact",
         ),
         provider=requested_model_ref.provider,
         model=requested_model_ref.model,
@@ -182,7 +182,7 @@ def resolve_effective_model(
           "provider-specific payload rendering."
         ),
         source_format="json",
-        document_authority="generated_artifact",
+        document_authority="compiled_runtime_artifact",
       ),
       provider=direct_model_ref.provider,
       model=direct_model_ref.model,

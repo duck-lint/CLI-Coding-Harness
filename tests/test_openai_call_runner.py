@@ -104,7 +104,7 @@ def build_raw_response_artifact(*, raw_response: dict) -> OpenAIRawResponse:
         "Raw OpenAI Responses API result captured before harness output validation."
       ),
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="raw_provider_artifact",
     ),
     provider="openai",
     endpoint="responses.create",

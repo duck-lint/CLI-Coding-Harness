@@ -117,7 +117,7 @@
           "title": "Objective",
           "type": "string"
         },
-        "validity_conditions": {
+        "operating_conditions": {
           "items": {
             "type": "string"
           },
@@ -142,7 +142,7 @@
         "role",
         "posture",
         "objective",
-        "validity_conditions",
+        "operating_conditions",
         "project_manager_report_derivation_rules",
         "conduct_rules",
         "review_lenses"
@@ -162,11 +162,17 @@
           "const": "Project Manager",
           "title": "Agent Name",
           "type": "string"
+        },
+        "document_authority": {
+          "const": "global_harness",
+          "title": "Document Authority",
+          "type": "string"
         }
       },
       "required": [
         "id",
-        "agent_name"
+        "agent_name",
+        "document_authority"
       ],
       "title": "Metadata",
       "type": "object"

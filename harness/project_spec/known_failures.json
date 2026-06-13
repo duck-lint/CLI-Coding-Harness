@@ -3,7 +3,7 @@
     "document_id": "known_failures.json",
     "title": "Known Failures",
     "source_format": "json",
-    "document_authority": "failure_evidence"
+    "document_authority": "harness_target"
   },
   "purpose": "Track recurring, evidence-backed failure patterns that later harness sessions should detect earlier. This file stays empty until a failure is repeatable, spreads across surfaces, or exposes a harness weakness.",
   "usage_rules": [

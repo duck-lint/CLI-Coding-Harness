@@ -337,7 +337,7 @@ def compile_openai_response_payload(
         "provider-neutral ApiCallPacket."
       ),
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     provider="openai",
     endpoint="responses.create",

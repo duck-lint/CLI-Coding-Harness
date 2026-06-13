@@ -30,9 +30,12 @@
         },
         "document_authority": {
           "enum": [
-            "invariant_authority",
-            "failure_evidence",
-            "operational_state"
+            "harness_target",
+            "compiled_runtime_artifact",
+            "operational_state",
+            "global_harness",
+            "output_policy_artifact",
+            "raw_provider_artifact"
           ],
           "title": "Document Authority",
           "type": "string"
@@ -105,9 +108,12 @@
         },
         "document_authority": {
           "enum": [
-            "invariant_authority",
-            "failure_evidence",
-            "operational_state"
+            "harness_target",
+            "compiled_runtime_artifact",
+            "operational_state",
+            "global_harness",
+            "output_policy_artifact",
+            "raw_provider_artifact"
           ],
           "title": "Document Authority",
           "type": "string"
@@ -235,7 +241,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "generated_artifact",
+          "const": "compiled_runtime_artifact",
           "title": "Document Authority",
           "type": "string"
         }

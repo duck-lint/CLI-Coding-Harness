@@ -13,7 +13,7 @@ class Metadata(BaseModel):
   document_id: Literal["known_failures.json"]
   title: Literal["Known Failures"]
   source_format: Literal["json"]
-  document_authority: Literal["failure_evidence"]
+  document_authority: Literal["harness_target"]
 
 class Entry(BaseModel):
   model_config = ConfigDict(extra="forbid")

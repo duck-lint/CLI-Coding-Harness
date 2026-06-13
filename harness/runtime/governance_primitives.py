@@ -12,10 +12,10 @@ class Metadata(BaseModel):
 
   document_id: Literal["governance_primitives.json"]
   title: Literal["Governance Primitives"]
-  context: Literal["Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target repository, including the harness repository itself."]
-  purpose: Literal["Define harness-level invariants that every target repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files."]
+  context: Literal["Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target project repository, including the harness repository itself."]
+  purpose: Literal["Define global harness-level invariants that every target project repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files."]
   source_format: Literal["json"]
-  document_authority: Literal["invariant_authority"]
+  document_authority: Literal["global_harness"]
 
 
 class RoleSurface(BaseModel):

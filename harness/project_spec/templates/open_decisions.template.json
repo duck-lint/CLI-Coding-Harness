@@ -4,7 +4,7 @@
     "document_id": "open_decisions.template.json",
     "title": "Open Decisions Template",
     "source_format": "json",
-    "document_authority": "template"
+    "document_authority": "harness_target.example"
   },
   "purpose": "Record decisions that currently shape the CLI harness implementation and decisions that must be resolved before crossing a new runtime boundary.",
   "usage_rules": [

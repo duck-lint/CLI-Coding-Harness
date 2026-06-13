@@ -3,10 +3,10 @@
   "metadata": {
     "document_id": "governance_primitives.json",
     "title": "Governance Primitives",
-    "context": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target repository, including the harness repository itself.",
-    "purpose": "Define harness-level invariants that every target repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
+    "context": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target project repository, including the harness repository itself.",
+    "purpose": "Define global harness-level invariants that every target project repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
     "source_format": "json",
-    "document_authority": "invariant_authority"
+    "document_authority": "global_harness"
   },
   "governance_posture": {
     "invariant_constraints": [
@@ -28,11 +28,11 @@
     "role_surface": {
       "known_role_categories": [
         "project_manager",
-        "planner",
-        "reviewer",
-        "adversary",
-        "implementer",
-        "archivist",
+        "planning_manager",
+        "review_manager",
+        "red_team_manager",
+        "implementation_manager",
+        "archive_manager",
         "worker_adapter"
       ],
       "role_contract_rule": "Role-specific behavior, prompts, return contracts, context policy, model/provider settings, and tool permissions live in agent contracts rather than in global governance prose.",

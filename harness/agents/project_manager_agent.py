@@ -14,6 +14,7 @@ class Metadata(BaseModel):
 
   id: Literal["project_manager.agent.json"]
   agent_name: Literal["Project Manager"]
+  document_authority: Literal["global_harness"]
 
 
 class StatusSemantics(BaseModel):
@@ -59,7 +60,7 @@ class InstructionContract(BaseModel):
   role: str
   posture: str
   objective: str
-  validity_conditions: list[str]
+  operating_conditions: list[str]
   project_manager_report_derivation_rules: ProjectManagerReportDerivationRules
   conduct_rules: list[str]
   review_lenses: ReviewLenses

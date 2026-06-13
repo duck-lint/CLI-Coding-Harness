@@ -14,7 +14,7 @@ class OpenAIRawResponseMetadata(BaseModel):
     "Raw OpenAI Responses API result captured before harness output validation."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["raw_provider_artifact"]
 
 
 class OpenAIRawResponse(BaseModel):

@@ -13,6 +13,7 @@ class AgentMetadata(BaseModel):
 
   id: str = Field(min_length=1)
   agent_name: str = Field(min_length=1)
+  document_authority: str = Field(min_length=1)
 
 
 class AgentInputResolution(BaseModel):

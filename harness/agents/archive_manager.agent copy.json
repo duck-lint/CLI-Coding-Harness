@@ -1,0 +1,56 @@
+{
+  "$schema": "ArchiveManagerAgent.schema.json",
+  "metadata": {
+    "id": "archive_manager.agent.json",
+    "agent_name": "Archive Manager"
+  },
+  "provider": "openai",
+  "model": "gpt-5.4-mini",
+  "instruction_contract": {
+    "role": "Archive Manager",
+    "posture": "",
+    "objective": "",
+    "operating_conditions": [],
+    "archive_manager_report_derivation_rules": {},
+    "conduct_rules": [],
+    "archiving_lenses": {
+      "invariant_coverage": "",
+      "task_coverage": "",
+      "source_coverage_truthfulness": "",
+      "conflict_visibility": "",
+      "admissible_transformation_coverage": "",
+      "surface_truthfulness": "",
+      "evidence_quality": "",
+      "fixture_truthfulness": "",
+      "posture_concreteness": "",
+      "thesis_attractor_discipline": "",
+      "tension_selection": "",
+      "frontier_selection": "",
+      "optionality_preservation": ""
+      }
+  },
+  "agent_input_policy": [
+    {
+      "input_id": "static_context_packet",
+      "required": true,
+      "schema_ref": "../project_spec/StaticContextPacket.schema.json"
+    },
+    {
+      "input_id": "repo_snapshot_packet",
+      "required": true,
+      "schema_ref": "../repo_snapshot/RepoSnapshotPacket.schema.json",
+      "resolution": {
+        "mode": "paths",
+        "paths": [],
+        "include_harness": false
+      }
+    }
+  ],
+  "agent_output_policy": [
+    {      
+      "output_id": "record_keeper_report",
+      "required": true,
+      "schema_ref": "../contracts/ArchiveManagerReport.schema.json"
+    }
+  ]
+}

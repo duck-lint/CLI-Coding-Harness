@@ -23,7 +23,7 @@ class ApiCallPacketMetadata(BaseModel):
     "Provider-neutral packet for one model call before provider-specific rendering."
   ]
   source_format: Literal["json"]
-  document_authority: Literal["generated_artifact"]
+  document_authority: Literal["compiled_runtime_artifact"]
 
 
 class ApiCallPacket(BaseModel):

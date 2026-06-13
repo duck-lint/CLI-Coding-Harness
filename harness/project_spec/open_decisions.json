@@ -3,7 +3,7 @@
     "document_id": "open_decisions.json",
     "title": "Open Decisions",
     "source_format": "json",
-    "document_authority": "operational_state"
+    "document_authority": "harness_target"
   },
   "purpose": "Record decisions that currently shape the CLI harness implementation and decisions that must be resolved before crossing a new runtime boundary.",
   "usage_rules": [

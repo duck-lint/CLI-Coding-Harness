@@ -414,7 +414,7 @@ def compile_repo_snapshot_packet(
       title="Repo Snapshot Packet",
       purpose="Compiled repo file evidence selected for a model call.",
       source_format="json",
-      document_authority="generated_artifact",
+      document_authority="compiled_runtime_artifact",
     ),
     selection=RepoSnapshotSelection(
       mode=mode,

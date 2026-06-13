@@ -363,12 +363,12 @@
           "type": "string"
         },
         "context": {
-          "const": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target repository, including the harness repository itself.",
+          "const": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target project repository, including the harness repository itself.",
           "title": "Context",
           "type": "string"
         },
         "purpose": {
-          "const": "Define harness-level invariants that every target repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
+          "const": "Define global harness-level invariants that every target project repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
           "title": "Purpose",
           "type": "string"
         },
@@ -378,7 +378,7 @@
           "type": "string"
         },
         "document_authority": {
-          "const": "invariant_authority",
+          "const": "global_harness",
           "title": "Document Authority",
           "type": "string"
         }
