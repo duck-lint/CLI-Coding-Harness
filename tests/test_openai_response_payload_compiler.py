@@ -187,6 +187,7 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
       temp_root = Path(temp_directory)
       build_agent_routed_api_call_packet(temp_root)
       expected_schema = load_json(PM_SCHEMA_PATH)
+      required = expected_schema["$defs"]["ReportSourceCoverage"]["required"]
 
       payload = compile_openai_response_payload(
         api_call_packet_path=temp_root / "api_call_packet.json",
@@ -202,6 +203,7 @@ class OpenAIResponsePayloadCompilerTests(unittest.TestCase):
           if k not in {"$schema", "$id"}
         },
       )
+      self.assertIn("repo_snapshot_packet", required)
 
   def test_payload_compiler_emits_responses_api_message_items(self) -> None:
     with tempfile.TemporaryDirectory() as temp_directory:
