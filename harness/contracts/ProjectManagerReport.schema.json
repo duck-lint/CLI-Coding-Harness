@@ -202,7 +202,8 @@
       },
       "required": [
         "static_context_packet",
-        "task"
+        "task",
+        "repo_snapshot_packet"
       ],
       "title": "ReportSourceCoverage",
       "type": "object"

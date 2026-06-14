@@ -95,6 +95,30 @@ def _coverage_entry(
   )
 
 
+def _format_blocking_input_coverage(
+  input_coverage: list[AgentContextInputCoverageEntry],
+) -> str:
+  blocking_entries = [
+    entry
+    for entry in input_coverage
+    if entry.status == "invalid"
+    or (entry.required and entry.status == "missing")
+  ]
+
+  lines = [
+    "Agent context compilation blocked by agent input policy.",
+    f"Blocking inputs: {len(blocking_entries)}.",
+  ]
+
+  for entry in blocking_entries:
+    requirement = "required" if entry.required else "optional"
+    lines.append(f"- {entry.input_id} ({requirement}, {entry.status})")
+    for basis_line in entry.basis:
+      lines.append(f"  - {basis_line}")
+
+  return "\n".join(lines)
+
+
 def resolve_static_context_packet(
   *,
   policy: Any,
@@ -360,7 +384,7 @@ def compile_agent_context_packet(
 
   if blocking_entries:
     raise AgentContextCompilationError(
-      "Agent context compilation blocked by agent input policy.",
+      _format_blocking_input_coverage(input_coverage),
       input_coverage=input_coverage,
     )
 

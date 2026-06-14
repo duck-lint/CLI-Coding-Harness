@@ -394,6 +394,8 @@ class PackageRouteTests(unittest.TestCase):
 
       self.assertEqual(code, 1)
       self.assertIn("FAIL: compile_agent_context_packet:", stderr.getvalue())
+      self.assertIn("repo_snapshot_packet (required, invalid)", stderr.getvalue())
+      self.assertIn("Requested path missing.txt was not found.", stderr.getvalue())
       render_provider_payload.assert_not_called()
 
       run_directory = only_run_directory(runs_root)
