@@ -17,41 +17,60 @@ class Metadata(BaseModel):
   document_authority: Literal["global_harness"]
 
 
+class SourceCoverage(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  basis: str
+  truthfulness_check: str
+
+
+class TrajectoryReview(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  current_posture: str
+  thesis_attractor: str
+  drift_detection: str
+  structural_tension: str
+
+
+class ProofFrontier(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  constraint_conflicts: str
+  dominant_tension_justification: str
+  next_admissible_transformation: str
+  affected_surfaces: str
+  non_affected_surfaces: str
+  stop_conditions: str
+  authority_constraints: str
+
+
+class ArtifactTruthfulness(BaseModel):
+  model_config = ConfigDict(extra="forbid")
+
+  compiled_runtime_artifacts: str
+  output_policy_artifacts: str
+  raw_provider_artifacts: str
+  non_runtime_templates: str
+
+
 class StatusSemantics(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  admissible: Literal["The task can proceed under current project and task authority; the frontier is open enough to name the next admissible move."]
-  admissibility_blocked: Literal["The requested object-level transformation cannot proceed because required basis, context, or authority is missing; the frontier may still be open enough to name a diagnostic or unblock move."]
-  rejected: Literal["The requested thesis or action conflicts with invariant project or harness authority; the frontier may still be open enough to name a correction, reclassification, or probe move."]
-  needs_clarification: Literal["The task is ambiguous enough that user clarification is required; the frontier may still be open enough to name a clarification move."]
+  admissible: str
+  admissibility_blocked: str
+  rejected: str
+  needs_clarification: str
 
 
-class ProjectManagerReportDerivationRules(BaseModel):
+class ReportDerivationLenses(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  evaluation_basis: str
-  drift_checks: str
-  next_step_recommendations: str
-  repository_state: str
+  source_coverage: SourceCoverage
+  trajectory_review: TrajectoryReview
+  proof_frontier: ProofFrontier
+  artifact_truthfulness: ArtifactTruthfulness
   status_semantics: StatusSemantics
-
-
-class ReviewLenses(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  invariant_coverage: str
-  task_coverage: str
-  source_coverage_truthfulness: str
-  conflict_visibility: str
-  admissible_transformation_coverage: str
-  surface_truthfulness: str
-  evidence_quality: str
-  fixture_truthfulness: str
-  posture_concreteness: str
-  thesis_attractor_discipline: str
-  tension_selection: str
-  frontier_selection: str
-  optionality_preservation: str
 
 
 class InstructionContract(BaseModel):
@@ -60,10 +79,9 @@ class InstructionContract(BaseModel):
   role: str
   posture: str
   objective: str
-  operating_conditions: list[str]
-  project_manager_report_derivation_rules: ProjectManagerReportDerivationRules
-  conduct_rules: list[str]
-  review_lenses: ReviewLenses
+  operating_context: list[str]
+  project_manager_conduct: list[str]
+  report_derivation_lenses: ReportDerivationLenses
 
 
 class ProjectManagerOutputPolicyEntry(AgentOutputPolicyEntry):

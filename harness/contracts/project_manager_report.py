@@ -43,8 +43,6 @@ class TrajectoryReview(BaseModel):
   current_posture: str
   thesis_attractor: str
   drift_detection: DriftDetection
-  invariant_constraints: list[str]
-  task_constraints: list[str]
   structural_tension: str
 
 
@@ -62,6 +60,7 @@ class ProofFrontier(BaseModel):
   affected_surfaces: list[str] | None
   non_affected_surfaces: list[str] | None
   stop_conditions: list[str] | None
+  authority_constraints: list[str]
 
 
 class ProjectManagerReport(BaseModel):

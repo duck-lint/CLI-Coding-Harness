@@ -6,154 +6,55 @@ from __future__ import annotations
 from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
+BindingAuthority = Literal[
+    "global_harness",
+    "harness_target",
+    "runtime_policy",
+    "operational_state",
+]
+
+DerivedRuntimeArtifact = Literal[
+    "compiled_runtime_artifact",
+    "output_policy_artifact",
+    "raw_provider_artifact",
+]
+
+AgentContracts = Literal[
+  "project_manager",
+  "planning_manager",
+  "review_manager",
+  "red_team_manager",
+  "implementation_manager",
+  "archive_manager",
+  "worker_adapter"
+  ]
+
+ApprovalSensitiveSurfaces = Literal[
+  "global_harness",
+  "agent_contracts",
+  "output_policies",
+  "runtime_orchestration",
+  "tool_and_worker_surface",
+  "provider_or_api_behavior",
+  "compatibility_commitments"
+  ]
 
 class Metadata(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
   document_id: Literal["governance_primitives.json"]
   title: Literal["Governance Primitives"]
-  context: Literal["Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target project repository, including the harness repository itself."]
-  purpose: Literal["Define global harness-level invariants that every target project repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files."]
+  context: Literal["Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation in every target repository the harness is placed inside and invoked against."]
+  purpose: Literal["Define and delineate global harness-level invariants from harness target repository boundaries that every project workflow must respect."]
   source_format: Literal["json"]
   document_authority: Literal["global_harness"]
 
 
-class RoleSurface(BaseModel):
+class DocumentAuthorityClasses(BaseModel):
   model_config = ConfigDict(extra="forbid")
 
-  known_role_categories: list[str]
-  role_contract_rule: str
-  project_manager_rule: str
-  implementation_rule: str
-  worker_adapter_rule: str
-
-
-class ArtifactSemantics(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  authoring_artifacts: list[str]
-  runtime_artifacts: list[str]
-  authoring_metadata_rule: str
-  runtime_metadata_rule: str
-  fixture_rule: str
-
-
-class GovernancePosture(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  invariant_constraints: list[str]
-  role_surface: RoleSurface
-  artifact_semantics: ArtifactSemantics
-  explicit_distinctions: list[str]
-
-
-class ExplicitApprovalRequiredToModify(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  global_governance: list[str]
-  role_contract: list[str]
-  runtime_outputs_contract: list[str]
-  compiler_and_context_policy: list[str]
-  runtime_orchestration: list[str]
-  tool_and_worker_surface: list[str]
-  provider_or_api_behavior: list[str]
-  compatibility_and_fallback_commitment: list[str]
-
-
-class ApprovalBoundaries(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  explicit_approval_required_to_modify: ExplicitApprovalRequiredToModify
-  repo_local_boundaries: str
-
-
-class AuthorityScope(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  global_harness_authority: list[str]
-  repo_local_authority: list[str]
-  conflict_handling: str
-  self_governance_rule: str
-
-
-class StateTransitionAuthority(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  principle: str
-  planner_artifact_rule: str
-  task_authority_rule: str
-  recommendation_rule: str
-  implicit_approval_boundary: str
-
-
-class AgentBoundary(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  ambient_access_rule: str
-  compiler_rule: str
-  pm_boundary: str
-  tool_permission_rule: str
-  network_rule: str
-
-
-class Sources(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  authoritative_artifacts: list[str]
-  derived_artifacts: list[str]
-  operational_artifacts: list[str]
-  presentation_artifacts: list[str]
-  order: str
-
-
-class VerificationDuties(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  must_not_skip: list[str]
-
-
-class AmbiguityUncertainty(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  preserve_visibility: list[str]
-
-
-class InvariantsAndIntegrityConstraints(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  authority_scope: AuthorityScope
-  state_transition_authority: StateTransitionAuthority
-  agent_boundary: AgentBoundary
-  sources: Sources
-  fixtures_samples_test_roles: list[str]
-  compatibility_commitments: list[str]
-  verification_duties: VerificationDuties
-  ambiguity_uncertainty: AmbiguityUncertainty
-
-
-class AdmissibleTransformations(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  preserve_global_governance: list[str]
-  require_repo_local_project_spec_or_state: list[str]
-  require_global_governance_or_role_contract_change: list[str]
-  forbidden_shortcuts: list[str]
-  evidence_minimum: list[str]
-
-
-class VisibleBeforeTrusting(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  source_authority: list[str]
-  derived_or_operational_artifacts: list[str]
-  execution_boundary: list[str]
-
-
-class ReviewCheckpoints(BaseModel):
-  model_config = ConfigDict(extra="forbid")
-
-  visible_before_trusting: VisibleBeforeTrusting
-  visible_before_closing_work: list[str]
+  binding_authority: list[BindingAuthority]
+  derived_runtime_artifacts: list[DerivedRuntimeArtifact]
 
 
 class GovernancePrimitives(BaseModel):
@@ -161,8 +62,6 @@ class GovernancePrimitives(BaseModel):
 
   schema_ref: str = Field(..., alias='$schema')
   metadata: Metadata
-  governance_posture: GovernancePosture
-  approval_boundaries: ApprovalBoundaries
-  invariants_and_integrity_constraints: InvariantsAndIntegrityConstraints
-  admissible_transformations: AdmissibleTransformations
-  review_checkpoints: ReviewCheckpoints
+  document_authority_classes: DocumentAuthorityClasses
+  agent_contracts: list[AgentContracts]
+  approval_sensitive_surfaces: list[ApprovalSensitiveSurfaces] = []

@@ -36,12 +36,6 @@
       "drift_detected": true, 
       "description": "Description of drift if detected."
     },
-    "invariant_constraints": [
-      "Constraint from project context."
-    ],
-    "task_constraints": [
-      "Constraint from task."
-    ],
     "structural_tension": "Main actionable mismatch."
   },
   "proof_frontier": {
@@ -61,6 +55,9 @@
     ],
     "stop_conditions": [
       "Condition that should stop the work."
+    ],
+    "authority_constraints": [
+      "Constraint from task."
     ]
   }
 }

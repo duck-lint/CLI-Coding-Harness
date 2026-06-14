@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$defs": {
     "DriftDetection": {
       "additionalProperties": false,
@@ -154,6 +155,13 @@
             }
           ],
           "title": "Stop Conditions"
+        },
+        "authority_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Authority Constraints",
+          "type": "array"
         }
       },
       "required": [
@@ -165,7 +173,8 @@
         "next_admissible_transformation",
         "affected_surfaces",
         "non_affected_surfaces",
-        "stop_conditions"
+        "stop_conditions",
+        "authority_constraints"
       ],
       "title": "ProofFrontier",
       "type": "object"
@@ -193,8 +202,7 @@
       },
       "required": [
         "static_context_packet",
-        "task",
-        "repo_snapshot_packet"
+        "task"
       ],
       "title": "ReportSourceCoverage",
       "type": "object"
@@ -235,20 +243,6 @@
         "drift_detection": {
           "$ref": "#/$defs/DriftDetection"
         },
-        "invariant_constraints": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Invariant Constraints",
-          "type": "array"
-        },
-        "task_constraints": {
-          "items": {
-            "type": "string"
-          },
-          "title": "Task Constraints",
-          "type": "array"
-        },
         "structural_tension": {
           "title": "Structural Tension",
           "type": "string"
@@ -258,8 +252,6 @@
         "current_posture",
         "thesis_attractor",
         "drift_detection",
-        "invariant_constraints",
-        "task_constraints",
         "structural_tension"
       ],
       "title": "TrajectoryReview",

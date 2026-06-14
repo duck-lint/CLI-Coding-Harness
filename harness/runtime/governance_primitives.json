@@ -3,354 +3,40 @@
   "metadata": {
     "document_id": "governance_primitives.json",
     "title": "Governance Primitives",
-    "context": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation when the harness is invoked against any target project repository, including the harness repository itself.",
-    "purpose": "Define global harness-level invariants that every target project repository workflow must respect. Target-project intent, product scope, acceptance probes, implementation details, and repo-local decisions belong in that target repository's project_spec and operational state files.",
+    "context": "Global governance for the CLI harness. These primitives govern agent operation, execution boundaries, runtime artifact semantics, and authority separation in every target repository the harness is placed inside and invoked against.",
+    "purpose": "Define and delineate global harness-level invariants from harness target repository boundaries that every project workflow must respect.",
     "source_format": "json",
     "document_authority": "global_harness"
   },
-  "governance_posture": {
-    "invariant_constraints": [
-      "The harness is a local CLI governance runtime that can be invoked against any target repository, including its own repository.",
-      "Global governance defines execution boundaries for harness-mediated agent work, not target-project product intent.",
-      "Each target repository supplies its own project_spec as the repo-local authority for project purpose, scope, acceptance probes, non-goals, and implementation criteria.",
-      "Explicit separation must be preserved between project_spec authority, current task authority, role contracts, runtime_inputs, runtime_outputs schemas, returned runtime_outputs, and saved runtime artifacts.",
-      "Agents cannot inspect files outside the provided runtime_inputs.",
-      "Runtime_inputs are compiled by deterministic harness code before an agent call; the compiler is not an agent.",
-      "Agents do not receive ambient repository access by default.",
-      "The Project Manager role is always read-only and must not receive file mutation, shell execution, worker-adapter, or broad tool permissions.",
-      "Non-PM roles may only receive tool permissions through explicit route and agent-contract definitions.",
-      "Implementation authority is represented by documented state transitions, not by conversational momentum or implicit model preference.",
-      "Structured JSON is the authoritative artifact format where the source is object-shaped.",
-      "runtime_outputs refers to agent-specific turns that produce structured artifacts under an explicit return contract.",
-      "No runtime capability claim is trustworthy without saved evidence appropriate to the claim.",
-      "No silent compatibility shims, fallback formats, or legacy behavior preservation are assumed unless explicitly authorized."
+  "document_authority_classes": {
+    "binding_authority": [
+      "global_harness",
+      "harness_target",
+      "runtime_policy",
+      "operational_state"
     ],
-    "role_surface": {
-      "known_role_categories": [
-        "project_manager",
-        "planning_manager",
-        "review_manager",
-        "red_team_manager",
-        "implementation_manager",
-        "archive_manager",
-        "worker_adapter"
-      ],
-      "role_contract_rule": "Role-specific behavior, prompts, return contracts, context policy, model/provider settings, and tool permissions live in agent contracts rather than in global governance prose.",
-      "project_manager_rule": "Project Manager is a governance/recommendation role only. It may classify, summarize, identify tensions, and recommend admissible next transformations, but it cannot authorize, inspect ambient files, mutate files, run shell commands, or invoke workers.",
-      "implementation_rule": "Implementation work may be delegated only after task authority has been created from repo-local operational state, such as a selected implementation-plan seam, and only through an explicit implementer or worker-adapter route.",
-      "worker_adapter_rule": "Worker adapters are execution surfaces, not governance authorities. They may act only inside the task, route, tool, and target-repository constraints they are given."
-    },
-    "artifact_semantics": {
-      "authoring_artifacts": [
-        "Schemas.",
-        "Templates.",
-        "Examples.",
-        "Fixtures.",
-        "Sample runtime_outputs."
-      ],
-      "runtime_artifacts": [
-        "Compiled runtime_inputs.",
-        "Agent runtime_outputs.",
-        "Saved run artifacts.",
-        "Validation summaries.",
-        "Probe results when the target project defines probes."
-      ],
-      "authoring_metadata_rule": "Examples and templates are authoring artifacts, not runtime artifacts. They may contain authoring metadata such as $schema when useful for IDE or human validation.",
-      "runtime_metadata_rule": "Runtime-emitted model outputs must satisfy their runtime_outputs contract and must not be confused with examples, templates, or fixtures.",
-      "fixture_rule": "Fixtures and samples must be labeled as fixtures or samples and must not be presented as live runtime evidence."
-    },
-    "explicit_distinctions": [
-      "Global harness governance versus target repository project_spec.",
-      "Harness execution boundary versus target-project product intent.",
-      "Project invariants versus current task authority.",
-      "Policy versus prompt.",
-      "Role contract versus runtime_outputs schema.",
-      "runtime_inputs versus raw repository files.",
-      "Compiled context versus ambient file access.",
-      "Agent runtime_outputs versus saved runtime artifacts.",
-      "Recommendation versus authorization.",
-      "Planning artifact versus task authority.",
-      "Governance role versus execution/worker surface.",
-      "Authoring artifact versus runtime artifact.",
-      "Scaffold-only evidence versus runtime-evidenced behavior.",
-      "Repo-local open decisions versus global harness governance.",
-      "Model/provider configuration versus provider-specific behavior."
+    "derived_runtime_artifacts": [
+      "compiled_runtime_artifact",
+      "output_policy_artifact",
+      "raw_provider_artifact"
     ]
   },
-  "approval_boundaries": {
-    "explicit_approval_required_to_modify": {
-      "global_governance": [
-        "Harness-level authority semantics.",
-        "Agent execution boundaries.",
-        "Role category meanings.",
-        "Authorization/state-transition rules.",
-        "Artifact class semantics.",
-        "Compatibility commitments.",
-        "Global source-of-truth rules."
-      ],
-      "role_contract": [
-        "Role identity.",
-        "Role mode.",
-        "Return contract path.",
-        "Context policy.",
-        "Default model/provider route.",
-        "Allowed tool behavior.",
-        "Whether a role may invoke a worker adapter."
-      ],
-      "runtime_outputs_contract": [
-        "runtime_outputs schemas.",
-        "Pydantic models used as runtime contracts.",
-        "Required fields.",
-        "Status enum semantics.",
-        "Cross-field validation rules.",
-        "Validation strictness.",
-        "Artifact shape expected by downstream runtime code."
-      ],
-      "compiler_and_context_policy": [
-        "Which target-repository sources may enter runtime_inputs.",
-        "Required versus optional context sources.",
-        "Missing-source behavior.",
-        "Context-packet structure.",
-        "Any policy that expands context collection beyond repo-local files already authorized by the target project."
-      ],
-      "runtime_orchestration": [
-        "Route selection behavior.",
-        "State-transition behavior.",
-        "Run artifact writing behavior.",
-        "Validation order.",
-        "Error handling that changes whether work proceeds or stops.",
-        "Any change that allows agents to select arbitrary next agents."
-      ],
-      "tool_and_worker_surface": [
-        "Giving a role file mutation capability.",
-        "Giving a role shell execution capability.",
-        "Giving a role web or network capability.",
-        "Giving a role worker-adapter invocation capability.",
-        "Allowing implementer routes to spawn parallel worker agents.",
-        "Changing boundaries around what a worker adapter may mutate."
-      ],
-      "provider_or_api_behavior": [
-        "Switching the first runtime path away from the OpenAI Responses API.",
-        "Adding provider abstraction.",
-        "Hardcoding provider-specific model identity into global schemas.",
-        "Changing structured-output behavior.",
-        "Changing retry behavior.",
-        "Changing streaming behavior.",
-        "Changing API-cost-affecting call graphs."
-      ],
-      "compatibility_and_fallback_commitment": [
-        "Preserving old prompt paths.",
-        "Maintaining duplicate policy formats.",
-        "Adding migration shims.",
-        "Promising legacy artifact compatibility.",
-        "Supporting multiple scaffold layouts.",
-        "Treating fallback behavior as normal runtime behavior."
-      ]
-    },
-    "repo_local_boundaries": "Target-project product scope, non-goals, acceptance probes, implementation criteria, project-specific open decisions, and project-specific known failures belong in the target repository's project_spec and operational state files, not in global governance primitives."
-  },
-  "invariants_and_integrity_constraints": {
-    "authority_scope": {
-      "global_harness_authority": [
-        "Agent operation boundaries.",
-        "Role and route separation.",
-        "runtime_inputs and runtime_outputs contract discipline.",
-        "Tool and worker-adapter boundary discipline.",
-        "Artifact semantics.",
-        "Validation and evidence discipline.",
-        "Compatibility and fallback discipline."
-      ],
-      "repo_local_authority": [
-        "Target-project thesis and non-goals.",
-        "Target-project acceptance probes.",
-        "Target-project implementation plans and trackers.",
-        "Target-project open decisions.",
-        "Target-project known failures.",
-        "Target-project archive and history."
-      ],
-      "conflict_handling": "If a target-repository request or artifact conflicts with global harness execution boundaries, the harness must stop or surface the conflict rather than silently weakening the global boundary.",
-      "self_governance_rule": "When the harness repository is the target repository, it is governed through the same target-repository contract as any other repository. It is not a special case."
-    },
-    "state_transition_authority": {
-      "principle": "Approval is represented by documented state transitions in repo-local operational state, not by chat-style back-and-forth inside an agent run.",
-      "planner_artifact_rule": "Implementation plans are derived planner artifacts until a seam or task is selected for action.",
-      "task_authority_rule": "A selected seam or task becomes task authority only within the scope allowed by the target repository's project_spec, current operational state, and the route/role contract executing it.",
-      "recommendation_rule": "PM reports and other agent runtime_outputs may recommend or classify, but do not authorize boundary crossings by themselves.",
-      "implicit_approval_boundary": "Implicit approval through state transition is valid only when the selected transition is represented in repo-local artifacts that future calls will compile into runtime_inputs."
-    },
-    "agent_boundary": {
-      "ambient_access_rule": "Agents cannot inspect files outside runtime_inputs.",
-      "compiler_rule": "The deterministic context compiler may inspect target-repository sources according to context policy because it is harness code, not an agent.",
-      "pm_boundary": "Project Manager is always read-only and cannot receive tool permissions that mutate files, run shell commands, invoke worker adapters, or inspect ambient repo state.",
-      "tool_permission_rule": "Tool permissions are role-specific and route-specific. They must be explicit in the role contract or runtime route, not implied by project intent.",
-      "network_rule": "Web, search, or network access is not a default context source. If ever introduced, it must be an explicit role/route permission or compiler policy decision."
-    },
-    "sources": {
-      "authoritative_artifacts": [
-        "Global governance primitives.",
-        "Role contracts.",
-        "runtime_outputs schemas and Pydantic contract models.",
-        "Runtime route definitions.",
-        "Context compiler policy.",
-        "Target repository project_spec.",
-        "Target repository operational state inside its authorized scope."
-      ],
-      "derived_artifacts": [
-        "PM reports.",
-        "Planner reports.",
-        "Reviewer reports.",
-        "Adversary reports.",
-        "Archivist reports.",
-        "Generated implementation plans before selection into task authority.",
-        "Summaries.",
-        "Recommendations."
-      ],
-      "operational_artifacts": [
-        "Selected implementation tasks.",
-        "Active implementation trackers.",
-        "Saved run artifacts.",
-        "Validation summaries.",
-        "Worker execution logs if a worker route is used."
-      ],
-      "presentation_artifacts": [
-        "Terminal summaries.",
-        "Optional Markdown debug renderings.",
-        "Human-readable archive summaries."
-      ],
-      "order": "Derived or presentation artifacts do not override global governance, role contracts, runtime_outputs contracts, or target repository project_spec authority."
-    },
-    "fixtures_samples_test_roles": [
-      "Examples and templates are authoring artifacts and may include $schema for IDE or human validation.",
-      "Fixtures and samples must not be presented as live runtime evidence.",
-      "A fixture runtime_output must be labeled as fixture or sample.",
-      "A manually pasted runtime_output must not be treated as proof unless linked to saved runtime artifacts.",
-      "Tests must not silently repurpose sample files as live runtime artifacts."
-    ],
-    "compatibility_commitments": [
-      "There are no compatibility promises by default.",
-      "No legacy file path, prompt format, scaffold layout, or artifact format is preserved unless explicitly approved.",
-      "Clean replacement is preferred over compatibility shims unless compatibility is itself an authorized requirement."
-    ],
-    "verification_duties": {
-      "must_not_skip": [
-        "runtime_outputs schema or contract validation where a role returns structured artifacts.",
-        "Artifact existence checks for artifacts claimed as saved evidence.",
-        "Missing source reporting.",
-        "Permission enforcement before tool or worker invocation.",
-        "Route-boundary checks before moving from recommendation/planning to implementation.",
-        "Visibility of scaffold-only versus runtime-evidenced behavior."
-      ]
-    },
-    "ambiguity_uncertainty": {
-      "preserve_visibility": [
-        "Missing authority sources.",
-        "Absent optional context.",
-        "Scaffold-only behavior.",
-        "Failed API calls.",
-        "Failed validation.",
-        "Unclear route boundaries.",
-        "Unimplemented routes.",
-        "Deferred worker behavior.",
-        "Cost or budget enforcement gaps.",
-        "Provider-specific behavior.",
-        "Unknowns must be named rather than hidden in polished runtime_outputs."
-      ]
-    }
-  },
-  "admissible_transformations": {
-    "preserve_global_governance": [
-      "Loading role contracts.",
-      "Validating required role contract fields.",
-      "Compiling structured runtime_inputs from target-repository context policy.",
-      "Passing compiled runtime_inputs to an agent route.",
-      "Validating structured runtime_outputs.",
-      "Saving run artifacts.",
-      "Improving missing-context error messages.",
-      "Treating optional sources as missing rather than fatal when the relevant context policy allows it.",
-      "Improving distinction between authoring artifacts and runtime artifacts.",
-      "Removing obsolete compatibility paths when no compatibility commitment exists."
-    ],
-    "require_repo_local_project_spec_or_state": [
-      "Defining target-project product scope.",
-      "Defining target-project non-goals.",
-      "Defining target-project acceptance probes.",
-      "Defining target-project implementation seams.",
-      "Recording target-project open decisions.",
-      "Recording target-project known failures.",
-      "Selecting a planner-derived seam as task authority."
-    ],
-    "require_global_governance_or_role_contract_change": [
-      "Allowing agents to inspect files outside runtime_inputs.",
-      "Changing PM from read-only to tool-using.",
-      "Allowing a role to write files.",
-      "Allowing a role to run shell commands.",
-      "Allowing a role to use web, search, or network access.",
-      "Allowing a role to invoke a worker adapter.",
-      "Allowing agent-selected recursive routing.",
-      "Treating chat memory as authority.",
-      "Replacing runtime artifacts with external storage as the default evidence surface.",
-      "Introducing provider abstraction as a supported runtime layer.",
-      "Introducing autonomous repo mutation outside explicit task and worker boundaries."
-    ],
-    "forbidden_shortcuts": [
-      "Hardcoding agent runtime_outputs in runtime code.",
-      "Duplicating role semantics in runtime code rather than enforcing contracts.",
-      "Flattening structured runtime_inputs into Markdown as the authoritative packet.",
-      "Treating agent runtime_outputs as validation.",
-      "Skipping runtime_outputs validation.",
-      "Hiding failed validation behind successful summaries.",
-      "Silently continuing after missing required context.",
-      "Giving PM tool permissions.",
-      "Treating generated plans as task authority before a seam or task is selected.",
-      "Preserving obsolete compatibility paths without approval."
-    ],
-    "evidence_minimum": [
-      "What changed.",
-      "Why it was admissible under global harness governance.",
-      "Which repo-local authority allowed target-specific work.",
-      "Which route and role executed it.",
-      "What evidence proves it happened.",
-      "What remains uncertain."
-    ]
-  },
-  "review_checkpoints": {
-    "visible_before_trusting": {
-      "source_authority": [
-        "Global governance source.",
-        "Target repository project_spec source.",
-        "Included runtime_inputs sources.",
-        "Missing runtime_inputs sources.",
-        "Whether each source was required or optional.",
-        "Whether each source was included, missing, or invalid."
-      ],
-      "derived_or_operational_artifacts": [
-        "Command invoked.",
-        "Target repository identifier or path.",
-        "Route selected.",
-        "Role contract path.",
-        "Model/provider route.",
-        "runtime_inputs path or saved artifact.",
-        "runtime_outputs schema path.",
-        "runtime_outputs artifact path.",
-        "Validation result.",
-        "Saved run artifact path."
-      ],
-      "execution_boundary": [
-        "No ambient agent file access.",
-        "No unauthorized tool use.",
-        "No unauthorized worker invocation.",
-        "No unauthorized mutation.",
-        "No hidden route expansion.",
-        "Clear status."
-      ]
-    },
-    "visible_before_closing_work": [
-      "Repo-local implementation plan/tracker updated if active work exists.",
-      "Saved runtime artifacts exist for claimed runtime behavior.",
-      "Validation evidence is visible for structured runtime_outputs.",
-      "Repo-local known failures updated or explicitly ruled out when relevant.",
-      "Repo-local open decisions updated or cleared when relevant.",
-      "Explicit remaining risks or unknowns are named."
-    ]
-  }
+  "agent_contracts": [
+    "project_manager",
+    "planning_manager",
+    "review_manager",
+    "red_team_manager",
+    "implementation_manager",
+    "archive_manager",
+    "worker_adapter"
+  ],
+  "approval_sensitive_surfaces": [
+    "global_harness",
+    "agent_contracts",
+    "output_policies",
+    "runtime_orchestration",
+    "tool_and_worker_surface",
+    "provider_or_api_behavior",
+    "compatibility_commitments"
+  ]
 }

@@ -298,7 +298,7 @@
     ],
     "operator_expectations": [
       "LLM reports do not substitute for deterministic artifact checks.",
-      "The harness should prevent accidental autonomy, hidden context contamination, and unreviewed file mutation.",
+      "The harness should prevent accidental autonomy, hidden context contamination, and non-reviewed file mutation.",
       "The operator may edit JSON configuration, but schemas and validators preserve admissible shape."
     ],
     "inspectability_properties": [

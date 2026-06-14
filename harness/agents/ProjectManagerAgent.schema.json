@@ -102,6 +102,35 @@
       "title": "AgentInputResolution",
       "type": "object"
     },
+    "ArtifactTruthfulness": {
+      "additionalProperties": false,
+      "properties": {
+        "compiled_runtime_artifacts": {
+          "title": "Compiled Runtime Artifacts",
+          "type": "string"
+        },
+        "output_policy_artifacts": {
+          "title": "Output Policy Artifacts",
+          "type": "string"
+        },
+        "raw_provider_artifacts": {
+          "title": "Raw Provider Artifacts",
+          "type": "string"
+        },
+        "non_runtime_templates": {
+          "title": "Non Runtime Templates",
+          "type": "string"
+        }
+      },
+      "required": [
+        "compiled_runtime_artifacts",
+        "output_policy_artifacts",
+        "raw_provider_artifacts",
+        "non_runtime_templates"
+      ],
+      "title": "ArtifactTruthfulness",
+      "type": "object"
+    },
     "InstructionContract": {
       "additionalProperties": false,
       "properties": {
@@ -117,35 +146,31 @@
           "title": "Objective",
           "type": "string"
         },
-        "operating_conditions": {
+        "operating_context": {
           "items": {
             "type": "string"
           },
-          "title": "Validity Conditions",
+          "title": "Operating Context",
           "type": "array"
         },
-        "project_manager_report_derivation_rules": {
-          "$ref": "#/$defs/ProjectManagerReportDerivationRules"
-        },
-        "conduct_rules": {
+        "project_manager_conduct": {
           "items": {
             "type": "string"
           },
-          "title": "Conduct Rules",
+          "title": "Project Manager Conduct",
           "type": "array"
         },
-        "review_lenses": {
-          "$ref": "#/$defs/ReviewLenses"
+        "report_derivation_lenses": {
+          "$ref": "#/$defs/ReportDerivationLenses"
         }
       },
       "required": [
         "role",
         "posture",
         "objective",
-        "operating_conditions",
-        "project_manager_report_derivation_rules",
-        "conduct_rules",
-        "review_lenses"
+        "operating_context",
+        "project_manager_conduct",
+        "report_derivation_lenses"
       ],
       "title": "InstructionContract",
       "type": "object"
@@ -203,133 +228,114 @@
       "title": "ProjectManagerOutputPolicyEntry",
       "type": "object"
     },
-    "ProjectManagerReportDerivationRules": {
+    "ProofFrontier": {
       "additionalProperties": false,
       "properties": {
-        "evaluation_basis": {
-          "title": "Evaluation Basis",
+        "constraint_conflicts": {
+          "title": "Constraint Conflicts",
           "type": "string"
         },
-        "drift_checks": {
-          "title": "Drift Checks",
+        "dominant_tension_justification": {
+          "title": "Dominant Tension Justification",
           "type": "string"
         },
-        "next_step_recommendations": {
-          "title": "Next Step Recommendations",
+        "next_admissible_transformation": {
+          "title": "Next Admissible Transformation",
           "type": "string"
         },
-        "repository_state": {
-          "title": "Repository State",
+        "affected_surfaces": {
+          "title": "Affected Surfaces",
           "type": "string"
+        },
+        "non_affected_surfaces": {
+          "title": "Non Affected Surfaces",
+          "type": "string"
+        },
+        "stop_conditions": {
+          "title": "Stop Conditions",
+          "type": "string"
+        },
+        "authority_constraints": {
+          "title": "Authority Constraints",
+          "type": "string"
+        }
+      },
+      "required": [
+        "constraint_conflicts",
+        "dominant_tension_justification",
+        "next_admissible_transformation",
+        "affected_surfaces",
+        "non_affected_surfaces",
+        "stop_conditions",
+        "authority_constraints"
+      ],
+      "title": "ProofFrontier",
+      "type": "object"
+    },
+    "ReportDerivationLenses": {
+      "additionalProperties": false,
+      "properties": {
+        "source_coverage": {
+          "$ref": "#/$defs/SourceCoverage"
+        },
+        "trajectory_review": {
+          "$ref": "#/$defs/TrajectoryReview"
+        },
+        "proof_frontier": {
+          "$ref": "#/$defs/ProofFrontier"
+        },
+        "artifact_truthfulness": {
+          "$ref": "#/$defs/ArtifactTruthfulness"
         },
         "status_semantics": {
           "$ref": "#/$defs/StatusSemantics"
         }
       },
       "required": [
-        "evaluation_basis",
-        "drift_checks",
-        "next_step_recommendations",
-        "repository_state",
+        "source_coverage",
+        "trajectory_review",
+        "proof_frontier",
+        "artifact_truthfulness",
         "status_semantics"
       ],
-      "title": "ProjectManagerReportDerivationRules",
+      "title": "ReportDerivationLenses",
       "type": "object"
     },
-    "ReviewLenses": {
+    "SourceCoverage": {
       "additionalProperties": false,
       "properties": {
-        "invariant_coverage": {
-          "title": "Invariant Coverage",
+        "basis": {
+          "title": "Basis",
           "type": "string"
         },
-        "task_coverage": {
-          "title": "Task Coverage",
-          "type": "string"
-        },
-        "source_coverage_truthfulness": {
-          "title": "Source Coverage Truthfulness",
-          "type": "string"
-        },
-        "conflict_visibility": {
-          "title": "Conflict Visibility",
-          "type": "string"
-        },
-        "admissible_transformation_coverage": {
-          "title": "Admissible Transformation Coverage",
-          "type": "string"
-        },
-        "surface_truthfulness": {
-          "title": "Surface Truthfulness",
-          "type": "string"
-        },
-        "evidence_quality": {
-          "title": "Evidence Quality",
-          "type": "string"
-        },
-        "fixture_truthfulness": {
-          "title": "Fixture Truthfulness",
-          "type": "string"
-        },
-        "posture_concreteness": {
-          "title": "Posture Concreteness",
-          "type": "string"
-        },
-        "thesis_attractor_discipline": {
-          "title": "Thesis Attractor Discipline",
-          "type": "string"
-        },
-        "tension_selection": {
-          "title": "Tension Selection",
-          "type": "string"
-        },
-        "frontier_selection": {
-          "title": "Frontier Selection",
-          "type": "string"
-        },
-        "optionality_preservation": {
-          "title": "Optionality Preservation",
+        "truthfulness_check": {
+          "title": "Truthfulness Check",
           "type": "string"
         }
       },
       "required": [
-        "invariant_coverage",
-        "task_coverage",
-        "source_coverage_truthfulness",
-        "conflict_visibility",
-        "admissible_transformation_coverage",
-        "surface_truthfulness",
-        "evidence_quality",
-        "fixture_truthfulness",
-        "posture_concreteness",
-        "thesis_attractor_discipline",
-        "tension_selection",
-        "frontier_selection",
-        "optionality_preservation"
+        "basis",
+        "truthfulness_check"
       ],
-      "title": "ReviewLenses",
+      "title": "SourceCoverage",
       "type": "object"
     },
     "StatusSemantics": {
       "additionalProperties": false,
       "properties": {
         "admissible": {
-          "const": "The task can proceed under current project and task authority; the frontier is open enough to name the next admissible move.",
           "title": "Admissible",
           "type": "string"
         },
         "admissibility_blocked": {
-          "const": "The requested object-level transformation cannot proceed because required basis, context, or authority is missing; the frontier may still be open enough to name a diagnostic or unblock move.",
           "title": "Admissibility Blocked",
           "type": "string"
         },
         "rejected": {
-          "const": "The requested thesis or action conflicts with invariant project or harness authority; the frontier may still be open enough to name a correction, reclassification, or probe move.",
           "title": "Rejected",
           "type": "string"
         },
         "needs_clarification": {
-          "const": "The task is ambiguous enough that user clarification is required; the frontier may still be open enough to name a clarification move.",
           "title": "Needs Clarification",
           "type": "string"
         }
@@ -341,6 +347,35 @@
         "needs_clarification"
       ],
       "title": "StatusSemantics",
+      "type": "object"
+    },
+    "TrajectoryReview": {
+      "additionalProperties": false,
+      "properties": {
+        "current_posture": {
+          "title": "Current Posture",
+          "type": "string"
+        },
+        "thesis_attractor": {
+          "title": "Thesis Attractor",
+          "type": "string"
+        },
+        "drift_detection": {
+          "title": "Drift Detection",
+          "type": "string"
+        },
+        "structural_tension": {
+          "title": "Structural Tension",
+          "type": "string"
+        }
+      },
+      "required": [
+        "current_posture",
+        "thesis_attractor",
+        "drift_detection",
+        "structural_tension"
+      ],
+      "title": "TrajectoryReview",
       "type": "object"
     }
   },
